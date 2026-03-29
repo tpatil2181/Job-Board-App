@@ -34,7 +34,17 @@ public class AppController {
 //		return "applied";
 //	}
 //	
+
 	
+	
+//Controlers which should be app controller
+//	1.Create job using comany id
+//	2.
+//	3.
+//	4.
+//	5.
+//	6.
+//	7.
 	
 	@GetMapping("/viewAllJobs")
 	public List<Job> getAllJobs(){

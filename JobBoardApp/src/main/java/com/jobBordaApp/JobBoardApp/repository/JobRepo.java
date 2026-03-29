@@ -14,4 +14,7 @@ public interface JobRepo  extends JpaRepository<Job,Integer> {
 	
 	@Query(value="select * from job u where employeerId=?1",nativeQuery = true)
 	public List<Job> findJobsByCompanyId(int companyID); 
+	
+	@Query(value="select * from job u where userId=?1",nativeQuery = true)
+	public List<Job> findAllapplicationOfPerticlarUser();
 }

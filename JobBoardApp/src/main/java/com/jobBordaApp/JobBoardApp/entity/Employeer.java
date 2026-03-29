@@ -20,6 +20,8 @@ public class Employeer {
 	String website;
 	@Column(name="email")
 	String email;
+	@Column(name="password")
+	String password;
 	@Column(name="contact")
 	String contact;
 	@Column(name="joblist")
@@ -31,16 +33,39 @@ public class Employeer {
 	}
 
 
-	public Employeer(int employeerId, String employeerName, String website, String email, String contact,
-			String joblist) {
+
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+
+
+
+	public Employeer(int employeerId, String employeerName, String website, String email, String password,
+			String contact, String joblist) {
 		super();
 		this.employeerId = employeerId;
 		this.employeerName = employeerName;
 		this.website = website;
 		this.email = email;
+		this.password = password;
 		this.contact = contact;
 		this.joblist = joblist;
 	}
+
+
+
 
 
 	public int getEmployeerId() {

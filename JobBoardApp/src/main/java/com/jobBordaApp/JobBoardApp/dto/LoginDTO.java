@@ -2,17 +2,17 @@ package com.jobBordaApp.JobBoardApp.dto;
 
 
 
-public class UserLoginDTO {
+public class LoginDTO {
 	private String email;
     private String password;
     
     
-    public UserLoginDTO() {
+    public LoginDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public UserLoginDTO(String email, String password) {
+	public LoginDTO(String email, String password) {
 		super();
 		this.email = email;
 		this.password = password;
