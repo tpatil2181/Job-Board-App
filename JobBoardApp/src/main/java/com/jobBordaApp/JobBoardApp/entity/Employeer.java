@@ -13,7 +13,7 @@ public class Employeer {
 	
 	@Id()
 	@GeneratedValue(strategy= GenerationType.AUTO)
-	int employeerId;
+	Integer employeerId;
 	@Column(name="employeer_name")
 	String employeerName;
 	@Column(name="website")
@@ -27,10 +27,38 @@ public class Employeer {
 	@Column(name="joblist")
 	String joblist;
 	
+//	
+//	{
+//		  "employeerName":"Vikram",
+//		  "website":"www.google.com",
+//		  "email":"vikram.singh@gmail.com",
+//		  "password":3333,
+//		  "contact":9090909090,
+//		  "joblist":"L"
+//		}
+//	
 	
 	public Employeer() {
 		// TODO Auto-generated constructor stub
 	}
+
+	
+	
+
+
+
+
+	public Employeer(String employeerName, String website, String email, String password, String contact, String joblist) {
+	super();
+	this.employeerName = employeerName;
+	this.website = website;
+	this.email = email;
+	this.password = password;
+	this.contact = contact;
+	this.joblist = joblist;
+}
+
+
 
 
 
@@ -48,21 +76,6 @@ public class Employeer {
 		this.password = password;
 	}
 
-
-
-
-
-	public Employeer(int employeerId, String employeerName, String website, String email, String password,
-			String contact, String joblist) {
-		super();
-		this.employeerId = employeerId;
-		this.employeerName = employeerName;
-		this.website = website;
-		this.email = email;
-		this.password = password;
-		this.contact = contact;
-		this.joblist = joblist;
-	}
 
 
 

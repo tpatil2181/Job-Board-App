@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
-
+import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
@@ -27,12 +27,34 @@ import com.jobBordaApp.JobBoardApp.repository.UserRepo;
 public class EmployeerController {
 	
 	@Autowired
-	UserRepo userRepo;   //Reporisotory variable
+	JobRepo jobRepo;   //Reporisotory variable
 
 	
 	@Autowired
 	EmployeerRepo employeerRepo;
 	
+	
+	
+//	{
+//		  "employeerName":"Google",
+//		  "website":"www.google.com",
+//		  "email":"Gogole@gmail.com",
+//		  "password":3333,
+//		  "contact":9090909090,
+//		  "joblist":"L"
+//		}
+	
+//	{
+//		  "employer": { "employeerId": 1 },
+//		  "job_title":"java developer",
+//		  "job_discription":"3333",
+//		  "status":"L",
+//		  "create_date":"12/04/2026"
+//		}
+//	
+	
+	
+
 	
 	@GetMapping("/test")
 	public String testEmoployeer() {
@@ -46,8 +68,8 @@ public class EmployeerController {
 	@PostMapping("/register")
 	public String registerCompany(@RequestBody Employeer company) {
 		
-		Optional<Employeer> existingCompany= employeerRepo.findById(company.getEmployeerId());
-		if(existingCompany!=null) {
+		Optional<Employeer> existingCompany= employeerRepo.findByEmail(company.getEmail());
+		if(existingCompany.isPresent()) {
 			throw new RuntimeException("Company already Register");
 		}
 		employeerRepo.save(company);
@@ -111,6 +133,16 @@ public class EmployeerController {
 		
 	}
 	
+	
+	@PostMapping("/createJob")
+	public String getAllCompanies( @RequestBody Job newJob) {
+		
+//		List<Employeer> companyies=employeerRepo.findAll();
+		jobRepo.save(newJob);
+		
+		return "Job Created Successfully";
+		
+	}
 	
 	
 	

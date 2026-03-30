@@ -19,6 +19,7 @@ import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.User;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.UserRepo;
@@ -44,6 +45,7 @@ public class UserController {
 //	}
 	
 	
+	
 	@GetMapping("/testUser")
 	public String testProj() {
 		
@@ -56,24 +58,28 @@ public class UserController {
 	@Autowired
 	UserRepo userRepo;   //Reporisotory variable
 	
+	@Autowired
+	ApplyJobRepo applicationRepo;
+	
 	
 	
 //================User CURD operation========================
 
 	
-	@PostMapping("/registrer")
+	@PostMapping("/registerUser")
 	public String registerUser(@RequestBody User newUser) {
 		
-		Optional<User> existingUser=userRepo.findById(newUser.getUserId());
-		if(existingUser!=null) {
-			throw new RuntimeException("User already exist");
+		Optional<User> existingUser=userRepo.findByEmail(newUser.getEmail());
+		if(existingUser.isPresent()) {
+//			throw new RuntimeException("User already exist");
+			return "User already exist";
 		}
 		userRepo.save(newUser);
 		return "User Created Successfully";	
 	}
 	
 	
-	@PostMapping("/login/")
+	@PostMapping("/login")
 	public String userLogin(@RequestBody LoginDTO request) {
 
         User user = userRepo.findByEmail(request.getEmail())

@@ -22,8 +22,8 @@ public class User {
 	@Column(name="last_name")
 	String last_name;
 	@Column(name="mobile_no")
-	Long mobNo;
-	@Column(name="email")
+	String mobNo;
+	@Column(name="email", unique=true)
 	String email;
 	@Column(name="password")
 	String password;
@@ -46,7 +46,7 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(Integer userId, String first_name, String last_name, Long mobNo, String email, String password,
+	public User(Integer userId, String first_name, String last_name, String mobNo, String email, String password,
 			String education, String skills, Date createdate) {
 		super();
 		this.userId = userId;
@@ -84,11 +84,11 @@ public class User {
 		this.last_name = last_name;
 	}
 
-	public Long getMobNo() {
+	public String getMobNo() {
 		return mobNo;
 	}
 
-	public void setMobNo(Long mobNo) {
+	public void setMobNo(String mobNo) {
 		this.mobNo = mobNo;
 	}
 
@@ -131,10 +131,6 @@ public class User {
 	public void setCreatedate(Date createdate) {
 		this.createdate = createdate;
 	}
-	
-	
-	
-	
 	
 	
 	
