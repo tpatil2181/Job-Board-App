@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
@@ -23,6 +25,7 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.UserRepo;
+import com.jobBordaApp.JobBoardApp.service.FileService;
 
 
 @RestController
@@ -60,6 +63,9 @@ public class UserController {
 	
 	@Autowired
 	ApplyJobRepo applicationRepo;
+	
+	 @Autowired
+	 private FileService fileService;
 	
 	
 	
@@ -103,7 +109,7 @@ public class UserController {
 	
 	@GetMapping("user/{id}")
 	public User getPerticularUser(@PathVariable Integer id) {
-		User user= userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+		User user= userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with this ID"));
 		return user;
 	}
 	
@@ -179,6 +185,27 @@ public class UserController {
 
 	    return userRepo.save(existingUser);
 	}
+	
+	
+	
+	
+	
+
+
+	    @PostMapping("/upload/{userId}")
+	    public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer userId) {
+	    	
+	    	
+	        try {
+	            String path = fileService.uploadOrUpdateResume(userId,file);
+	            return "File uploaded successfully at: " + path;
+
+	        } catch (Exception e) {
+	            return "File upload failed: " + e.getMessage();
+	        }
+	    }
+	
+
 	
 // For update perticular field we can user @PatchMapping exlpore it and complete this mapping
 	

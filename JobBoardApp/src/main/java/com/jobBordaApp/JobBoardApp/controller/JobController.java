@@ -1,6 +1,7 @@
 package com.jobBordaApp.JobBoardApp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,13 +38,14 @@ public class JobController {
 	
 	@PutMapping("/job/{jobId}")
 	public String updateJob(@RequestBody Job newJob) {
+		
 		jobRepo.save(newJob);
 		return "Job Updated Successfully";
 	}
 	
 	@DeleteMapping("/job/{jobId}")
 	public String deleteJob(@PathVariable Integer Jobid) {
-		Job job = jobRepo.findById(Jobid).orElseThrow(()-> new ResourceNotFoundException("Job not found with this if"));  
+		Job job = jobRepo.findById(Jobid).orElseThrow(()-> new ResourceNotFoundException("Job not found with this ID"));  
 		jobRepo.delete(job);
 	    return "Job Deleted successfully";		
 	}
@@ -67,6 +69,14 @@ public class JobController {
 		}
 		return allJobs;
 	}
+	
+	@GetMapping("/job/{jobId}")
+	public Job findPerticularJob(@PathVariable Integer JobId) {
+		Job isJobExist=jobRepo.findById(JobId).orElseThrow(()-> new ResourceNotFoundException("No job found with this jobId"));
+		return isJobExist; 
+	}
+	
+	
 	
 	
 //===================Advance Part=================	

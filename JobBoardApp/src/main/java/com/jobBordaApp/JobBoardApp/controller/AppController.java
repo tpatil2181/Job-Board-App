@@ -3,6 +3,7 @@ package com.jobBordaApp.JobBoardApp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.User;
+import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.UserRepo;
+
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 //@RequestMapping()
@@ -60,7 +65,31 @@ public class AppController {
 //		return "applied";
 //	}
 //	
+	
+//====================================Spring security part====================================	
+	
+	//Getting session id
+//	@GetMapping("/")
+//	public String testsecurity(HttpServletRequest request)
+//	{
+//		
+//		return "hii    "+	request.getSession().getId();
+//	
+//	}
+//
+//	@GetMapping("/getCsrf")
+//	public CsrfToken getCsrfToken(HttpServletRequest request)
+//	{
+//		
+//		return (CsrfToken)request.getAttribute("_csrf");
+//		//Gertting problem to create obkject form postman
+//	}
 
+	
+//====================================Spring security part End ====================================	
+	
+	
+	
 	
 	
 //Controlers which should be app controller
@@ -72,6 +101,7 @@ public class AppController {
 //	6.
 //	7.
 	
+	
 	@GetMapping("/viewAllJobs")
 	public List<Job> getAllJobs(){
 		
@@ -79,6 +109,33 @@ public class AppController {
 		return allJobs;
 		
 	}
+	
+	
+	@GetMapping("allAppliedJob/{userID}")
+	public List<ApplyJob> getListOfAllJobdAppliedByUser(@PathVariable Integer userId){
+		
+		User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		List<ApplyJob> allJobOfUser=applicationRepo.findByUserId(userId);
+		if(allJobOfUser.size()==0) {
+			throw new ResourceNotFoundException("No jobs applied by this user");
+		}
+		return allJobOfUser;
+		
+	}
+	
+	
+//	@GetMapping("/{employeerId}/allAppliedUser/{JobId}")
+//	public List<User> getAllAppliedUserByJobId(@PathVariable Integer employeerId, @PathVariable Integer JobId ){
+//		
+////		Job applicationRepo.
+//		
+//		return 
+//		
+//		
+//		
+//	}
+	
+	
 	
 //	@PostMapping("/applyJob")
 //	public String applyForJob(@RequestBody ApplyJob newApplication) {

@@ -145,6 +145,9 @@ public class EmployeerController {
 	}
 	
 	
+//	@PatchMapping("updateStatus/{ApplyJobId}")
+//	public String changeStatusOfPerticularJobApplication()
+	
 	
 	
 //==============Job releted operations by company=================
