@@ -15,6 +15,10 @@ public interface UserResumeReop extends JpaRepository<UserResume,Integer>{
 	
 	Optional<UserResume> findByUser(User user);
 	
+//	Optional<UserResume> findByUserId(Integer userId);
+	
+	Optional<UserResume> findByUser_UserId(Integer userId);
+	
 	
 
 }

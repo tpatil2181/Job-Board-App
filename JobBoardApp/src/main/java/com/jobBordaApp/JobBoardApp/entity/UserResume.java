@@ -65,15 +65,6 @@ public class UserResume {
 	public void setPath(String path) {
 		Path = path;
 	}
-
-	
-	
-
-	
-	
-	
-	
-	
    
 
 }

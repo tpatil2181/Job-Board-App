@@ -7,6 +7,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +36,7 @@ public class FileService {
     private UserResumeReop userResumeRepo;
 
     public String uploadOrUpdateResume(Integer userId, MultipartFile file) throws IOException {
+
 
         // 1. Get user
         User user = userRepo.findById(userId)
@@ -73,6 +78,25 @@ public class FileService {
 
         return filePath;  // ✅ return path
     }
+    
+    
+//    
+//    @GetMapping("/resume/{userId}")
+    public ResponseEntity<Resource> getResume(@PathVariable Integer userId) throws IOException {
+
+        UserResume resume = userResumeRepo.findByUser_UserId(userId)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
+
+        File file = new File(resume.getPath());
+
+        Resource resource =  new UrlResource(file.toURI());
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=" + file.getName())
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
+    
 }
 
 

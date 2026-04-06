@@ -1,8 +1,10 @@
 package com.jobBordaApp.JobBoardApp.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 //import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,9 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.UserRepo;
+import com.jobBordaApp.JobBoardApp.service.FileService;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -38,6 +42,9 @@ public class AppController {
 	
 	@Autowired
 	ApplyJobRepo applicationRepo;
+	
+	 @Autowired
+	 private FileService fileService;
 	
 //		{
 //		  "employeerName":"Vikram",
@@ -161,6 +168,12 @@ public class AppController {
 	    applicationRepo.save(newApplication);
 
 	    return "Applied Successfully";
+	}
+	
+	
+	@GetMapping("resume/{userId}")
+	public ResponseEntity<org.springframework.core.io.Resource> getResume(@PathVariable Integer userId) throws IOException{
+			return fileService.getResume(userId);
 	}
 	
 //	@GetMapping("/allJobs/{employeerId}")
