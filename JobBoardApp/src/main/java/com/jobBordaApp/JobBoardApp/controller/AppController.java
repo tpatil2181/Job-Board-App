@@ -122,7 +122,7 @@ public class AppController {
 	public List<ApplyJob> getListOfAllJobdAppliedByUser(@PathVariable Integer userId){
 		
 		User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		List<ApplyJob> allJobOfUser=applicationRepo.findByUserId(userId);
+		List<ApplyJob> allJobOfUser=applicationRepo.findAllApplicationsByUserId(userId);
 		if(allJobOfUser.size()==0) {
 			throw new ResourceNotFoundException("No jobs applied by this user");
 		}
@@ -170,11 +170,13 @@ public class AppController {
 	    return "Applied Successfully";
 	}
 	
+//Ambiguty error comming for this methode for same name get resume	
+//	@GetMapping("resume/{userId}")
+//	public ResponseEntity<org.springframework.core.io.Resource> getapplicantResume(@PathVariable Integer userId) throws IOException{
+//			return fileService.getResume(userId);
+//	}
 	
-	@GetMapping("resume/{userId}")
-	public ResponseEntity<org.springframework.core.io.Resource> getResume(@PathVariable Integer userId) throws IOException{
-			return fileService.getResume(userId);
-	}
+	
 	
 //	@GetMapping("/allJobs/{employeerId}")
 //	public List<Job> getPerticularCompanyJobs(@PathVariable int companyId){

@@ -1,9 +1,11 @@
 package com.jobBordaApp.JobBoardApp.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
+import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.User;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
@@ -26,6 +29,7 @@ import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.UserRepo;
 import com.jobBordaApp.JobBoardApp.service.FileService;
+import com.jobBordaApp.JobBoardApp.service.UserService;
 
 
 @RestController
@@ -55,24 +59,28 @@ public class UserController {
 		return "User Run successfully";
 	}
 	
-
-
 	
 	@Autowired
-	UserRepo userRepo;   //Reporisotory variable
+	private UserRepo userRepo;   //Reporisotory variable
 	
 	@Autowired
-	ApplyJobRepo applicationRepo;
+	private UserService userService;   //Reporisotory variable
 	
-	 @Autowired
-	 private FileService fileService;
+	@Autowired
+	private ApplyJobRepo applicationRepo;
+	
+	@Autowired
+	private FileService fileService;
+	
+	@Autowired
+	private ApplyJobRepo applyJobRepo;
 	
 	
 	
 //================User CURD operation========================
 
 	
-	@PostMapping("/registerUser")
+	@PostMapping("/register")
 	public String registerUser(@RequestBody User newUser) {
 		
 		Optional<User> existingUser=userRepo.findByEmail(newUser.getEmail());
@@ -107,16 +115,19 @@ public class UserController {
 		return allUsers;
 	}
 	
+	
+//User Service Implemented	
 	@GetMapping("user/{id}")
 	public User getPerticularUser(@PathVariable Integer id) {
-		User user= userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with this ID"));
-		return user;
+		return userService.getUserByUserId(id);
 	}
 	
-	@PutMapping("/user/{id}")
-	public String updateUserInfo(@PathVariable Integer id,@RequestBody User updatedUser) {
+	
+	
+	@PutMapping("/user")
+	public String updateUserInfo(@RequestBody User updatedUser) {
 		 
-		User existingUser = userRepo.findById(id).orElseThrow();
+		User existingUser = userRepo.findById(updatedUser.getUserId()).orElseThrow();
 		// Update fields
 	    existingUser.setFirst_name(updatedUser.getFirst_name());
 	    existingUser.setLast_name(updatedUser.getLast_name());
@@ -186,15 +197,10 @@ public class UserController {
 	    return userRepo.save(existingUser);
 	}
 	
-	
-	
-	
-	
 
 
-	    @PostMapping("/upload/{userId}")
+	    @PostMapping("/uploadResume/{userId}")
 	    public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer userId) {
-	    	
 	    	
 	        try {
 	            String path = fileService.uploadOrUpdateResume(userId,file);
@@ -204,106 +210,29 @@ public class UserController {
 	            return "File upload failed: " + e.getMessage();
 	        }
 	    }
+	    
+	    
+	    
+	    @GetMapping("resume/{userId}")
+		public ResponseEntity<org.springframework.core.io.Resource> getUserResume(@PathVariable Integer userId) throws IOException{
+				return fileService.getResume(userId);
+		}
+	    
+	    
+	    
+		@GetMapping("user/{id}/applications")
+		public List<ApplyJob> getAllApplicationOfPerticularUser(@PathVariable Integer userId) {
+			
+			List<ApplyJob> allApplications= applyJobRepo.findAllApplicationsByUserId(userId);
+			if(allApplications.isEmpty()) {
+				throw new ResourceNotFoundException("Not appied for any job");
+			}
+			return allApplications;
+		}
+		
 	
-
-	
-// For update perticular field we can user @PatchMapping exlpore it and complete this mapping
-	
-//	@PutMapping("user/{id}/change-password")
-//	public User changeUserPassword(@PathVariable Integer id) {
-//		User user= userRepo.findById(id).orElseThrow();
-//		user.getPassword();
-//		
-//		return user;
-//	}
-	
-
-	
-// Think about that file is comming form user resume file how it will be accepted in this mapping
-	
-//	@PostMapping("user/{id}/upload-resume")
-//	public void  uploadResume(@PathVariable Integer id) {
-//		Optional<User> user= userRepo.findById(id);
-//		return user;
-//	}
-	
-
-	
-//Write a program to get all applications of the perticular user 
-////	This should be in application controller
-//	@GetMapping("user/{id}/applications")
-//	public void getAllApplicationOfPerticularUser(@PathVariable Integer id) {
-//		User user= userRepo.findById(id).orElseThrow();
-////		user
-//		
-//		return user;
-//	}
-//	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//================User CURD operation========================
-	
-	
-//	@GetMapping("/users")
-//	public List<User> getAllUsers() {
-//		List<User> allUsers = userRepo.findAll();
-////		if(allUser)
-//		return allUsers;
-//	}
-	
-//	
-//	@PostMapping("/userRegistration")
-//	public String registerUser(@RequestBody User newUser) {
-//		userRepo.save(newUser);
-//		return "User Created Successfully";	
-//	}
-//	
-	
-//	@PutMapping("/user/{id}")
-//	public String updateUserInfo(@PathVariable Integer id,@RequestBody User updatedUser) {
-//		 
-//		User existingUser = userRepo.findById(id).orElseThrow();
-//		
-//		// Update fields
-//	    existingUser.setFirst_name(updatedUser.getFirst_name());
-//	    existingUser.setLast_name(updatedUser.getLast_name());
-//	    existingUser.setMobNo(updatedUser.getMobNo());
-//	    existingUser.setEmail(updatedUser.getEmail());
-//	    existingUser.setPassword(updatedUser.getPassword());
-//	    existingUser.setEducation(updatedUser.getEducation());
-//	    existingUser.setSkills(updatedUser.getSkills());
-//	    
-//	    userRepo.save(existingUser);
-//	    return "User updated successfully";		
-//	}
-//	
-//	@DeleteMapping("/user/{id}")
-//	public String deleteUser(@PathVariable Integer id) {
-//		User user = userRepo.findById(id).orElseThrow();  
-//		userRepo.delete(user);
-//
-//	    return "User Deleted successfully";		
-//	}
-//		
+	    
+//================================User Services End========================================
+	    
 
 }

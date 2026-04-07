@@ -34,7 +34,10 @@ public class FileService {
 
     @Autowired
     private UserResumeReop userResumeRepo;
-
+    
+    
+//=======================================Upload User Resume=======================================\
+    
     public String uploadOrUpdateResume(Integer userId, MultipartFile file) throws IOException {
 
 
@@ -80,8 +83,10 @@ public class FileService {
     }
     
     
-//    
-//    @GetMapping("/resume/{userId}")
+    
+    
+//=======================================Get User Resume=======================================
+    
     public ResponseEntity<Resource> getResume(@PathVariable Integer userId) throws IOException {
 
         UserResume resume = userResumeRepo.findByUser_UserId(userId)
@@ -102,74 +107,3 @@ public class FileService {
 
 
 
-
-//My Old code
-
-
-//@Service
-//public class FileService {
-//	
-//	@Autowired
-//	private UserResumeReop URRepo;
-//	
-//	
-//	 @Value("${file.upload-dir}")String uploadDir;
-//	 public String uploadFile(MultipartFile file,@PathVariable  Integer userId ) throws IOException {
-//
-//		 
-//		 UserResume ur =URRepo.findResumeByUserId(userId);
-//		 
-//		 if(ur!=null) {
-//			 String oldFilePath=newUserResume.getPath();
-//			 File oldFile = new File(oldFilePath);
-//		        if (oldFile.exists()) {
-//		            oldFile.delete();
-//		        }
-//		        
-//		        // file path
-//		        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//		        String filePath = uploadDir + File.separator + fileName;
-//
-//
-//		        // save file
-//		        file.transferTo(new File(filePath));
-//		        ur.setPath(filePath);
-//		        URRepo.save(ur);
-//		 }
-//		 else {
-//			 // file path
-//		        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//		        String filePath = uploadDir + File.separator + fileName;
-//
-//
-//		        // save file
-//		        file.transferTo(new File(filePath));
-//		        UserResume newUserResume=new UserResume(userId,, filePath);
-//			 URRepo.save(newUserResume);
-//		 }
-//    	
-//    	
-//    	
-//    	  
-//
-////        // create folder if not exists
-////        File dir = new File(uploadDir);
-////        if (!dir.exists()) {
-////            dir.mkdirs();
-////        }
-////
-////        // file path
-////        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-////        String filePath = uploadDir + File.separator + fileName;
-////
-////
-////        // save file
-////        file.transferTo(new File(filePath));
-//        
-//
-////        return filePath;
-//    }
-//	
-//	
-//
-//}

@@ -15,9 +15,16 @@ public interface UserRepo  extends JpaRepository<User,Integer> {
 	
 	public Optional<User> findByEmail(String email);
 	
+
 //	public User findByUsername(String username);
 //	
 //	@Query()
 //	public List<Job> findAllapplicationOfPerticlarUser();
+	
+	
+//========================Searching Operation========================
+	
+		//Get all user having pertucular skill
+		
 
 }

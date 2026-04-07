@@ -45,20 +45,33 @@ public class User {
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
-	public User(Integer userId, String first_name, String last_name, String mobNo, String email, String password,
-			String education, String skills, Date createdate) {
+	public User(String first_name, String last_name, String mobNo, String email, String password) {
 		super();
-		this.userId = userId;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.mobNo = mobNo;
 		this.email = email;
 		this.password = password;
-		this.education = education;
-		this.skills = skills;
-		this.createdate = createdate;
 	}
+
+
+
+//	public User(Integer userId, String first_name, String last_name, String mobNo, String email, String password,
+//			String education, String skills, Date createdate) {
+//		super();
+//		this.userId = userId;
+//		this.first_name = first_name;
+//		this.last_name = last_name;
+//		this.mobNo = mobNo;
+//		this.email = email;
+//		this.password = password;
+//		this.education = education;
+//		this.skills = skills;
+//		this.createdate = createdate;
+//	}
 
 	public Integer getUserId() {
 		return userId;
