@@ -2,6 +2,7 @@ package com.jobBordaApp.JobBoardApp.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Job;
-import com.jobBordaApp.JobBoardApp.entity.User;
+import com.jobBordaApp.JobBoardApp.exception.RecordAvailableException;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
-import com.jobBordaApp.JobBoardApp.repository.UserRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.service.FileService;
 
 import jakarta.annotation.Resource;
@@ -32,16 +34,16 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AppController {
 	
 	@Autowired
-	UserRepo userRepo;   //Reporisotory variable
+	private CandidateRepo candidateRepo;   //Reporisotory variable
 	
 	@Autowired
-	JobRepo jobRepo;
+	private JobRepo jobRepo;
 	
 	@Autowired
-	EmployeerRepo employeerRepo;
+	private EmployeerRepo employeerRepo;
 	
 	@Autowired
-	ApplyJobRepo applicationRepo;
+	private ApplyJobRepo applicationRepo;
 	
 	 @Autowired
 	 private FileService fileService;
@@ -118,15 +120,15 @@ public class AppController {
 	}
 	
 	
-	@GetMapping("allAppliedJob/{userID}")
-	public List<ApplyJob> getListOfAllJobdAppliedByUser(@PathVariable Integer userId){
+	@GetMapping("allAppliedJob/{candidateId}")
+	public List<ApplyJob> getListOfAllJobdAppliedByCandidate(@PathVariable Integer candidateId){
 		
-		User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		List<ApplyJob> allJobOfUser=applicationRepo.findAllApplicationsByUserId(userId);
-		if(allJobOfUser.size()==0) {
-			throw new ResourceNotFoundException("No jobs applied by this user");
+		Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+		List<ApplyJob> allJobOfCandidate=applicationRepo.findAllApplicationsByCandidateId(candidateId);
+		if(allJobOfCandidate.size()==0) {
+			throw new ResourceNotFoundException("No jobs applied by this Candidate");
 		}
-		return allJobOfUser;
+		return allJobOfCandidate;
 		
 	}
 	
@@ -153,16 +155,22 @@ public class AppController {
 	@PostMapping("/applyJob")
 	public String applyJob(@RequestBody ApplyJob newApplication) {
 
-	    Integer userId = newApplication.getUser().getUserId();
+	    Integer candidateId = newApplication.getCandidate().getCandidateId();
 	    Integer jobId = newApplication.getJob().getJobId();
 
-	    User user = userRepo.findById(userId)
-	            .orElseThrow(() -> new RuntimeException("User not found"));
+	    Candidate candidate = candidateRepo.findById(candidateId)
+	            .orElseThrow(() -> new RuntimeException("Candidate not found"));
 
 	    Job job = jobRepo.findById(jobId)
 	            .orElseThrow(() -> new RuntimeException("Job not found"));
+	    
+	    Optional<ApplyJob> isApplied=applicationRepo.findByUserIdAndJobId(candidateId,jobId);
+	    
+	    if(isApplied.isPresent()) {
+	    	throw new RecordAvailableException("You have already applied for this job");
+	    }
 
-	    newApplication.setUser(user);  // ✅ managed entity
+	    newApplication.setCandidate(candidate);  // ✅ managed entity
 	    newApplication.setJob(job);    // ✅ managed entity
 
 	    applicationRepo.save(newApplication);

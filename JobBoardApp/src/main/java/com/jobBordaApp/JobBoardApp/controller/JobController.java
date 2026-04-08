@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.entity.Job;
-import com.jobBordaApp.JobBoardApp.entity.User;
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
+
 
 @RestController
 public class JobController {
@@ -76,9 +77,7 @@ public class JobController {
 		return isJobExist; 
 	}
 	
-	
-	
-	
+		
 //===================Advance Part=================	
 	
 // In advance create a get job on filtering	

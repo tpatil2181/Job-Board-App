@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
-import com.jobBordaApp.JobBoardApp.entity.User;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
-import com.jobBordaApp.JobBoardApp.repository.UserRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.service.FileService;
-import com.jobBordaApp.JobBoardApp.service.UserService;
+import com.jobBordaApp.JobBoardApp.service.CandidateService;
 
 @RestController
 @RequestMapping("/jobBoardApp/employeer")
@@ -51,7 +51,7 @@ public class EmployeerController {
 	
 	
 	@Autowired
-	private UserService userService;   //Reporisotory variable
+	private CandidateService candidateService;   //Reporisotory variable
 	
 	
 	
@@ -177,7 +177,7 @@ public class EmployeerController {
 	
 	
 	@PostMapping("/createJob")
-	public String getAllCompanies( @RequestBody Job newJob) {
+	public String postNewJob( @RequestBody Job newJob) {
 		
 		Optional<Job> job=jobRepo.findById(newJob.getJobId());
 		if(job.isPresent()) {
@@ -197,7 +197,7 @@ public class EmployeerController {
 		existingJob.setJob_discription(updatedJob.getJob_discription());
 		existingJob.setStatus(updatedJob.getStatus());
 	    jobRepo.save(updatedJob);
-	    return "JOb updated successfully";	
+	    return "Job updated successfully";	
 		
 	}
 	
@@ -222,7 +222,7 @@ public class EmployeerController {
 	
 	
 	
-//============== User-Job Application releted operations by company=================
+//============== Candidate-Job Application releted operations by company=================
 	
 	@PatchMapping("/applyJobStatus/{applyid}/{status}")
 	public String changeApplyJobStatus(@PathVariable Integer applyId,@PathVariable String Status) {
@@ -238,19 +238,19 @@ public class EmployeerController {
 		 return allApplicantOfPerticularJob;
 	}
 	
-//============== User operations by company=================
+//============== Candidate operations by company=================
 	
-	@GetMapping("/getUser/{userId}")
-	public User getPerticularUser(@PathVariable Integer id) {
-		return userService.getUserByUserId(id);
+	@GetMapping("/getCandidate/{candidateId}")
+	public Candidate getPerticularCandidate(@PathVariable Integer id) {
+		return candidateService.getCandidateByCandidateId(id);
 	}
 	
-	@GetMapping("resume/{userId}")
-	public ResponseEntity<org.springframework.core.io.Resource> getResume(@PathVariable Integer userId) throws IOException{
-			return fileService.getResume(userId);
+	@GetMapping("resume/{candidateId}")
+	public ResponseEntity<org.springframework.core.io.Resource> getResume(@PathVariable Integer candidateId) throws IOException{
+			return fileService.getResume(candidateId);
 	}
 	
-	//create a function which will return of users by search for particular skill
+	//create a function which will return of Candidates by search for particular skill
 	
 	
 	

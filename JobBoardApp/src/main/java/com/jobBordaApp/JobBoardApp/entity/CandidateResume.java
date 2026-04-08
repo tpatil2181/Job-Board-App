@@ -10,61 +10,59 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="user_resume")
-public class UserResume {
+@Table(name="candidate_resume")
+public class CandidateResume {
 	
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resumeId;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;   // reference to User table
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;   // reference to Candidate table
 
 
 	@Column(name="file_path")
     private String Path;     // reference to Job table
 
 	
-	public UserResume() {
+	public CandidateResume() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserResume( User user, String path) {
+	public CandidateResume( Candidate candidate, String path) {
 		super();
-		this.user = user;
+		this.candidate = candidate;
 		Path = path;
 	}
 
-
-	public Integer getUr_id() {
+	
+	
+	
+	
+	public Integer getResumeId() {
 		return resumeId;
 	}
 
-
-	public void setUr_id(Integer resumeId) {
+	public void setResumeId(Integer resumeId) {
 		this.resumeId = resumeId;
 	}
 
-
-	public User getUser() {
-		return user;
+	public Candidate getCandidate() {
+		return candidate;
 	}
 
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setCandidate(Candidate candidate) {
+		this.candidate = candidate;
 	}
-
 
 	public String getPath() {
 		return Path;
 	}
 
-
 	public void setPath(String path) {
 		Path = path;
 	}
-   
+
 
 }

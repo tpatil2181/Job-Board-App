@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
-import com.jobBordaApp.JobBoardApp.entity.User;
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
 
 
 public interface EmployeerRepo  extends JpaRepository<Employeer,Integer> {

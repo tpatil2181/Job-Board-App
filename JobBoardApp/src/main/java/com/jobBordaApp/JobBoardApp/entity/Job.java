@@ -31,20 +31,28 @@ public class Job {
 	
 	
 	
-//	In jobusercompany table add two more fields  applystatus and BookmarkStatus
+//	In jobCandidatecompany table add two more fields  applystatus and BookmarkStatus
 	
 	public Job() {
 		// TODO Auto-generated constructor stub
 	}
+	
 
-	public Job( Employeer employer, String job_title, String job_discription, String status, String create_date) {
+	public Job(Employeer employer, String job_title) {
 	super();
 	this.employer = employer;
 	this.job_title = job_title;
-	this.job_discription = job_discription;
-	this.status = status;
-	this.create_date = create_date;
 }
+
+
+//	public Job( Employeer employer, String job_title, String job_discripteion, String status, String create_date) {
+//	super();
+//	this.employer = employer;
+//	this.job_title = job_title;
+//	this.job_discription = job_discription;
+//	this.status = status;
+//	this.create_date = create_date;
+//}
 
 	public Integer getJobId() {
 		return jobId;

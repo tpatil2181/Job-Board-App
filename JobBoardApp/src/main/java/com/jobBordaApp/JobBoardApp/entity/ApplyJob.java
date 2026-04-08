@@ -10,16 +10,13 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class ApplyJob {
-	
-	
-	
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer applyid;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;   // reference to User table
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;   // reference to Candidate table
 
     @ManyToOne
     @JoinColumn(name = "job_id")
@@ -34,7 +31,7 @@ public class ApplyJob {
     
 //    
 //    {
-//    	  "user": { "userId": 1 },
+//    	  "Candidate": { "candidateId": 1 },
 //    	  "job": { "jobId": 1 },
 //    	  "employeerId": { "employeerId": 1 },
 //    	  "status": "Applied"
@@ -46,33 +43,33 @@ public class ApplyJob {
 	}
 
 
-	public ApplyJob(Integer id, User user, Job job, Employeer employeerId, String status) {
+	public ApplyJob(Integer id, Candidate candidate, Job job, Employeer employeerId, String status) {
 		super();
 		this.applyid = id;
-		this.user = user;
+		this.candidate = candidate;
 		this.job = job;
 		this.employeerId = employeerId;
 		this.status = status;
 	}
 
 
-	public Integer getId() {
+	public Integer getApplyid() {
 		return applyid;
 	}
 
 
-	public void setId(Integer id) {
-		this.applyid = id;
+	public void setApplyid(Integer applyid) {
+		this.applyid = applyid;
 	}
 
 
-	public User getUser() {
-		return user;
+	public Candidate getCandidate() {
+		return candidate;
 	}
 
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setCandidate(Candidate candidate) {
+		this.candidate = candidate;
 	}
 
 
@@ -104,8 +101,8 @@ public class ApplyJob {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-    
-    
-	
+
+
+
 
 }

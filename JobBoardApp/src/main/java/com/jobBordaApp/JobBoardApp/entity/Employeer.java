@@ -27,7 +27,7 @@ public class Employeer {
 	@Column(name="joblist")
 	String joblist;
 	
-//	
+
 //	{
 //		  "employeerName":"Vikram",
 //		  "website":"www.google.com",
@@ -35,8 +35,7 @@ public class Employeer {
 //		  "password":3333,
 //		  "contact":9090909090,
 //		  "joblist":"L"
-//		}
-//	
+//	}	
 	
 	public Employeer() {
 		// TODO Auto-generated constructor stub
@@ -46,19 +45,25 @@ public class Employeer {
 	
 
 
+//	public Employeer(String employeerName, String website, String email, String password, String contact, String joblist) {
+//		super();
+//		this.employeerName = employeerName;
+//		this.website = website;
+//		this.email = email;
+//		this.password = password;
+//		this.contact = contact;
+//		this.joblist = joblist;
+//	}
 
 
-	public Employeer(String employeerName, String website, String email, String password, String contact, String joblist) {
-	super();
-	this.employeerName = employeerName;
-	this.website = website;
-	this.email = email;
-	this.password = password;
-	this.contact = contact;
-	this.joblist = joblist;
-}
 
 
+	public Employeer(String employeerName, String email, String password) {
+		super();
+		this.employeerName = employeerName;
+		this.email = email;
+		this.password = password;
+	}
 
 
 

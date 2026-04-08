@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jobBordaApp.JobBoardApp.entity.User;
-import com.jobBordaApp.JobBoardApp.entity.UserResume;
-import com.jobBordaApp.JobBoardApp.repository.UserRepo;
-import com.jobBordaApp.JobBoardApp.repository.UserResumeReop;
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
+import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
+import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateResumeReop;
 
 
 
@@ -30,23 +30,26 @@ public class FileService {
     private String uploadDir;
 
     @Autowired
-    private UserRepo userRepo;
+    private CandidateRepo userRepo;
 
     @Autowired
-    private UserResumeReop userResumeRepo;
+    private CandidateResumeReop userResumeRepo;
     
     
 //=======================================Upload User Resume=======================================\
     
-    public String uploadOrUpdateResume(Integer userId, MultipartFile file) throws IOException {
+    public int uploadOrUpdateResume(Integer userId, MultipartFile file) throws IOException {
+    	
+    	
+    	int resumeid=-1;
 
 
         // 1. Get user
-        User user = userRepo.findById(userId)
+    	Candidate candidate = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 2. Check if resume already exists
-        Optional<UserResume> existingResumeOpt = userResumeRepo.findByUser(user);
+        Optional<CandidateResume> existingResumeOpt = userResumeRepo.findByCandidate(candidate);
 
         // 3. Create directory if not exists
         File dir = new File(uploadDir);
@@ -59,7 +62,7 @@ public class FileService {
 
         // 4. If exists → delete old file
         if (existingResumeOpt.isPresent()) {
-            UserResume existingResume = existingResumeOpt.get();
+            CandidateResume existingResume = existingResumeOpt.get();
 
             File oldFile = new File(existingResume.getPath());
             if (oldFile.exists()) {
@@ -69,17 +72,21 @@ public class FileService {
             // update path
             existingResume.setPath(filePath);
             userResumeRepo.save(existingResume);
+            resumeid= existingResume.getResumeId(); 
 
         } else {
             // 5. If not exists → create new entry
-            UserResume newResume = new UserResume(user, filePath);
+            CandidateResume newResume = new CandidateResume(candidate, filePath);
             userResumeRepo.save(newResume);
+            resumeid= newResume.getResumeId(); 
         }
 
         // 6. Save new file
         file.transferTo(new File(filePath));
+        
+        return resumeid;
 
-        return filePath;  // ✅ return path
+//        return filePath;  // ✅ return path
     }
     
     
@@ -87,9 +94,9 @@ public class FileService {
     
 //=======================================Get User Resume=======================================
     
-    public ResponseEntity<Resource> getResume(@PathVariable Integer userId) throws IOException {
+    public ResponseEntity<Resource> getResume(@PathVariable Integer Candidate_Id) throws IOException {
 
-        UserResume resume = userResumeRepo.findByUser_UserId(userId)
+        CandidateResume resume = userResumeRepo.findByCandidate_CandidateId(Candidate_Id)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
 
         File file = new File(resume.getPath());
