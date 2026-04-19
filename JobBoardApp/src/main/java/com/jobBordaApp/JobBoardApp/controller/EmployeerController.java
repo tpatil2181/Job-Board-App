@@ -86,36 +86,36 @@ public class EmployeerController {
 //==============Comapny  releted  CURD operations by company=================
 	
 	
-	@PostMapping("/register")
-	public String registerCompany(@RequestBody Employeer company) {
-		
-		Optional<Employeer> existingCompany= employeerRepo.findByEmail(company.getEmail());
-		if(existingCompany.isPresent()) {
-			throw new RuntimeException("Company already Register");
-		}
-		employeerRepo.save(company);
-		return "Company Registered Successfully";	
-		
-	}
+//	@PostMapping("/register")
+//	public String registerCompany(@RequestBody Employeer company) {
+//		
+//		Optional<Employeer> existingCompany= employeerRepo.findByEmail(company.getEmail());
+//		if(existingCompany.isPresent()) {
+//			throw new RuntimeException("Company already Register");
+//		}
+//		employeerRepo.save(company);
+//		return "Company Registered Successfully";	
+//		
+//	}
+//	
+//	@PostMapping("/login")
+//	public String companyLogin(@RequestBody LoginDTO request  ) {
+//		
+//		Employeer company = employeerRepo.findByEmail(request.getEmail())
+//	                .orElseThrow(() -> new RuntimeException("Company not found"));
+//
+//	        if (!company.getPassword().equals(request.getPassword())) {
+//	            throw new ResourceNotFoundException( "Invalid password");
+//	        }
+//			return "Company login successfully";
+//	}
 	
-	@PostMapping("/login")
-	public String companyLogin(@RequestBody LoginDTO request  ) {
-		
-		Employeer company = employeerRepo.findByEmail(request.getEmail())
-	                .orElseThrow(() -> new RuntimeException("Company not found"));
-
-	        if (!company.getPassword().equals(request.getPassword())) {
-	            throw new ResourceNotFoundException( "Invalid password");
-	        }
-			return "Company login successfully";
-	}
 	
-	
-	@GetMapping("/company/{employeerId}")
-	public Employeer getCompanyProfile(@PathVariable int companyId) {
-		Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
-		return company;
-	}
+//	@GetMapping("/company/{employeerId}")
+//	public Employeer getCompanyProfile(@PathVariable int companyId) {
+//		Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
+//		return company;
+//	}
 	
 	@PutMapping("/company/{employeerId}")
 	public String updateCompanyProfile(@PathVariable int companyId, @RequestBody Employeer updatedComapny) {
@@ -193,8 +193,8 @@ public class EmployeerController {
 		
 		Job existingJob = jobRepo.findById(updatedJob.getJobId()).orElseThrow();
 		// Update fields
-		existingJob.setJob_title(updatedJob.getJob_title());
-		existingJob.setJob_discription(updatedJob.getJob_discription());
+		existingJob.setJobTitle(updatedJob.getJobTitle());
+		existingJob.setJobDescription(updatedJob.getJobDescription());
 		existingJob.setStatus(updatedJob.getStatus());
 	    jobRepo.save(updatedJob);
 	    return "Job updated successfully";	

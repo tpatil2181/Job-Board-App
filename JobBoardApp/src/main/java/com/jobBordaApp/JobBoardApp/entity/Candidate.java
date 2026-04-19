@@ -1,6 +1,7 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -21,30 +24,52 @@ public class Candidate {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	Integer candidateId;
 	@Column(name="first_name")
-	String first_name;
+	String firstName;
+	
 	@Column(name="last_name")
-	String last_name;
+	String lastName;
+	
+	@Column(name="cand_title")
+	String candidateTitle;
+	
+	@Column(name="about")
+	String candidateAbout;
+	
 	@Column(name="mobile_no")
 	String mobNo;
+	
 	@Column(name="email", unique=true)
 	String email;
+	
 	@Column(name="password")
 	String password;
+	
 	@Column(name="education")
 	String education;
+	
+//	@Column(name="experience")
+//	String CandidateExperience experience;
+//	@Column(name="candidate_profile_image_id")
+//	String CandidatProfileImage;
 	@OneToOne
 	@JoinColumn(name = "resume_id")
-	private CandidateResume resume;   // reference to Candidate table
-	@Column(name="skills")
-	String skills;
+	private CandidateResume resume;  // reference to Candidate table
 	
-//	@Column(name="address")
-//	String address;
-//	@Column(name="no_of_bookings")
-//	Integer no_of_bookings=0;
-//	@Column(name="user_bookings")
-//	@OneToMany(targetEntity=Booking.class)
-//	List<Booking> user_bookings;
+	@OneToOne
+	@JoinColumn(name = "cand_image_id")
+	private CandidateImage image;
+	
+	@ManyToMany
+	@JoinTable(
+	    name = "candidate_skills",
+	    joinColumns = @JoinColumn(name = "candidateId"),
+	    inverseJoinColumns = @JoinColumn(name = "skill_id")
+	)
+	private List<Skill> skills;
+	
+	@Column(name="is_active")
+	Boolean isActive;
+	
 	@Column(name="create_date")
 	Date createdate;
 	
@@ -54,34 +79,15 @@ public class Candidate {
 	
 
 
-	public Candidate(String first_name, String last_name, String mobNo, String email, String password) {
+	public Candidate(String firstName, String lastName, String mobNo, String email, String password) {
 		super();
-		this.first_name = first_name;
-		this.last_name = last_name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.mobNo = mobNo;
 		this.email = email;
 		this.password = password;
 	}
-	
-	
 
-//	public Candidate(Integer userId, String first_name, String last_name, String mobNo, String email, String password,
-//			String education, String skills, Date createdate) {
-//		super();
-//		this.userId = userId;
-//		this.first_name = first_name;
-//		this.last_name = last_name;
-//		this.mobNo = mobNo;
-//		this.email = email;
-//		this.password = password;
-//		this.education = education;
-//		this.skills = skills;
-//		this.createdate = createdate;
-//	}
-
-
-	
-	
 
 
 	public Integer getCandidateId() {
@@ -96,26 +102,50 @@ public class Candidate {
 
 
 
-	public String getFirst_name() {
-		return first_name;
+	public String getFirstName() {
+		return firstName;
 	}
 
 
 
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 
 
-	public String getLast_name() {
-		return last_name;
+	public String getLastName() {
+		return lastName;
 	}
 
 
 
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+
+	public String getCandidateTitle() {
+		return candidateTitle;
+	}
+
+
+
+	public void setCandidateTitle(String candidateTitle) {
+		this.candidateTitle = candidateTitle;
+	}
+
+
+
+	public String getCandidateAbout() {
+		return candidateAbout;
+	}
+
+
+
+	public void setCandidateAbout(String candidateAbout) {
+		this.candidateAbout = candidateAbout;
 	}
 
 
@@ -168,14 +198,50 @@ public class Candidate {
 
 
 
-	public String getSkills() {
+	public CandidateResume getResume() {
+		return resume;
+	}
+
+
+
+	public void setResume(CandidateResume resume) {
+		this.resume = resume;
+	}
+
+
+
+	public CandidateImage getImage() {
+		return image;
+	}
+
+
+
+	public void setImage(CandidateImage image) {
+		this.image = image;
+	}
+
+
+
+	public List<Skill> getSkills() {
 		return skills;
 	}
 
 
 
-	public void setSkills(String skills) {
+	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
+	}
+
+
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 
@@ -189,28 +255,24 @@ public class Candidate {
 	public void setCreatedate(Date createdate) {
 		this.createdate = createdate;
 	}
-
-
-
-	public CandidateResume getResume() {
-		return resume;
-	}
-
-
-
-	public void setResume(CandidateResume resume) {
-		this.resume = resume;
-	}
-
-
-
 	
 	
-	
-	
-	
-	
-	
+
+//	public Candidate(Integer userId, String first_name, String last_name, String mobNo, String email, String password,
+//			String education, String skills, Date createdate) {
+//		super();
+//		this.userId = userId;
+//		this.first_name = first_name;
+//		this.last_name = last_name;
+//		this.mobNo = mobNo;
+//		this.email = email;
+//		this.password = password;
+//		this.education = education;
+//		this.skills = skills;
+//		this.createdate = createdate;
+//	}
+
+
 	
 	
 	

@@ -2,9 +2,11 @@ package com.jobBordaApp.JobBoardApp.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
+import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.RecordAvailableException;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
@@ -45,8 +50,154 @@ public class AppController {
 	@Autowired
 	private ApplyJobRepo applicationRepo;
 	
-	 @Autowired
-	 private FileService fileService;
+	@Autowired
+	private FileService fileService;
+	 
+	 
+	@Autowired
+	private ApplyJobRepo applyJobRepo;
+	 
+	 
+	 
+	 
+	 
+//===========================Candidate Specific service ==========================================
+	 
+		@PostMapping("/register")
+		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
+			
+			Optional<Candidate> existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
+			if(existingCandidate.isPresent()) {
+				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
+				}
+				candidateRepo.save(newCandidate);	
+			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
+		}
+		
+		
+		
+	@PostMapping("/login")
+	public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
+
+			Candidate candidate = candidateRepo.findByEmail(request.getEmail())
+	                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+				if (!candidate.getPassword().equals(request.getPassword())) {
+						return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
+					}
+				 	CandidateDTO dto = new CandidateDTO();
+					    dto.setFirst_name(candidate.getFirstName());
+					    dto.setLast_name(candidate.getLastName());
+					    dto.setMobNo(candidate.getMobNo());
+					    dto.setEmail(candidate.getEmail());
+					    dto.setEducation(candidate.getEducation());
+					    dto.setResumeId(candidate.getResume().getResumeId());
+//					    dto.setSkills(candidate.getSkills());
+		
+		
+				    return ResponseEntity.ok(dto);
+		//	        return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
+		}
+	
+	@GetMapping("/candidate/{email}")
+	public ResponseEntity<?> getCandidate(@PathVariable String email) {
+
+		    Optional<Candidate> existingCandidate = candidateRepo.findByEmail(email);
+		    
+		    if (existingCandidate.isEmpty()) {
+		        return ResponseEntity
+		                .status(HttpStatus.NOT_FOUND)
+		                .body("Candidate not found");
+		    }
+		    
+		    Candidate candidate = existingCandidate.get();
+		    CandidateDTO dto = new CandidateDTO();
+		    
+	//	    dto.setCandidateId(candidate.getCandidateId());
+		    dto.setFirst_name(candidate.getFirstName());
+		    dto.setLast_name(candidate.getLastName());
+		    dto.setMobNo(candidate.getMobNo());
+		    dto.setEmail(candidate.getEmail());
+		    dto.setEducation(candidate.getEducation());
+	//	    dto.setResume(candidate.getResume());
+//		    dto.setSkills(candidate.getSkills());
+	
+	
+		    return ResponseEntity.ok(dto);
+	}
+	
+	 
+//===========================Candidate Specific service End ==========================================
+	 @GetMapping("resume/{resumeId}")
+		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+				return fileService.getResume(resumeId);
+		}
+	    
+		@GetMapping("candidate/{id}/applications")
+		public List<ApplyJob> getAllApplicationOfPerticularCandidate(@PathVariable Integer candidateId) {
+			
+			List<ApplyJob> allApplications= applyJobRepo.findAllApplicationsByCandidateId(candidateId);
+			if(allApplications.isEmpty()) {
+				throw new ResourceNotFoundException("Not appied for any job");
+			}
+			return allApplications;
+		}
+		
+		
+		
+		
+		
+//===========================Company Specific service =========================================		
+		
+		@PostMapping("/comnpany-register")
+		public String registerCompany(@RequestBody Employeer company) {
+			
+			Optional<Employeer> existingCompany= employeerRepo.findByEmail(company.getEmail());
+			if(existingCompany.isPresent()) {
+				throw new RuntimeException("Company already Register");
+			}
+			employeerRepo.save(company);
+			return "Company Registered Successfully";	
+			
+		}
+		
+		@PostMapping("/company-login")
+		public String companyLogin(@RequestBody LoginDTO request  ) {
+			
+			Employeer company = employeerRepo.findByEmail(request.getEmail())
+		                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+		        if (!company.getPassword().equals(request.getPassword())) {
+		            throw new ResourceNotFoundException( "Invalid password");
+		        }
+				return "Company login successfully";
+		}
+		
+		@GetMapping("/company/{employeerId}")
+		public Employeer getCompanyProfile(@PathVariable int companyId) {
+			Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
+			return company;
+		}
+		
+		
+		
+//===========================Company Specific service End =========================================
+		
+		
+//===========================Job Specific service  =========================================
+		
+
+		
+		
+		
+		
+		
+		
+		
+//===========================Job Specific service End =========================================
+	 
+	 
+//============================================================================= 
 	
 //		{
 //		  "employeerName":"Vikram",
@@ -119,7 +270,7 @@ public class AppController {
 		
 	}
 	
-	
+	//This service should only for user
 	@GetMapping("allAppliedJob/{candidateId}")
 	public List<ApplyJob> getListOfAllJobdAppliedByCandidate(@PathVariable Integer candidateId){
 		

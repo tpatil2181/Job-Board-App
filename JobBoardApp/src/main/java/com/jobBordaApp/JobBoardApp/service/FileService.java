@@ -94,9 +94,9 @@ public class FileService {
     
 //=======================================Get User Resume=======================================
     
-    public ResponseEntity<Resource> getResume(@PathVariable Integer Candidate_Id) throws IOException {
+    public ResponseEntity<Resource> getResume(@PathVariable Integer resumeId) throws IOException {
 
-        CandidateResume resume = userResumeRepo.findByCandidate_CandidateId(Candidate_Id)
+        CandidateResume resume = userResumeRepo.findById(resumeId)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
 
         File file = new File(resume.getPath());

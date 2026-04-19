@@ -10,13 +10,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="candidate_resume")
-public class CandidateResume {
-	
+@Table(name="candidate_image")
+public class CandidateImage {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer resumeId;
+    private Integer candImgId;
     @ManyToOne
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;   // reference to Candidate table
@@ -26,43 +26,87 @@ public class CandidateResume {
     private String path;     // reference to Job table
 
 	
-	public CandidateResume() {
+	public CandidateImage() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CandidateResume( Candidate candidate, String path) {
+	
+
+	
+	
+	
+	
+	public CandidateImage(Candidate candidate, String path) {
 		super();
 		this.candidate = candidate;
 		this.path = path;
 	}
 
-	
-	
-	
-	
-	public Integer getResumeId() {
-		return resumeId;
+
+
+
+
+
+
+	public Integer getCandImgId() {
+		return candImgId;
 	}
 
-	public void setResumeId(Integer resumeId) {
-		this.resumeId = resumeId;
+
+
+
+
+
+
+	public void setCandImgId(Integer candImgId) {
+		this.candImgId = candImgId;
 	}
+
+
+
+
+
+
 
 	public Candidate getCandidate() {
 		return candidate;
 	}
 
+
+
+
+
+
+
 	public void setCandidate(Candidate candidate) {
 		this.candidate = candidate;
 	}
+
+
+
+
+
+
 
 	public String getPath() {
 		return path;
 	}
 
+
+
+
+
+
+
 	public void setPath(String path) {
 		this.path = path;
 	}
+
+
+
+
+
+
 
 
 }
