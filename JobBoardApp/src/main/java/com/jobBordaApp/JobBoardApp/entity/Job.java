@@ -19,7 +19,22 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name="job")
 public class Job {
@@ -95,215 +110,4 @@ public class Job {
 	
 	
 	
-
-	
-	
-	public Job() {
-		// TODO Auto-generated constructor stub
-	}
-
-
-
-
-	public Job(String jobTitle, Employeer employer, WorkMode workMode, String jobLocation, Integer minExperience,
-			Integer maxExperience, Integer minSalary, Integer maxSalary, String jobDescription, String role,
-			String employmentType, String industryType, String educations, List<Skill> skills) {
-		super();
-		this.jobTitle = jobTitle;
-		this.employer = employer;
-		this.workMode = workMode;
-		this.jobLocation = jobLocation;
-		this.minExperience = minExperience;
-		this.maxExperience = maxExperience;
-		this.minSalary = minSalary;
-		this.maxSalary = maxSalary;
-		this.jobDescription = jobDescription;
-		this.role = role;
-		this.employmentType = employmentType;
-		this.industryType = industryType;
-		this.educations = educations;
-		this.skills = skills;
-	}
-	
-	
-	
-	
-
-	public Integer getJobId() {
-		return jobId;
-	}
-
-	public void setJobId(Integer jobId) {
-		this.jobId = jobId;
-	}
-
-	public String getJobTitle() {
-		return jobTitle;
-	}
-
-	public void setJobTitle(String jobTitle) {
-		this.jobTitle = jobTitle;
-	}
-
-	public Employeer getEmployer() {
-		return employer;
-	}
-
-	public void setEmployer(Employeer employer) {
-		this.employer = employer;
-	}
-
-	public WorkMode getWorkMode() {
-		return workMode;
-	}
-
-	public void setWorkMode(WorkMode workMode) {
-		this.workMode = workMode;
-	}
-
-	public String getJobLocation() {
-		return jobLocation;
-	}
-
-	public void setJobLocation(String jobLocation) {
-		this.jobLocation = jobLocation;
-	}
-
-	public Integer getMinExperience() {
-		return minExperience;
-	}
-
-	public void setMinExperience(Integer minExperience) {
-		this.minExperience = minExperience;
-	}
-
-	public Integer getMaxExperience() {
-		return maxExperience;
-	}
-
-	public void setMaxExperience(Integer maxExperience) {
-		this.maxExperience = maxExperience;
-	}
-
-	public Integer getMinSalary() {
-		return minSalary;
-	}
-
-	public void setMinSalary(Integer minSalary) {
-		this.minSalary = minSalary;
-	}
-
-	public Integer getMaxSalary() {
-		return maxSalary;
-	}
-	
-	public void setMaxSalary(Integer maxSalary) {
-		this.maxSalary = maxSalary;
-	}
-
-	public Integer getNoOfOpenings() {
-		return noOfOpenings;
-	}
-
-	public void setNoOfOpenings(Integer noOfOpenings) {
-		this.noOfOpenings = noOfOpenings;
-	}
-
-	public String getJobDescription() {
-		return jobDescription;
-	}
-
-	public void setJobDescription(String jobDescription) {
-		this.jobDescription = jobDescription;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public String getEmploymentType() {
-		return employmentType;
-	}
-
-	public void setEmploymentType(String employmentType) {
-		this.employmentType = employmentType;
-	}
-
-	public String getIndustryType() {
-		return industryType;
-	}
-
-	public void setIndustryType(String industryType) {
-		this.industryType = industryType;
-	}
-	
-	public String getEducations() {
-		return educations;
-	}
-
-	public void setEducations(String educations) {
-		this.educations = educations;
-	}
-
-	public List<Skill> getSkills() {
-		return skills;
-	}
-
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-
-	public JobStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(JobStatus status) {
-		this.status = status;
-	}
-
-	public LocalDateTime getDatePosted() {
-		return datePosted;
-	}
-	
-	public void setDatePosted(LocalDateTime datePosted) {
-		this.datePosted = datePosted;
-	}
-	
-	
-	
-	
-	
-	
-	
-//	In jobCandidatecompany table add two more fields  applystatus and BookmarkStatus
-	
-//	public Job() {
-//		// TODO Auto-generated constructor stub
-//	}
-//	
-//
-//	public Job(Employeer employer, String job_title) {
-//	super();
-//	this.employer = employer;
-//	this.jobTitle = job_title;
-//}
-
-
-//	show tables
-//
-//	select * from candidate
-//
-//	select * from employeer
-//
-//	select * from job
-//
-//	select * from apply_job
-//
-//	select * from candidate_resume
-
-
 }

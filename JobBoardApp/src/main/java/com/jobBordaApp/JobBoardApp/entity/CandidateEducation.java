@@ -1,6 +1,7 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,27 +27,30 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 @Entity
-@Table(name="candidate_exp")
-public class CandidateExperience {
+@Table(name="cndidate_education")
+public class CandidateEducation {
 	
-	@Id()
-	@GeneratedValue(strategy= GenerationType.AUTO)
-	Integer candExpId;
-	@ManyToOne
-    @JoinColumn(name = "candidate_id")
-	private Candidate candidate;   // reference to Candidate table
 
-	@Column(name="company_name")
-	String companyName;
-	@Column(name="job_title")
-	String jobTitle;
-	@Column(name="joining_date")
-	Date joiningDate;
-	@Column(name="ending_date")
-	Date endingDate;
-	@Column(name="is_current_company")
-	Boolean isCurrentCompanny; 
-	@Column(name="about_job")
-	String aboutJobProfile;
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Integer educationId;
+
+	    @Column(name="degree")
+	    private String degree;
+	    @Column(name="college")
+	    private String college;
+	    @Column(name="start_year")
+	    private String startYear;
+	    @Column(name="end_year")
+	    private String endYear;
+	    @Column(name="percentage")
+	    private Double percentage;
+
+	    @ManyToOne
+	    @JoinColumn(name = "candidate_id")
+	    private Candidate candidate;
+	    
+	  	    
 	
+
 }

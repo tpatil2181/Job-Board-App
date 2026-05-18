@@ -6,7 +6,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name="Employeer")
 public class Employeer {
@@ -37,23 +51,6 @@ public class Employeer {
 //		  "joblist":"L"
 //	}	
 	
-	public Employeer() {
-		// TODO Auto-generated constructor stub
-	}
-
-	
-	
-
-
-//	public Employeer(String employeerName, String website, String email, String password, String contact, String joblist) {
-//		super();
-//		this.employeerName = employeerName;
-//		this.website = website;
-//		this.email = email;
-//		this.password = password;
-//		this.contact = contact;
-//		this.joblist = joblist;
-//	}
 
 
 
@@ -64,92 +61,5 @@ public class Employeer {
 		this.email = email;
 		this.password = password;
 	}
-
-
-
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-
-
-
-
-	public int getEmployeerId() {
-		return employeerId;
-	}
-
-
-	public void setEmployeerId(int employeerId) {
-		this.employeerId = employeerId;
-	}
-
-
-	public String getEmployeerName() {
-		return employeerName;
-	}
-
-
-	public void setEmployeerName(String employeerName) {
-		this.employeerName = employeerName;
-	}
-
-
-	public String getWebsite() {
-		return website;
-	}
-
-
-	public void setWebsite(String website) {
-		this.website = website;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getContact() {
-		return contact;
-	}
-
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-
-	public String getJoblist() {
-		return joblist;
-	}
-
-
-	public void setJoblist(String joblist) {
-		this.joblist = joblist;
-	}
-	
-	
-	
-	
-	
-	
-	
 
 }

@@ -8,7 +8,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name="candidate_image")
 public class CandidateImage {
@@ -24,89 +39,5 @@ public class CandidateImage {
 
 	@Column(name="file_path")
     private String path;     // reference to Job table
-
-	
-	public CandidateImage() {
-		// TODO Auto-generated constructor stub
-	}
-
-	
-
-	
-	
-	
-	
-	public CandidateImage(Candidate candidate, String path) {
-		super();
-		this.candidate = candidate;
-		this.path = path;
-	}
-
-
-
-
-
-
-
-	public Integer getCandImgId() {
-		return candImgId;
-	}
-
-
-
-
-
-
-
-	public void setCandImgId(Integer candImgId) {
-		this.candImgId = candImgId;
-	}
-
-
-
-
-
-
-
-	public Candidate getCandidate() {
-		return candidate;
-	}
-
-
-
-
-
-
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-
-
-
-
-
-
-	public String getPath() {
-		return path;
-	}
-
-
-
-
-
-
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-
-
-
-
-
-
 
 }

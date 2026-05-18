@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.RecordAvailableException;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
@@ -56,8 +58,15 @@ public class AppController {
 	 
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
+	
+	
+	@Autowired
+	private CandidateMapper candidateMapper;
 	 
-	 
+@GetMapping("/test")
+public String test() {
+	return "Job board app run successfully";
+}
 	 
 	 
 	 
@@ -78,6 +87,8 @@ public class AppController {
 		
 	@PostMapping("/login")
 	public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
+		
+//		 CandidateMapper candidateMapper = Mappers.getMapper(CandidateMapper.class);
 
 			Candidate candidate = candidateRepo.findByEmail(request.getEmail())
 	                .orElseThrow(() -> new RuntimeException("Candidate not found"));
@@ -85,17 +96,10 @@ public class AppController {
 				if (!candidate.getPassword().equals(request.getPassword())) {
 						return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
 					}
-				 	CandidateDTO dto = new CandidateDTO();
-					    dto.setFirst_name(candidate.getFirstName());
-					    dto.setLast_name(candidate.getLastName());
-					    dto.setMobNo(candidate.getMobNo());
-					    dto.setEmail(candidate.getEmail());
-					    dto.setEducation(candidate.getEducation());
-					    dto.setResumeId(candidate.getResume().getResumeId());
-//					    dto.setSkills(candidate.getSkills());
-		
-		
-				    return ResponseEntity.ok(dto);
+				
+				
+				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
+				    return ResponseEntity.ok(candidateDto);
 		//	        return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
 		}
 	
@@ -114,11 +118,11 @@ public class AppController {
 		    CandidateDTO dto = new CandidateDTO();
 		    
 	//	    dto.setCandidateId(candidate.getCandidateId());
-		    dto.setFirst_name(candidate.getFirstName());
-		    dto.setLast_name(candidate.getLastName());
-		    dto.setMobNo(candidate.getMobNo());
-		    dto.setEmail(candidate.getEmail());
-		    dto.setEducation(candidate.getEducation());
+//		    dto.setFirst_name(candidate.getFirstName());
+//		    dto.setLast_name(candidate.getLastName());
+//		    dto.setMobNo(candidate.getMobNo());
+//		    dto.setEmail(candidate.getEmail());
+//		    dto.setEducation(candidate.getEducation());
 	//	    dto.setResume(candidate.getResume());
 //		    dto.setSkills(candidate.getSkills());
 	

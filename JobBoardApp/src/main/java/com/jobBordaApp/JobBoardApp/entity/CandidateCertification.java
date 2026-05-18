@@ -1,10 +1,16 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
+import java.util.Date;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,13 +28,20 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 @Entity
-public class Skill {
+@Table(name="cndidate_certification")
+public class CandidateCertification {
+	
+		@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Integer certificationId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer skillId;
-
-    @Column(name="skill_name")
-    private String skillName;
+	    @Column(name="certifacte_Name")
+	    private String certificateName;
+	    
+	    @ManyToOne
+	    @JoinColumn(name = "candidate_id")
+	    private Candidate candidate;
+	       
+	    
 
 }

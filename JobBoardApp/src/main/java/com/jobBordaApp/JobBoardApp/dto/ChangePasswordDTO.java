@@ -1,42 +1,25 @@
 package com.jobBordaApp.JobBoardApp.dto;
 
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
+import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
 public class ChangePasswordDTO {
 	private String currentPass;
 	private String newPass;
 	
-	
-	public ChangePasswordDTO() {
-		// TODO Auto-generated constructor stub
 	}
-
-
-	public ChangePasswordDTO(String currentPass, String newPass) {
-		super();
-		this.currentPass = currentPass;
-		this.newPass = newPass;
-	}
-
-
-	public String getCurrentPass() {
-		return currentPass;
-	}
-
-
-	public void setCurrentPass(String currentPass) {
-		this.currentPass = currentPass;
-	}
-
-
-	public String getNewPass() {
-		return newPass;
-	}
-
-
-	public void setNewPass(String newPass) {
-		this.newPass = newPass;
-	}
-	
-	
-	
-
-}

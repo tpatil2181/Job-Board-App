@@ -18,6 +18,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class JobDTO {
+public class CandidateCertificationDTO {
 
 }

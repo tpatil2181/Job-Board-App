@@ -1,44 +1,28 @@
 package com.jobBordaApp.JobBoardApp.dto;
 
+import com.jobBordaApp.JobBoardApp.entity.Candidate;
+import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
 
 public class LoginDTO {
 	private String email;
     private String password;
     
-    
-    public LoginDTO() {
-		// TODO Auto-generated constructor stub
-	}
-
-
-	public LoginDTO(String email, String password) {
-		super();
-		this.email = email;
-		this.password = password;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	
     
 }
 

@@ -90,7 +90,7 @@ public class CandidateController {
 	    existingCandidate.setMobNo(updatedCandidate.getMobNo());
 	    existingCandidate.setEmail(updatedCandidate.getEmail());
 	    existingCandidate.setPassword(updatedCandidate.getPassword());
-	    existingCandidate.setEducation(updatedCandidate.getEducation());
+//	    existingCandidate.setEducation(updatedCandidate.getEducation());
 	    existingCandidate.setSkills(updatedCandidate.getSkills());
 	    
 	    candidateRepo.save(existingCandidate);
@@ -149,8 +149,8 @@ public class CandidateController {
 	    if (updatedCandidate.getPassword() != null)
 	        existingCandidate.setPassword(updatedCandidate.getPassword());
 
-	    if (updatedCandidate.getEducation() != null)
-	        existingCandidate.setEducation(updatedCandidate.getEducation());
+//	    if (updatedCandidate.getEducation() != null)
+//	        existingCandidate.setEducation(updatedCandidate.getEducation());
 
 	    if (updatedCandidate.getSkills() != null)
 	        existingCandidate.setSkills(updatedCandidate.getSkills());
