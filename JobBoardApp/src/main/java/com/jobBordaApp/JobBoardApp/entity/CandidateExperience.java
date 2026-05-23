@@ -23,8 +23,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Builder
 @Entity
 @Table(name="candidate_exp")

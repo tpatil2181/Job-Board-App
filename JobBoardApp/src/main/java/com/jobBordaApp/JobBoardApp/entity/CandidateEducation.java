@@ -3,6 +3,8 @@ package com.jobBordaApp.JobBoardApp.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,38 +21,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Builder
 @Entity
-@Table(name="cndidate_education")
+@Table(name="candidate_education")
 public class CandidateEducation {
-	
 
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Integer educationId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer educationId;
+    
+    @Column(name="degree")
+    private String degree;
 
-	    @Column(name="degree")
-	    private String degree;
-	    @Column(name="college")
-	    private String college;
-	    @Column(name="start_year")
-	    private String startYear;
-	    @Column(name="end_year")
-	    private String endYear;
-	    @Column(name="percentage")
-	    private Double percentage;
+    @Column(name="college")
+    private String college;
 
-	    @ManyToOne
-	    @JoinColumn(name = "candidate_id")
-	    private Candidate candidate;
-	    
-	  	    
-	
+    @Column(name="start_yaer")
+    private String startYear;
 
+    @Column(name="end_year")
+    private String endYear;
+
+    @Column(name="percentage")
+    private Double percentage;
+
+    @ManyToOne
+    @JoinColumn(name = "candidate_id")
+//    @JsonIgnore
+    private Candidate candidate;
 }

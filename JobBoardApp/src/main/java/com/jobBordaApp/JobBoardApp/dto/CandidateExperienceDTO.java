@@ -1,23 +1,27 @@
 package com.jobBordaApp.JobBoardApp.dto;
 
-import com.jobBordaApp.JobBoardApp.entity.Candidate;
-import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CandidateExperienceDTO {
+
+	Integer candExpId;
+	private Integer candidateId; // reference to Candidate table
+	String companyName;
+	String jobTitle;
+	Date joiningDate;
+	Date endingDate;
+	Boolean isCurrentCompanny; 
+	String aboutJobProfile;
 
 }
