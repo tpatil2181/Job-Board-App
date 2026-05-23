@@ -17,17 +17,15 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 
 //Solve mapper implementation problem(Problem in pom.xm plugnin order of plugijn should be 1)Lombok 2)Lombok binding 3)MapStruct) and now implementation of mapper are generating and DTO getting in the postman
 @Mapper(
-	    componentModel = "spring",
-	    uses = {
-	        CandidateEducationMapper.class,
-	        CandidateExperienceMapper.class,
-	        CandidateCertificateMapper.class
-	    }
-	)
-	public interface CandidateMapper {
-	
-		@Mapping(source = "resume.resumeId", target = "resumeId")
+		componentModel = "spring", uses = {
+        CandidateEducationMapper.class,
+        CandidateExperienceMapper.class,
+        CandidateCertificateMapper.class
+})
+public interface CandidateMapper {
 
-	    CandidateDTO mapCandidateToCandidateDTO(Candidate candidate);
-
-	}
+    @Mapping(source = "resume.resumeId", target = "resumeId")
+    @Mapping(source = "image.imageId", target = "imageId")
+    @Mapping(source = "createdDate", target = "createdDate")
+    CandidateDTO mapCandidateToCandidateDTO(Candidate candidate);
+}

@@ -1,5 +1,6 @@
  package com.jobBordaApp.JobBoardApp.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class CandidateDTO {
 	Integer imageId;
 	List<Skill> skills;
 	Boolean isActive;
-	Date createdate;
+	LocalDateTime createdDate;
 	
 	
 }

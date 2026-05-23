@@ -31,7 +31,8 @@ public class CandidateImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer candImgId;
+    private Integer imageId;
+    
     @ManyToOne
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;   // reference to Candidate table

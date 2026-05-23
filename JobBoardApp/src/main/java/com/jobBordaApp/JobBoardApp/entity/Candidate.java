@@ -1,7 +1,10 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -91,11 +94,13 @@ public class Candidate {
 	)
 	private List<Skill> skills;
 	
+	@Builder.Default
 	@Column(name="is_active")
-	Boolean isActive;
+	private Boolean isActive = true;
 	
-	@Column(name="create_date")
-	Date createdate;
+	@CreationTimestamp
+	@Column(name = "create_date", updatable = false)
+	private LocalDateTime createdDate;
 	
 	
 }
