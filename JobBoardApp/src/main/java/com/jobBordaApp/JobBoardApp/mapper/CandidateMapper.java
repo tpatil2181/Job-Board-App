@@ -26,7 +26,7 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 	)
 	public interface CandidateMapper {
 	
-//		@Mapping(source = "CandidateResume.resumeId", target = "resumeId")
+		@Mapping(source = "resume.resumeId", target = "resumeId")
 
 	    CandidateDTO mapCandidateToCandidateDTO(Candidate candidate);
 

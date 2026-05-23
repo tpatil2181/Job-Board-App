@@ -42,7 +42,7 @@ public class CandidateDTO {
 	List<CandidateEducationDTO> educations;
     List<CandidateExperienceDTO> experiences;
     List<CandidateCertificationDTO> certifications;
-	Integer ResumeId;
+	Integer resumeId;
 	Integer imageId;
 	List<Skill> skills;
 	Boolean isActive;

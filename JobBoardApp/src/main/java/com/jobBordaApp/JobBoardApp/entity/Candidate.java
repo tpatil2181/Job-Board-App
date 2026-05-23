@@ -25,9 +25,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 
-//Token
-//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
-
 
 @Getter
 @Setter
