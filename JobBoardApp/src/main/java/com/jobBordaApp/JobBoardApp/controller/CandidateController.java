@@ -139,6 +139,12 @@ public class CandidateController {
 
 	    if (updatedCandidate.getLastName() != null)
 	        existingCandidate.setLastName(updatedCandidate.getLastName());
+	    
+	    if (updatedCandidate.getCandidateTitle() != null)
+	        existingCandidate.setCandidateTitle(updatedCandidate.getCandidateTitle());
+	    
+	    if (updatedCandidate.getCandidateAbout() != null)
+	        existingCandidate.setCandidateAbout(updatedCandidate.getCandidateAbout());
 
 	    if (updatedCandidate.getMobNo() != null)
 	        existingCandidate.setMobNo(updatedCandidate.getMobNo());

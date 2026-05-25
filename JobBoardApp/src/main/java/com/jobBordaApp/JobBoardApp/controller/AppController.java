@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +58,9 @@ public class AppController {
 	@Autowired
 	private FileService fileService;
 	 
+	
+
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 	 
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
@@ -75,46 +81,62 @@ public String test() {
 		@PostMapping("/register")
 		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
 			
-			Optional<Candidate> existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
-			if(existingCandidate.isPresent()) {
+			Candidate existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
+			if(existingCandidate!=null) {
 				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
 				}
+				newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
 				candidateRepo.save(newCandidate);	
 			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
 		}
 		
 		
 		
-	@PostMapping("/login")
-	public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
-		
-//		 CandidateMapper candidateMapper = Mappers.getMapper(CandidateMapper.class);
+//		Implemented Spring security and password encoder decoder and the following request by spring security and authent
+		@GetMapping("/profile")
+		public ResponseEntity<?> getProfile(Authentication authentication) {
 
-			Candidate candidate = candidateRepo.findByEmail(request.getEmail())
-	                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+		    String email = authentication.getName();
+		    Candidate candidate = candidateRepo.findByEmail(email);
+		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
 
-				if (!candidate.getPassword().equals(request.getPassword())) {
-						return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
-					}
-				
-				
-				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
-				    return ResponseEntity.ok(candidateDto);
-		//	        return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
+		    return ResponseEntity.ok(candidateDTO);
 		}
+		
+		
+		
+//	@PostMapping("/login")
+//	public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
+//		
+////		 CandidateMapper candidateMapper = Mappers.getMapper(CandidateMapper.class);
+//
+//			Candidate candidate = candidateRepo.findByEmail(request.getEmail());
+//			if(candidate==null) {
+//				new RuntimeException("Candidate not found");
+//			}
+//
+//				if (!candidate.getPassword().equals(request.getPassword())) {
+//						return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
+//					}
+//				
+//				
+//				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
+//				    return ResponseEntity.ok(candidateDto);
+//		//	        return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
+//		}
 	
 	@GetMapping("/candidate/{email}")
 	public ResponseEntity<?> getCandidate(@PathVariable String email) {
 
-		    Optional<Candidate> existingCandidate = candidateRepo.findByEmail(email);
+		    Candidate existingCandidate = candidateRepo.findByEmail(email);
 		    
-		    if (existingCandidate.isEmpty()) {
+		    if (existingCandidate==null) {
 		        return ResponseEntity
 		                .status(HttpStatus.NOT_FOUND)
 		                .body("Candidate not found");
 		    }
 		    
-		    Candidate candidate = existingCandidate.get();
+//		    Candidate candidate = existingCandidate();
 		    CandidateDTO dto = new CandidateDTO();
 		    
 	//	    dto.setCandidateId(candidate.getCandidateId());

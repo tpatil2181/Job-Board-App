@@ -12,7 +12,10 @@ import com.jobBordaApp.JobBoardApp.entity.Candidate;
 @Repository
 public interface CandidateRepo  extends JpaRepository<Candidate,Integer> {
 	
-	public Optional<Candidate> findByEmail(String email);
+//	public Optional<Candidate> findByEmail(String email);
+	public Candidate findByEmail(String email);
+	
+	public Candidate findByFirstName(String Name);
 	
 
 //	public User findByUsername(String username);

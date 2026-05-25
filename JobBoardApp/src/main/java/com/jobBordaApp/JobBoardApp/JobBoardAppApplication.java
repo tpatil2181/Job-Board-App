@@ -14,3 +14,4 @@ public class JobBoardAppApplication {
 
 //
 //If there is any problem with Mapper generation go the project folder open cd and hit following command  .\mvnw.cmd clean compile If new project .\mvnw.cmd clean Install and .\mvnw.cmd clean compile
+ 
