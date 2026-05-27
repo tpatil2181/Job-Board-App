@@ -70,7 +70,7 @@
 		    <version>1.5.5.Final</version>
 		    <scope>provided</scope>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -79,7 +79,19 @@
 				<artifactId>spring-boot-starter-security-test</artifactId>
 				<scope>test</scope>
 		</dependency>
-		<!-- -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.12.5</version>
+		    <scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.12.5</version>
+		    <scope>runtime</scope>
+		</dependency>
+		 -->
 	</dependencies>
 
 	<build>

@@ -10,8 +10,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +33,7 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
+import com.jobBordaApp.JobBoardApp.service.AppService;
 import com.jobBordaApp.JobBoardApp.service.FileService;
 
 import jakarta.annotation.Resource;
@@ -60,7 +61,7 @@ public class AppController {
 	 
 	
 
-	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+//	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); 
 	 
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
@@ -68,6 +69,11 @@ public class AppController {
 	
 	@Autowired
 	private CandidateMapper candidateMapper;
+	
+	
+	
+	@Autowired
+	private AppService appService;
 	 
 @GetMapping("/test")
 public String test() {
@@ -81,11 +87,12 @@ public String test() {
 		@PostMapping("/register")
 		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
 			
+			
 			Candidate existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
 			if(existingCandidate!=null) {
 				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
 				}
-				newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
+//				newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
 				candidateRepo.save(newCandidate);	
 			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
 		}
@@ -93,37 +100,25 @@ public String test() {
 		
 		
 //		Implemented Spring security and password encoder decoder and the following request by spring security and authent
-		@GetMapping("/profile")
-		public ResponseEntity<?> getProfile(Authentication authentication) {
-
-		    String email = authentication.getName();
-		    Candidate candidate = candidateRepo.findByEmail(email);
-		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
-
-		    return ResponseEntity.ok(candidateDTO);
-		}
-		
-		
-		
-//	@PostMapping("/login")
-//	public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
-//		
-////		 CandidateMapper candidateMapper = Mappers.getMapper(CandidateMapper.class);
+//		@GetMapping("/profile")
+//		public ResponseEntity<?> getProfile(Authentication authentication) {
 //
-//			Candidate candidate = candidateRepo.findByEmail(request.getEmail());
-//			if(candidate==null) {
-//				new RuntimeException("Candidate not found");
-//			}
+//		    String email = authentication.getName();
+//		    Candidate candidate = candidateRepo.findByEmail(email);
+//		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
 //
-//				if (!candidate.getPassword().equals(request.getPassword())) {
-//						return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
-//					}
-//				
-//				
-//				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
-//				    return ResponseEntity.ok(candidateDto);
-//		//	        return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
+//		    return ResponseEntity.ok(candidateDTO);
 //		}
+		
+		
+		
+	@PostMapping("/login")
+	public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
+		
+				return appService.candidateLogin(request);
+		}
+	
+//-------------------------------------------------------------------------
 	
 	@GetMapping("/candidate/{email}")
 	public ResponseEntity<?> getCandidate(@PathVariable String email) {
@@ -330,29 +325,31 @@ public String test() {
 //	}
 //	
 	@PostMapping("/applyJob")
-	public String applyJob(@RequestBody ApplyJob newApplication) {
-
-	    Integer candidateId = newApplication.getCandidate().getCandidateId();
-	    Integer jobId = newApplication.getJob().getJobId();
-
-	    Candidate candidate = candidateRepo.findById(candidateId)
-	            .orElseThrow(() -> new RuntimeException("Candidate not found"));
-
-	    Job job = jobRepo.findById(jobId)
-	            .orElseThrow(() -> new RuntimeException("Job not found"));
-	    
-	    Optional<ApplyJob> isApplied=applicationRepo.findByUserIdAndJobId(candidateId,jobId);
-	    
-	    if(isApplied.isPresent()) {
-	    	throw new RecordAvailableException("You have already applied for this job");
-	    }
-
-	    newApplication.setCandidate(candidate);  // ✅ managed entity
-	    newApplication.setJob(job);    // ✅ managed entity
-
-	    applicationRepo.save(newApplication);
-
-	    return "Applied Successfully";
+	public ResponseEntity<?> applyJob(@RequestBody ApplyJob newApplication) {
+		
+		return appService.JobApplication(newApplication);
+//
+//	    Integer candidateId = newApplication.getCandidate().getCandidateId();
+//	    Integer jobId = newApplication.getJob().getJobId();
+//
+//	    Candidate candidate = candidateRepo.findById(candidateId)
+//	            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+//
+//	    Job job = jobRepo.findById(jobId)
+//	            .orElseThrow(() -> new RuntimeException("Job not found"));
+//	    
+//	    Optional<ApplyJob> isApplied=applicationRepo.findByUserIdAndJobId(candidateId,jobId);
+//	    
+//	    if(isApplied.isPresent()) {
+//	    	throw new RecordAvailableException("You have already applied for this job");
+//	    }
+//
+//	    newApplication.setCandidate(candidate);  // ✅ managed entity
+//	    newApplication.setJob(job);    // ✅ managed entity
+//
+//	    applicationRepo.save(newApplication);
+//
+//	    return "Applied Successfully";
 	}
 	
 //Ambiguty error comming for this methode for same name get resume	

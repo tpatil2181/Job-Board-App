@@ -26,14 +26,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="cndidate_certification")
+@Table(name="candidate_certification")
 public class CandidateCertification {
 	
 		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Integer certificationId;
 
-	    @Column(name="certifacte_Name")
+	    @Column(name="certifacte_name")
 	    private String certificateName;
 	    
 	    @ManyToOne

@@ -23,14 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateEducationDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
+import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
+import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
+import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateCertificationsRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateEducationRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateExperienceRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
@@ -59,6 +66,19 @@ public class CandidateController {
 	
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
+
+	@Autowired
+	private CandidateEducationRepo candidateEducationRepo;
+	
+	@Autowired
+	private CandidateCertificationsRepo candidateCertificationRepo;
+	
+	
+	@Autowired
+	private CandidateExperienceRepo candidateExperienceRepo;
+	
+	
+	
 	
 	
 	
@@ -164,6 +184,7 @@ public class CandidateController {
 	    return candidateRepo.save(existingCandidate);
 	}
 	
+	
 
 
 	    @PostMapping("/uploadResume/{candidateId}")
@@ -187,7 +208,120 @@ public class CandidateController {
 	        }
 	    }
 	    
-	    
+	
+//================================Candidate education========================================
+		@PostMapping("/candidate/{candidateId}/education")
+		public ResponseEntity<?> addEducation( @PathVariable Integer candidateId, @RequestBody CandidateEducation education) {
+
+		    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
+		    education.setCandidate(candidate);
+		    candidateEducationRepo.save(education);
+		    return ResponseEntity.ok("Education Added");
+		}
+		
+		
+		
+//		 public CandidateEducationDTO updateEducation(Integer educationId,CandidateEducationDTO dto) {
+//
+//		        CandidateEducation education =candidateEducationRepo.findById(educationId).orElseThrow(() ->new RuntimeException("Education not found"));
+//
+//		        // Partial Update
+//		        if(dto.getDegree() != null) {
+//		            education.setDegree(dto.getDegree());
+//		        }
+//
+//		        if(dto.getCollege() != null) {
+//		            education.setCollege(dto.getCollege());
+//		        }
+////
+////		        if(dto.getFieldOfStudy() != null) {
+////		            education.setFieldOfStudy(
+////		                    dto.getFieldOfStudy());
+////		        }
+//
+//		        if(dto.getStartYear() != null) {
+//		            education.setStartYear(dto.getStartYear());
+//		        }
+//
+//		        if(dto.getEndYear() != null) {
+//		            education.setEndYear(dto.getEndYear());
+//		        }
+//
+//		        CandidateEducation savedEducation =candidateEducationRepo.save(education);
+//
+//		        return educationMapper.map(savedEducation);
+//		    }
+//		}
+		
+		
+		
+//================================Candidate education End End========================================
+	
+		
+//================================Certification========================================
+				@PostMapping("/candidate/{candidateId}/certification")
+				public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
+
+				    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
+				    certification.setCandidate(candidate);
+				    candidateCertificationRepo.save(certification);
+				    return ResponseEntity.ok("Certification Added");
+				}
+				
+				
+				
+//				 public CandidateEducationDTO updateEducation(Integer educationId,CandidateEducationDTO dto) {
+		//
+//				        CandidateEducation education =candidateEducationRepo.findById(educationId).orElseThrow(() ->new RuntimeException("Education not found"));
+		//
+//				        // Partial Update
+//				        if(dto.getDegree() != null) {
+//				            education.setDegree(dto.getDegree());
+//				        }
+		//
+//				        if(dto.getCollege() != null) {
+//				            education.setCollege(dto.getCollege());
+//				        }
+		////
+////				        if(dto.getFieldOfStudy() != null) {
+////				            education.setFieldOfStudy(
+////				                    dto.getFieldOfStudy());
+////				        }
+		//
+//				        if(dto.getStartYear() != null) {
+//				            education.setStartYear(dto.getStartYear());
+//				        }
+		//
+//				        if(dto.getEndYear() != null) {
+//				            education.setEndYear(dto.getEndYear());
+//				        }
+		//
+//				        CandidateEducation savedEducation =candidateEducationRepo.save(education);
+		//
+//				        return educationMapper.map(savedEducation);
+//				    }
+//				}
+				
+				
+				
+//================================Certification End ========================================
+				
+				
+//================================Experience========================================
+		@PostMapping("/candidate/{candidateId}/experience")
+		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateExperience experience) {
+
+		    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
+		    experience.setCandidate(candidate);
+		    candidateExperienceRepo.save(experience);
+		    return ResponseEntity.ok("Experience Added");
+		}
+		
+								
+								
+//================================Experience End ========================================
+								
+				
 	    
 	    
 	    
