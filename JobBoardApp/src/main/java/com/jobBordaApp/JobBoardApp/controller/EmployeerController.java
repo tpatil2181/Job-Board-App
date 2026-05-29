@@ -175,6 +175,14 @@ public class EmployeerController {
 		return allJobs;
 	}
 	
+	@PostMapping("/job/{jobId}")
+	public Job getJob( @PathVariable Integer jobId) {
+		Job job = jobRepo.findById(jobId).orElseThrow(()-> new ResourceNotFoundException("Job not found"));
+		return job;
+//		jobRepo.delete(job);
+//	    return "Job Deleted successfully";	
+	}
+	
 	
 	@PostMapping("/createJob")
 	public String postNewJob( @RequestBody Job newJob) {

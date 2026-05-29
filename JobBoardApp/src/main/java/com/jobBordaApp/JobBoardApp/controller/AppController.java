@@ -54,72 +54,85 @@ public class AppController {
 	private EmployeerRepo employeerRepo;
 	
 	@Autowired
-	private ApplyJobRepo applicationRepo;
-	
-	@Autowired
 	private FileService fileService;
-	 
-	
 
-//	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); 
-	 
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
 	
-	
-	@Autowired
-	private CandidateMapper candidateMapper;
-	
-	
-	
 	@Autowired
 	private AppService appService;
-	 
+	
+	
+	
+	
+	
 @GetMapping("/test")
 public String test() {
 	return "Job board app run successfully";
 }
+
+
+//ONLY JOB SEARCH FEATURE IS REMEAINING
 	 
-	 
-	 
-//===========================Candidate Specific service ==========================================
-	 
-		@PostMapping("/register")
+
+
+//===========================Candidate Specific Controller ==========================================
+
+		@PostMapping("/candidate/register")
 		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
 			
-			
-			Candidate existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
-			if(existingCandidate!=null) {
-				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
-				}
-//				newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
-				candidateRepo.save(newCandidate);	
-			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
+			return appService.registerCandidate(newCandidate);
 		}
 		
-		
-		
-//		Implemented Spring security and password encoder decoder and the following request by spring security and authent
-//		@GetMapping("/profile")
-//		public ResponseEntity<?> getProfile(Authentication authentication) {
-//
-//		    String email = authentication.getName();
-//		    Candidate candidate = candidateRepo.findByEmail(email);
-//		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
-//
-//		    return ResponseEntity.ok(candidateDTO);
-//		}
-		
-		
-		
-	@PostMapping("/login")
-	public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
+
+		@PostMapping("/candidate/login")
+		public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
 		
 				return appService.candidateLogin(request);
 		}
-	
+		
+		
+		@PostMapping("/company/register")
+		public ResponseEntity<?> registerCompany(@RequestBody Employeer company) {
+			
+			return appService.employerRegister(company);
+			
+		}
+		
+		
+		@PostMapping("/company/login")
+		public ResponseEntity<?> companyLogin(@RequestBody LoginDTO request  ) {
+
+			return appService.employerLogin(request);
+			
+		}
+		
+		
+//===========================Main service of job board app Specific Controller ==========================================
+		
+		
+		@GetMapping("/Jobs")
+		public List<Job> getAllJobs(){
+
+			List<Job> allJobs= jobRepo.findAll();
+			return allJobs;	
+		}
+		
+		
+		@GetMapping("/job/{jobId}")
+		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
+			
+			return appService.getPerticularJob(jobId);
+		    
+		}
+
+	 	
+		
+
+		
+		
 //-------------------------------------------------------------------------
-	
+//	this should  be in company service only company can view candidate profile on candidate  email
 	@GetMapping("/candidate/{email}")
 	public ResponseEntity<?> getCandidate(@PathVariable String email) {
 
@@ -149,6 +162,9 @@ public String test() {
 	
 	 
 //===========================Candidate Specific service End ==========================================
+	
+	
+	
 	 @GetMapping("resume/{resumeId}")
 		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
 				return fileService.getResume(resumeId);
@@ -170,29 +186,8 @@ public String test() {
 		
 //===========================Company Specific service =========================================		
 		
-		@PostMapping("/comnpany-register")
-		public String registerCompany(@RequestBody Employeer company) {
-			
-			Optional<Employeer> existingCompany= employeerRepo.findByEmail(company.getEmail());
-			if(existingCompany.isPresent()) {
-				throw new RuntimeException("Company already Register");
-			}
-			employeerRepo.save(company);
-			return "Company Registered Successfully";	
-			
-		}
-		
-		@PostMapping("/company-login")
-		public String companyLogin(@RequestBody LoginDTO request  ) {
-			
-			Employeer company = employeerRepo.findByEmail(request.getEmail())
-		                .orElseThrow(() -> new RuntimeException("Company not found"));
 
-		        if (!company.getPassword().equals(request.getPassword())) {
-		            throw new ResourceNotFoundException( "Invalid password");
-		        }
-				return "Company login successfully";
-		}
+		
 		
 		@GetMapping("/company/{employeerId}")
 		public Employeer getCompanyProfile(@PathVariable int companyId) {
@@ -283,26 +278,12 @@ public String test() {
 //	7.
 	
 	
-	@GetMapping("/viewAllJobs")
-	public List<Job> getAllJobs(){
-		
-		List<Job> allJobs= jobRepo.findAll();
-		return allJobs;
-		
-	}
 	
-	//This service should only for user
-	@GetMapping("allAppliedJob/{candidateId}")
-	public List<ApplyJob> getListOfAllJobdAppliedByCandidate(@PathVariable Integer candidateId){
+
+//		
 		
-		Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
-		List<ApplyJob> allJobOfCandidate=applicationRepo.findAllApplicationsByCandidateId(candidateId);
-		if(allJobOfCandidate.size()==0) {
-			throw new ResourceNotFoundException("No jobs applied by this Candidate");
-		}
-		return allJobOfCandidate;
-		
-	}
+	
+
 	
 	
 //	@GetMapping("/{employeerId}/allAppliedUser/{JobId}")

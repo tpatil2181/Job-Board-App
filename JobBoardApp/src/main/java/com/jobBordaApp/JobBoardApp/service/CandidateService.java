@@ -19,6 +19,7 @@ public class CandidateService {
 		Candidate candidate= candidateRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Candidate not found with this ID"));
 			return candidate;
 	}
+	
 		
 	
 

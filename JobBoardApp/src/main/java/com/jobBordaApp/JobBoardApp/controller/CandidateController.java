@@ -77,14 +77,9 @@ public class CandidateController {
 	@Autowired
 	private CandidateExperienceRepo candidateExperienceRepo;
 	
-	
-	
-	
-	
+
 	
 //================Candidate CURD operation========================
-
-
 	
 	
 	@GetMapping("/candidates")
@@ -99,23 +94,25 @@ public class CandidateController {
 	
 
 	
+//	
+//	@PutMapping("/candidate")
+//	public String updateCandidateInfo(@RequestBody Candidate updatedCandidate) {
+//		 
+//		Candidate existingCandidate = candidateRepo.findById(updatedCandidate.getCandidateId()).orElseThrow();
+//		// Update fields
+//	    existingCandidate.setFirstName(updatedCandidate.getFirstName());
+//	    existingCandidate.setLastName(updatedCandidate.getLastName());
+//	    existingCandidate.setMobNo(updatedCandidate.getMobNo());
+//	    existingCandidate.setEmail(updatedCandidate.getEmail());
+//	    existingCandidate.setPassword(updatedCandidate.getPassword());
+////	    existingCandidate.setEducation(updatedCandidate.getEducation());
+//	    existingCandidate.setSkills(updatedCandidate.getSkills());
+//	    
+//	    candidateRepo.save(existingCandidate);
+//	    return "Candidate updated successfully";		
+//	}
 	
-	@PutMapping("/candidate")
-	public String updateCandidateInfo(@RequestBody Candidate updatedCandidate) {
-		 
-		Candidate existingCandidate = candidateRepo.findById(updatedCandidate.getCandidateId()).orElseThrow();
-		// Update fields
-	    existingCandidate.setFirstName(updatedCandidate.getFirstName());
-	    existingCandidate.setLastName(updatedCandidate.getLastName());
-	    existingCandidate.setMobNo(updatedCandidate.getMobNo());
-	    existingCandidate.setEmail(updatedCandidate.getEmail());
-	    existingCandidate.setPassword(updatedCandidate.getPassword());
-//	    existingCandidate.setEducation(updatedCandidate.getEducation());
-	    existingCandidate.setSkills(updatedCandidate.getSkills());
-	    
-	    candidateRepo.save(existingCandidate);
-	    return "Candidate updated successfully";		
-	}
+	
 	
 	@DeleteMapping("/candidate/{id}")  //change id to email
 	public String deleteCandidate(@PathVariable Integer id) {
@@ -185,7 +182,10 @@ public class CandidateController {
 	}
 	
 	
-
+//================================Resume========================================
+	
+	
+//	1.View resume should be in resume service
 
 	    @PostMapping("/uploadResume/{candidateId}")
 	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId) {
@@ -209,7 +209,7 @@ public class CandidateController {
 	    }
 	    
 	
-//================================Candidate education========================================
+//================================Education========================================
 		@PostMapping("/candidate/{candidateId}/education")
 		public ResponseEntity<?> addEducation( @PathVariable Integer candidateId, @RequestBody CandidateEducation education) {
 
@@ -219,43 +219,51 @@ public class CandidateController {
 		    return ResponseEntity.ok("Education Added");
 		}
 		
+
+		@PutMapping("/candidate/{candidateId}/education")
+		public ResponseEntity<?> updateEducation(@PathVariable Integer candidateId, @RequestBody CandidateEducation updatedEducation) {
+
+		    Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+		    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
+
+		    // Validation
+		    if (!education.getCandidate().getCandidateId().equals(candidateId)) {
+		        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+		    }
+
+		    education.setDegree(updatedEducation.getDegree());
+		    education.setCollege(updatedEducation.getCollege());
+		    education.setStartYear(updatedEducation.getStartYear());
+		    education.setEndYear(updatedEducation.getEndYear());
+		    education.setPercentage(updatedEducation.getPercentage());
+
+		    candidateEducationRepo.save(education);
+
+		    return ResponseEntity.ok("Education Updated Successfully");
+		}
+
+
+		@DeleteMapping("/candidate/{candidateId}/education/{educationId}")
+		public ResponseEntity<?> deleteEducation(
+		        @PathVariable Integer candidateId,
+		        @PathVariable Integer educationId) {
+
+		    Candidate candidate = candidateRepo.findById(candidateId)
+		            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+		    CandidateEducation education = candidateEducationRepo.findById(educationId)
+		            .orElseThrow(() -> new RuntimeException("Education not found"));
+
+		    candidate.getEducations().remove(education);
+
+		    candidateRepo.save(candidate);
+
+		    return ResponseEntity.ok("Education Deleted Successfully");
+		}
+
 		
-		
-//		 public CandidateEducationDTO updateEducation(Integer educationId,CandidateEducationDTO dto) {
-//
-//		        CandidateEducation education =candidateEducationRepo.findById(educationId).orElseThrow(() ->new RuntimeException("Education not found"));
-//
-//		        // Partial Update
-//		        if(dto.getDegree() != null) {
-//		            education.setDegree(dto.getDegree());
-//		        }
-//
-//		        if(dto.getCollege() != null) {
-//		            education.setCollege(dto.getCollege());
-//		        }
-////
-////		        if(dto.getFieldOfStudy() != null) {
-////		            education.setFieldOfStudy(
-////		                    dto.getFieldOfStudy());
-////		        }
-//
-//		        if(dto.getStartYear() != null) {
-//		            education.setStartYear(dto.getStartYear());
-//		        }
-//
-//		        if(dto.getEndYear() != null) {
-//		            education.setEndYear(dto.getEndYear());
-//		        }
-//
-//		        CandidateEducation savedEducation =candidateEducationRepo.save(education);
-//
-//		        return educationMapper.map(savedEducation);
-//		    }
-//		}
-		
-		
-		
-//================================Candidate education End End========================================
+//================================education End========================================
 	
 		
 //================================Certification========================================
@@ -268,42 +276,46 @@ public class CandidateController {
 				    return ResponseEntity.ok("Certification Added");
 				}
 				
-				
-				
-//				 public CandidateEducationDTO updateEducation(Integer educationId,CandidateEducationDTO dto) {
-		//
-//				        CandidateEducation education =candidateEducationRepo.findById(educationId).orElseThrow(() ->new RuntimeException("Education not found"));
-		//
-//				        // Partial Update
-//				        if(dto.getDegree() != null) {
-//				            education.setDegree(dto.getDegree());
-//				        }
-		//
-//				        if(dto.getCollege() != null) {
-//				            education.setCollege(dto.getCollege());
-//				        }
-		////
-////				        if(dto.getFieldOfStudy() != null) {
-////				            education.setFieldOfStudy(
-////				                    dto.getFieldOfStudy());
-////				        }
-		//
-//				        if(dto.getStartYear() != null) {
-//				            education.setStartYear(dto.getStartYear());
-//				        }
-		//
-//				        if(dto.getEndYear() != null) {
-//				            education.setEndYear(dto.getEndYear());
-//				        }
-		//
-//				        CandidateEducation savedEducation =candidateEducationRepo.save(education);
-		//
-//				        return educationMapper.map(savedEducation);
-//				    }
-//				}
-				
-				
-				
+				@PutMapping("/candidate/{candidateId}/certification")
+				public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateEducation updatedEducation) {
+
+				    Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+				    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
+
+				    // Validation
+				    if (!education.getCandidate().getCandidateId().equals(candidateId)) {
+				        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+				    }
+
+				    education.setDegree(updatedEducation.getDegree());
+				    education.setCollege(updatedEducation.getCollege());
+				    education.setStartYear(updatedEducation.getStartYear());
+				    education.setEndYear(updatedEducation.getEndYear());
+				    education.setPercentage(updatedEducation.getPercentage());
+
+				    candidateEducationRepo.save(education);
+
+				    return ResponseEntity.ok("Education Updated Successfully");
+				}
+
+
+				@DeleteMapping("/candidate/{candidateId}/certification")
+				public ResponseEntity<?> deleteCertificate(@PathVariable Integer candidateId,@PathVariable Integer educationId) {
+
+				    Candidate candidate = candidateRepo.findById(candidateId)
+				            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+				    CandidateEducation education = candidateEducationRepo.findById(educationId)
+				            .orElseThrow(() -> new RuntimeException("Education not found"));
+
+				    candidate.getEducations().remove(education);
+
+				    candidateRepo.save(candidate);
+
+				    return ResponseEntity.ok("Education Deleted Successfully");
+				}
+
 //================================Certification End ========================================
 				
 				
@@ -317,9 +329,64 @@ public class CandidateController {
 		    return ResponseEntity.ok("Experience Added");
 		}
 		
-								
+		@PutMapping("/candidate/{candidateId}/certification")
+		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateEducation updatedEducation) {
+
+		    Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+		    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
+
+		    // Validation
+		    if (!education.getCandidate().getCandidateId().equals(candidateId)) {
+		        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+		    }
+
+		    education.setDegree(updatedEducation.getDegree());
+		    education.setCollege(updatedEducation.getCollege());
+		    education.setStartYear(updatedEducation.getStartYear());
+		    education.setEndYear(updatedEducation.getEndYear());
+		    education.setPercentage(updatedEducation.getPercentage());
+
+		    candidateEducationRepo.save(education);
+
+		    return ResponseEntity.ok("Education Updated Successfully");
+		}
+
+
+		@DeleteMapping("/candidate/{candidateId}/experience")
+		public ResponseEntity<?> deleteExperience(@PathVariable Integer candidateId,@PathVariable Integer educationId) {
+
+		    Candidate candidate = candidateRepo.findById(candidateId)
+		            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+		    CandidateEducation education = candidateEducationRepo.findById(educationId)
+		            .orElseThrow(() -> new RuntimeException("Education not found"));
+
+		    candidate.getEducations().remove(education);
+
+		    candidateRepo.save(candidate);
+
+		    return ResponseEntity.ok("Education Deleted Successfully");
+		}	
 								
 //================================Experience End ========================================
+		
+//================================Candidate Job ========================================	
+		
+		
+		//This service should only for user
+		@GetMapping("allAppliedJob/{candidateId}")
+		public List<ApplyJob> getListOfAllJobdAppliedByCandidate(@PathVariable Integer candidateId){
+			
+			Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+			List<ApplyJob> allJobOfCandidate=applyJobRepo.findAllApplicationsByCandidateId(candidateId);
+			if(allJobOfCandidate.size()==0) {
+				throw new ResourceNotFoundException("No jobs applied by this Candidate");
+			}
+			return allJobOfCandidate;
+		}
+		
+		
 								
 				
 	    
