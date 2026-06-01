@@ -229,7 +229,7 @@ public class CandidateService {
 		
 //---------------------------------------------Candidate Certification----------------------------------------------	
 		
-		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
+		public ResponseEntity<?> addCandCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
 
 			    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
 			    certification.setCandidate(candidate);

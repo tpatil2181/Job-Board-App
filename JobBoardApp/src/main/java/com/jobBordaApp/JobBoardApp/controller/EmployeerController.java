@@ -253,7 +253,7 @@ public class EmployeerController {
 //	public String updateJobStatus( @RequestBody Job newJob) {
 //		
 //		
-		List<Employeer> companyies=employeerRepo.findAll();
+//		List<Employeer> companyies=employeerRepo.findAll();
 //		jobRepo.save(newJob);
 //		
 //		return "Job Created Successfully";

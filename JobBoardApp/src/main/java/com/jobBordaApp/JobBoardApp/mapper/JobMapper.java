@@ -9,9 +9,9 @@ import com.jobBordaApp.JobBoardApp.entity.Job;
 @Mapper(componentModel = "spring")
 public interface JobMapper {
 
-	@Mapping(source = "employer.employerId",target = "employerId")
+	@Mapping(source = "employer.employeerId",target = "employerId")
 
-    @Mapping(source = "employer.companyName",target = "employerName")
+    @Mapping(source = "employer.employeerName",target = "employerName")
 
     JobDTO mapJobToJobDTO(Job job);
 }

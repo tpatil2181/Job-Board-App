@@ -118,13 +118,13 @@ public String test() {
 			return allJobs;	
 		}
 		
-		
-		@GetMapping("/job/{jobId}")
-		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
-			
-			return appService.getPerticularJob(jobId);
-		    
-		}
+//		
+//		@GetMapping("/job/{jobId}")
+//		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
+//			
+//			return appService.getPerticularJob(jobId);
+//		    
+//		}
 
 	 	
 		
@@ -164,11 +164,11 @@ public String test() {
 //===========================Candidate Specific service End ==========================================
 	
 	
-	
-	 @GetMapping("resume/{resumeId}")
-		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
-				return fileService.getResume(resumeId);
-		}
+//	
+//	 @GetMapping("resume/{resumeId}")
+//		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+//				return fileService.getResume(resumeId);
+//		}
 	    
 		@GetMapping("candidate/{id}/applications")
 		public List<ApplyJob> getAllApplicationOfPerticularCandidate(@PathVariable Integer candidateId) {

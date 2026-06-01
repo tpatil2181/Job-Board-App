@@ -120,7 +120,7 @@ public class CandidateController {
 		@PostMapping("/candidate/{candidateId}/certification")
 		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
 			
-				return candidateService.addCertification(candidateId,certification);
+				return candidateService.addCandCertification(candidateId,certification);
 		}
 		
 		
@@ -131,7 +131,7 @@ public class CandidateController {
 		}
 		
 		
-		@PutMapping("/candidate/{candidateId}/certification")
+		@PutMapping("/candidateCerti/{candidateId}")
 		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateCertification updatedCedrtification) {
 			
 				return candidateService.updateCertification(candidateId, updatedCedrtification);
@@ -190,7 +190,7 @@ public class CandidateController {
 			  return candidateService.getCandidateResume(resumeId);
 		}
 	  
-		@DeleteMapping("/deleteResume/{candidateId")
+		@DeleteMapping("/deleteResume/{candidateId}")
 	  	public void deleteResume() {
 		  
 	  	}	  
