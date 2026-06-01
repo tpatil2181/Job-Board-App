@@ -242,32 +242,34 @@ public class AppService {
 	
 	public ResponseEntity<?> JobApplication(@RequestBody  ApplyJob newApplication) { 
 		
-		
-		Integer candidateId = newApplication.getCandidate().getCandidateId();
-		Integer jobId = newApplication.getJob().getJobId();
-		
-		Optional<Candidate> candidate = candidateRepo.findById(candidateId);
-		if(candidate.isEmpty()) 
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-		
-		Optional<Job> job =jobRepo.findById(jobId);
-		if(job.isEmpty()) 
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job not found"));
-		
-		Optional<ApplyJob> isApplied=applicationRepo.findByUserIdAndJobId(candidateId,jobId);
-	    
-	    if(isApplied.isPresent()) 
-	    	return ResponseEntity.badRequest().body(Map.of( "message", "You have already applied for this job"));
+			Integer candidateId = newApplication.getCandidate().getCandidateId();
+			Integer jobId = newApplication.getJob().getJobId();
+			
+			Optional<Candidate> candidate = candidateRepo.findById(candidateId);
+				if(candidate.isEmpty()) 
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			
+			Candidate existingCandidate = candidate.get();
+			
+			Optional<Job> job =jobRepo.findById(jobId);
+				if(job.isEmpty()) 
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job not found"));
+			
+			Job existingJob = job.get();
+			
+			Optional<ApplyJob> isApplied=applicationRepo.findByUserIdAndJobId(candidateId,jobId);
+		    
+			    if(isApplied.isPresent()) 
+			    	return ResponseEntity.badRequest().body(Map.of( "message", "You have already applied for this job"));
+	
+			
+			 newApplication.setCandidate(existingCandidate); 
+			 newApplication.setJob(existingJob);   
+			 
+			 applicationRepo.save(newApplication);
+			 
+			 return ResponseEntity.ok(Map.of("message", "Apply for job successfully" ));
 
+			}
 		
-//		 newApplication.setCandidate(candidate); 
-//		 newApplication.setJob(job);   
-		 
-		 applicationRepo.save(newApplication);
-		 
-		 return ResponseEntity.ok(Map.of("message", "Apply for job successfully" ));
-
-		
-	}
-
-}
+		}

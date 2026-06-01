@@ -19,6 +19,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 public class ChangePasswordDTO {
+	private Integer Id;
 	private String currentPass;
 	private String newPass;
 	

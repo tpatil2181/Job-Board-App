@@ -30,7 +30,9 @@ import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.service.FileService;
+import com.jobBordaApp.JobBoardApp.service.JobService;
 import com.jobBordaApp.JobBoardApp.service.CandidateService;
+import com.jobBordaApp.JobBoardApp.service.EmployerService;
 
 @RestController
 @RequestMapping("/jobBoardApp/employeer")
@@ -38,7 +40,9 @@ public class EmployeerController {
 	
 	@Autowired
 	private JobRepo jobRepo;   //Reporisotory variable
-
+	
+	@Autowired
+	private EmployerService EmprService;
 	
 	@Autowired
 	private FileService fileService;
@@ -47,14 +51,68 @@ public class EmployeerController {
 	private EmployeerRepo employeerRepo;
 	
 	@Autowired
-	private ApplyJobRepo applyJobRepo;
+	private JobService jobService;
 	
+	@Autowired
+	private ApplyJobRepo applyJobRepo;
 	
 	@Autowired
 	private CandidateService candidateService;   //Reporisotory variable
 	
 	
 	
+	
+	
+	
+	
+	
+//================================Job releted CURD and service========================================
+	
+	
+	@PostMapping("/createJob")
+	public ResponseEntity<?> postNewJob( @RequestBody Job newJob) {
+		
+			return EmprService.CreateNewJob(newJob);
+	}
+	
+	@GetMapping("/job/{id}")
+	public ResponseEntity<?> getJob( @PathVariable Integer jobId ) {
+			
+			return jobService.getJob(jobId);
+	}
+	
+	@PatchMapping("/job/{id}")
+	public ResponseEntity<?> updateJob( @PathVariable Integer id,@RequestBody Job updatedJob) {
+		
+			return EmprService.updateJob(id,updatedJob);	
+	}
+	
+	@DeleteMapping("/job/{jobId}/{EmployeerId}")
+	public ResponseEntity<?> deleteJob( @PathVariable Integer jobId,@PathVariable Integer EmployeerId) {
+		
+			return EmprService.DeleteExistingJob(jobId,EmployeerId);
+	}
+	
+	@GetMapping("/allAppln/{jobId}")
+	public ResponseEntity<?> getAllApplicant(@PathVariable Integer jobId){
+		
+			return EmprService.getAllApplicantByJob(jobId);
+	}
+
+	@GetMapping("/getAllJobs/{employeerId}")
+	public ResponseEntity<?> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
+		
+			return EmprService.getAllJobsPostedByCompany(employeerId);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+//=================================================================================
 	
 //	{
 //		  "employeerName":"Google",
@@ -165,35 +223,17 @@ public class EmployeerController {
 	
 	
 	
-	@GetMapping("/getAllJobs/{employeerId}")
-	public List<Job> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
-		List<Job> allJobs=jobRepo.findAllJobsByComapanyId(employeerId);
-		if(allJobs.isEmpty())
-		{
-			throw new ResourceNotFoundException("No Job posted by this comapny");
-		}
-		return allJobs;
-	}
 	
-	@PostMapping("/job/{jobId}")
-	public Job getJob( @PathVariable Integer jobId) {
-		Job job = jobRepo.findById(jobId).orElseThrow(()-> new ResourceNotFoundException("Job not found"));
-		return job;
-//		jobRepo.delete(job);
-//	    return "Job Deleted successfully";	
-	}
+//	@PostMapping("/job/{jobId}")
+//	public Job getJob( @PathVariable Integer jobId) {
+//		Job job = jobRepo.findById(jobId).orElseThrow(()-> new ResourceNotFoundException("Job not found"));
+//		return job;
+////		jobRepo.delete(job);
+////	    return "Job Deleted successfully";	
+//	}
 	
 	
-	@PostMapping("/createJob")
-	public String postNewJob( @RequestBody Job newJob) {
-		
-		Optional<Job> job=jobRepo.findById(newJob.getJobId());
-		if(job.isPresent()) {
-			throw new ResourceNotFoundException("Job already created which this job id");
-		}
-		jobRepo.save(newJob);
-		return "Job Posted Successfully";
-	}
+	
 	
 	
 	@PostMapping("/updateJob")
@@ -213,7 +253,7 @@ public class EmployeerController {
 //	public String updateJobStatus( @RequestBody Job newJob) {
 //		
 //		
-////		List<Employeer> companyies=employeerRepo.findAll();
+		List<Employeer> companyies=employeerRepo.findAll();
 //		jobRepo.save(newJob);
 //		
 //		return "Job Created Successfully";
@@ -221,12 +261,7 @@ public class EmployeerController {
 //	}
 	
 	
-	@DeleteMapping("/job/{jobId}")
-	public String deleteJob( @PathVariable Integer jobId) {
-		Job job = jobRepo.findById(jobId).orElseThrow(()-> new ResourceNotFoundException("Job not found"));  
-		jobRepo.delete(job);
-	    return "Job Deleted successfully";	
-	}
+	
 	
 	
 	
@@ -240,16 +275,12 @@ public class EmployeerController {
 		return "Job Status Updated Successfully";
 	}
 	
-	@GetMapping("/getAllApplicant/{jobId}")
-	public List<ApplyJob> getAllApplicant(@PathVariable Integer jobId){
-		 List<ApplyJob> allApplicantOfPerticularJob=applyJobRepo.findAllApplicantByJobId(jobId);
-		 return allApplicantOfPerticularJob;
-	}
+	
 	
 //============== Candidate operations by company=================
 	
 	@GetMapping("/getCandidate/{candidateId}")
-	public Candidate getPerticularCandidate(@PathVariable Integer id) {
+	public ResponseEntity<?> getPerticularCandidate(@PathVariable Integer id) {
 		return candidateService.getCandidateByCandidateId(id);
 	}
 	

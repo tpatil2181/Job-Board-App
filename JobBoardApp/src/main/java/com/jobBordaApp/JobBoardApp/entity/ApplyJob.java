@@ -7,7 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class ApplyJob {
 
@@ -36,72 +47,6 @@ public class ApplyJob {
 //    	  "employeerId": { "employeerId": 1 },
 //    	  "status": "Applied"
 //    	}
-
-    
-    public ApplyJob() {
-		// TODO Auto-generated constructor stub
-	}
-
-
-	public ApplyJob(Integer id, Candidate candidate, Job job, Employeer employeerId, String status) {
-		super();
-		this.applyid = id;
-		this.candidate = candidate;
-		this.job = job;
-		this.employeerId = employeerId;
-		this.status = status;
-	}
-
-
-	public Integer getApplyid() {
-		return applyid;
-	}
-
-
-	public void setApplyid(Integer applyid) {
-		this.applyid = applyid;
-	}
-
-
-	public Candidate getCandidate() {
-		return candidate;
-	}
-
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-
-	public Job getJob() {
-		return job;
-	}
-
-
-	public void setJob(Job job) {
-		this.job = job;
-	}
-
-
-	public Employeer getEmployeerId() {
-		return employeerId;
-	}
-
-
-	public void setEmployeerId(Employeer employeerId) {
-		this.employeerId = employeerId;
-	}
-
-
-	public String getStatus() {
-		return status;
-	}
-
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 
 
 
