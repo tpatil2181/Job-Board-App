@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +87,26 @@ public String test() {
 		}
 		
 
-		@PostMapping("/candidate/login")
-		public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
+//		@PostMapping("/candidate/login")
+//		public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
+//		
+//				return appService.candidateLogin(request);
+//		}
 		
-				return appService.candidateLogin(request);
+		//Implementated Spring Security
+//		@PostMapping("/candidate/login")//Secure login
+//		public ResponseEntity<?> candLogin(Authentication authentication) {
+//		
+//				return appService.getProfile(authentication);
+//		}
+		
+		
+//		completed till 2.37 generating token successfully and remaining is validating the token
+		@PostMapping("/candidate/login")//Secure login
+		public String candLogin (@RequestBody LoginDTO loginDTO) {
+		
+				return appService.verify(loginDTO);
 		}
-		
 		
 		@PostMapping("/company/register")
 		public ResponseEntity<?> registerCompany(@RequestBody Employeer company) {

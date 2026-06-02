@@ -3,6 +3,11 @@ package com.jobBordaApp.JobBoardApp.service;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,13 +54,19 @@ public class AppService {
 	private FileService fileService;
 	
 	@Autowired
+	private JWTService jwtService;
+	
+	@Autowired
 	private CandidateMapper candidateMapper;
 	
 	@Autowired
 	private JobMapper jobMapper;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
 	 
-//	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); 
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); 
 	 
 	
 	
@@ -69,7 +80,7 @@ public class AppService {
 			if(existingCandidate!=null) {
 				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
 				}
-	//					newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
+						newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
 				candidateRepo.save(newCandidate);	
 			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
 		}
@@ -79,30 +90,30 @@ public class AppService {
 		
 //		Implemented Spring security and password encoder decoder and the following request by spring security and authent
 		
-//		@GetMapping("/profile")(Login)
-//		public ResponseEntity<?> getProfile(Authentication authentication) {
-//
-//		    String email = authentication.getName();
-//		    Candidate candidate = candidateRepo.findByEmail(email);
-//		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
-//
-//		    return ResponseEntity.ok(candidateDTO);
-//		}
+		@GetMapping("/profile")//(Login)
+		public ResponseEntity<?> getProfile(Authentication authentication) {
+
+		    String email = authentication.getName();
+		    Candidate candidate = candidateRepo.findByEmail(email);
+		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
+
+		    return ResponseEntity.ok(candidateDTO);
+		}
 		
 		
-	
-		public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
-				Candidate candidate = candidateRepo.findByEmail(request.getEmail());
-				if(candidate==null) 
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-	
-				if (!candidate.getPassword().equals(request.getPassword()))
-					return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
-	
-				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
-					return ResponseEntity.ok(candidateDto);
-			//	    return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
-			}
+//	
+//		public ResponseEntity<?> candidateLogin(@RequestBody LoginDTO request) {
+//				Candidate candidate = candidateRepo.findByEmail(request.getEmail());
+//				if(candidate==null) 
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//	
+//				if (!candidate.getPassword().equals(request.getPassword()))
+//					return ResponseEntity.badRequest().body(Map.of( "message", "Invalid password"));
+//	
+//				CandidateDTO candidateDto=candidateMapper.mapCandidateToCandidateDTO(candidate);	
+//					return ResponseEntity.ok(candidateDto);
+//			//	    return ResponseEntity.ok(Map.of("message", "Candidate login successfully" ));
+//			}
 	
 	
 	
@@ -271,5 +282,34 @@ public class AppService {
 			 return ResponseEntity.ok(Map.of("message", "Apply for job successfully" ));
 
 			}
+
+
+
+
+	public ResponseEntity<?> verify(User user) {
 		
+		Authentication auth=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		if(auth.isAuthenticated()) {
+			 return ResponseEntity.ok(Map.of("message", "success" ));
 		}
+    	return ResponseEntity.badRequest().body(Map.of( "message", "Fail "));
+
+		
+		
+	}
+	
+	public String verify( @RequestBody LoginDTO loginDTO) {
+
+	    Authentication auth =
+	            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
+
+	    if (auth.isAuthenticated()) {
+	    	
+	    	return jwtService.generateToken(loginDTO.getEmail());
+//	        return ResponseEntity.ok(Map.of("message", "success"));
+	    }
+	    return "fail";
+//	    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
+	}
+		
+}
