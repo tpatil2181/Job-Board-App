@@ -102,11 +102,11 @@ public class CandidateService {
 	    if (updatedCandidate.getMobNo() != null)
 	        existingCandidate.setMobNo(updatedCandidate.getMobNo());
 
-	    if (updatedCandidate.getEmail() != null)
-	        existingCandidate.setEmail(updatedCandidate.getEmail());
-
-	    if (updatedCandidate.getPassword() != null)
-	        existingCandidate.setPassword(updatedCandidate.getPassword());
+//	    if (updatedCandidate.getEmail() != null)
+//	        existingCandidate.setEmail(updatedCandidate.getEmail());
+//
+//	    if (updatedCandidate.getPassword() != null)
+//	        existingCandidate.setPassword(updatedCandidate.getPassword());
 
 //	    if (updatedCandidate.getEducation() != null)
 //	        existingCandidate.setEducation(updatedCandidate.getEducation());
@@ -132,31 +132,31 @@ public class CandidateService {
 	
 	
 	
-	
-	public ResponseEntity<?> changeCandiddatePassword(@RequestBody ChangePasswordDTO newPass){
-		
-		Optional<Candidate> candidate=candidateRepo.findById(newPass.getId());
-
-		if(candidate.isEmpty())
-			return ResponseEntity.badRequest().body(Map.of("message", "Candidate not found"));
-		
-		Candidate existingCandidate = candidate.get();
-
-
-		if(!newPass.getCurrentPass().equals(existingCandidate.getPassword())){
-			System.out.println("New pass current pass "+newPass.getCurrentPass());
-			System.out.println("Existing pass current pass "+existingCandidate.getPassword());
-			throw new ResourceNotFoundException("Your current password is not matching");
-		}
-		existingCandidate.setPassword(newPass.getNewPass());
-		candidateRepo.save(existingCandidate);
-
-		return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
-		
-		//Forntend vaidation 
-		//1 old pass is not same to new pass
-		//2 new pass and conform pass should be match
-}
+//	
+//	public ResponseEntity<?> changeCandiddatePassword(@RequestBody ChangePasswordDTO newPass){
+//		
+//		Optional<Candidate> candidate=candidateRepo.findById(newPass.getId());
+//
+//		if(candidate.isEmpty())
+//			return ResponseEntity.badRequest().body(Map.of("message", "Candidate not found"));
+//		
+//		Candidate existingCandidate = candidate.get();
+//
+//
+//		if(!newPass.getCurrentPass().equals(existingCandidate.getPassword())){
+//			System.out.println("New pass current pass "+newPass.getCurrentPass());
+//			System.out.println("Existing pass current pass "+existingCandidate.getPassword());
+//			throw new ResourceNotFoundException("Your current password is not matching");
+//		}
+//		existingCandidate.setPassword(newPass.getNewPass());
+//		candidateRepo.save(existingCandidate);
+//
+//		return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+//		
+//		//Forntend vaidation 
+//		//1 old pass is not same to new pass
+//		//2 new pass and conform pass should be match
+//}
 	
 	
 //---------------------------------------------Candidate Education----------------------------------------------	

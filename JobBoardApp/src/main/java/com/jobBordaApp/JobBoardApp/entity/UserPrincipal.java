@@ -10,32 +10,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserPrincipal implements UserDetails {
 	
-		private Candidate candidate;
+	
+		private AppUser user;
 	
 	
 
-	public UserPrincipal(Candidate candidate) {
+	public UserPrincipal(AppUser user) {
 			super();
-			this.candidate = candidate;
+			this.user = user;
 		}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.singleton(new SimpleGrantedAuthority("USER")) ;
+
+	    return Collections.singleton(
+	        new SimpleGrantedAuthority(
+	            "ROLE_" + user.getRole().name()
+	        )
+	    );
 	}
 
 	@Override
 	public @Nullable String getPassword() {
 		// TODO Auto-generated method stub
-		return candidate.getPassword();
+		return user.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
 //		return user.getUsername();  since i dont have username i am using email hear
-		return candidate.getEmail();
+		return user.getEmail();
 	}
 
 }

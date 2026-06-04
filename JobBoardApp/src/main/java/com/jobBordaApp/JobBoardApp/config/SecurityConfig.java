@@ -13,6 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -31,6 +32,7 @@ import com.jobBordaApp.JobBoardApp.entity.Candidate;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig { 
 	
 	
@@ -47,17 +49,42 @@ public class SecurityConfig {
 		return http
 	            .csrf(customizer -> customizer.disable())
 	            .authorizeHttpRequests(auth -> auth
-
-	                    // Public APIs
+//
+	            		//Add Job serch api in this
+//	                    // Public APIs
+//	                    .requestMatchers(
+//	                            "/register",
+//	                            "/api/register",
+//	                            "/candidate/register",
+//	                            "/candidate/login"
+//	                    ).permitAll()
 	                    .requestMatchers(
-	                            "/register",
-	                            "/api/register",
+	                    		"cnd_register",
+	                    		"emp_register",
+	                    		"cnd_login",
+	                    		"emp_login",
+	            
 	                            "/candidate/register",
-	                            "/candidate/login"
+	                            "/employer/register",
+	                            "/candidate/login",
+	                            "/employer/login"
 	                    ).permitAll()
 
-	                    // Secure remaining APIs
+	                    // Candidate APIs
+	                    .requestMatchers("/candidate/**")
+	                    .hasRole("CANDIDATE")
+
+	                    // Employer APIs
+	                    .requestMatchers("/employer/**")
+	                    .hasRole("EMPLOYER")
+
+	                    // Admin APIs
+	                    .requestMatchers("/admin/**")
+	                    .hasRole("ADMIN")
+
+	                    // Everything else requires login
 	                    .anyRequest().authenticated()
+	
 	            )
 
 	            .httpBasic(Customizer.withDefaults())

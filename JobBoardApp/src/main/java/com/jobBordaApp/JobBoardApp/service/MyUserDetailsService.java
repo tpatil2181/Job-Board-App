@@ -6,8 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.UserPrincipal;
+import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 
 
@@ -17,19 +19,20 @@ public class MyUserDetailsService implements UserDetailsService{
 	
 
 	@Autowired
-	private CandidateRepo candidateRepo;
+	private AppUserRepo apUserRepo;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		
-		Candidate candidate=candidateRepo.findByEmail(username);
+//		Candidate candidate=candidateRepo.findByEmail(username);
+		AppUser usr=apUserRepo.findByEmail(username);
 		
-		if(candidate==null) {
+		if(usr==null) {
 			System.out.println();
 			throw new UsernameNotFoundException("User Not Found");
 		}
-		return new UserPrincipal(candidate);
+		return new UserPrincipal(usr);
 	}
 
 }

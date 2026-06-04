@@ -1,10 +1,13 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,15 +35,17 @@ public class Employeer {
 	String employeerName;
 	@Column(name="website")
 	String website;
-	@Column(name="email")
-	String email;
-	@Column(name="password")
-	String password;
+//	@Column(name="email")
+//	String email;
+//	@Column(name="password")
+//	String password;
 	@Column(name="contact")
-	String contact;
+	Long contact;
 	@Column(name="joblist")
 	String joblist;
-	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private AppUser user;
 
 //	{
 //		  "employeerName":"Vikram",
@@ -51,15 +56,5 @@ public class Employeer {
 //		  "joblist":"L"
 //	}	
 	
-
-
-
-
-	public Employeer(String employeerName, String email, String password) {
-		super();
-		this.employeerName = employeerName;
-		this.email = email;
-		this.password = password;
-	}
 
 }

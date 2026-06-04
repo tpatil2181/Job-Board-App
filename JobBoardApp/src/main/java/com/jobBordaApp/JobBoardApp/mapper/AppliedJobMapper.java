@@ -8,6 +8,6 @@ import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 @Mapper(componentModel = "spring")
 public interface AppliedJobMapper {
 	
-		AppliedJobDTO mapAppiedJobtoApplyobMapper(ApplyJob appliedJob);
+//		AppliedJobDTO mapAppiedJobtoApplyobMapper(ApplyJob appliedJob);
 
 }

@@ -39,7 +39,7 @@ public class CandidateDTO {
 	String candidateTitle;
 	String candidateAbout;
 	String mobNo;
-	String email;	
+//	String email;	
 	List<CandidateEducationDTO> educations;
     List<CandidateExperienceDTO> experiences;
     List<CandidateCertificationDTO> certifications;

@@ -1,7 +1,6 @@
 package com.jobBordaApp.JobBoardApp.dto;
 
-import com.jobBordaApp.JobBoardApp.entity.Candidate;
-import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

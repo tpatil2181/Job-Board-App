@@ -12,5 +12,5 @@ public interface EmployeerRepo  extends JpaRepository<Employeer,Integer> {
 	
 //	public Optional<Employeer> findByEmail(String email);
 	
-	public Employeer findByEmail(String email);
+//	public Employeer findByEmail(String email);
 }

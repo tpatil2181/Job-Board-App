@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
+import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
+import com.jobBordaApp.JobBoardApp.enums.Role;
 import com.jobBordaApp.JobBoardApp.exception.RecordAvailableException;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
@@ -31,6 +35,7 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
+import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 
 @Service
 public class AppService {
@@ -46,6 +51,9 @@ public class AppService {
 	
 	@Autowired
 	private ApplyJobRepo applicationRepo;
+	
+	@Autowired
+	private AppUserRepo userRepo;
 	
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
@@ -73,16 +81,43 @@ public class AppService {
 	
 //===========================Candidate Specific service ==========================================
 	 
-	
-		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
-			
-			Candidate existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
-			if(existingCandidate!=null) {
-				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
-				}
-						newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
-				candidateRepo.save(newCandidate);	
-			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
+//	
+//		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
+//			
+//			Candidate existingCandidate=candidateRepo.findByEmail(newCandidate.getEmail());
+//			if(existingCandidate!=null) {
+//				 return ResponseEntity.badRequest().body(Map.of("message", "Candidate already exist"));
+//				}
+//						newCandidate.setPassword(encoder.encode(newCandidate.getPassword()));
+//				candidateRepo.save(newCandidate);	
+//			 return ResponseEntity.ok(Map.of("message", "Candidate Registered Successfully")); 
+//		}
+		
+		
+//Applied Role Base Autherization , this registration method set candidate role as a Condidate for limited autharization in code
+		public ResponseEntity<?> registerCandidate(@RequestBody CandidateRegisterDTO dto) {
+
+		    if (userRepo.findByEmail(dto.getEmail()) != null) {
+		    	
+		        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
+		    }
+
+		    AppUser user = AppUser.builder()
+		            .email(dto.getEmail())
+		            .password(encoder.encode(dto.getPassword()))
+		            .role(Role.CANDIDATE)
+		            .build();
+
+		    Candidate candidate = Candidate.builder()
+		            .firstName(dto.getFirstName())
+		            .lastName(dto.getLastName())
+		            .mobNo(dto.getMobNo())
+		            .user(user)
+		            .build();
+		    
+		    candidateRepo.save(candidate);
+
+		    return ResponseEntity.ok(Map.of("message","Candidate registered successfully"));
 		}
 		
 		
@@ -90,15 +125,15 @@ public class AppService {
 		
 //		Implemented Spring security and password encoder decoder and the following request by spring security and authent
 		
-		@GetMapping("/profile")//(Login)
-		public ResponseEntity<?> getProfile(Authentication authentication) {
-
-		    String email = authentication.getName();
-		    Candidate candidate = candidateRepo.findByEmail(email);
-		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
-
-		    return ResponseEntity.ok(candidateDTO);
-		}
+//		@GetMapping("/profile")//(Login)
+//		public ResponseEntity<?> getProfile(Authentication authentication) {
+//
+//		    String email = authentication.getName();
+//		    Candidate candidate = candidateRepo.findByEmail(email);
+//		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(candidate);
+//
+//		    return ResponseEntity.ok(candidateDTO);
+//		}
 		
 		
 //	
@@ -126,32 +161,32 @@ public class AppService {
 	
 //-------------------------------------------------------------------------
 	
-	@GetMapping("/candidate/{email}")
-	public ResponseEntity<?> getCandidate(@PathVariable String email) {
-
-		    Candidate existingCandidate = candidateRepo.findByEmail(email);
-		    
-		    if (existingCandidate==null) {
-		        return ResponseEntity
-		                .status(HttpStatus.NOT_FOUND)
-		                .body("Candidate not found");
-		    }
-		    
-//		    Candidate candidate = existingCandidate();
-		    CandidateDTO dto = new CandidateDTO();
-		    
-	//	    dto.setCandidateId(candidate.getCandidateId());
-//		    dto.setFirst_name(candidate.getFirstName());
-//		    dto.setLast_name(candidate.getLastName());
-//		    dto.setMobNo(candidate.getMobNo());
-//		    dto.setEmail(candidate.getEmail());
-//		    dto.setEducation(candidate.getEducation());
-	//	    dto.setResume(candidate.getResume());
-//		    dto.setSkills(candidate.getSkills());
-	
-	
-		    return ResponseEntity.ok(dto);
-	}
+//	@GetMapping("/candidate/{email}")
+//	public ResponseEntity<?> getCandidate(@PathVariable String email) {
+//
+//		    Candidate existingCandidate = candidateRepo.findByEmail(email);
+//		    
+//		    if (existingCandidate==null) {
+//		        return ResponseEntity
+//		                .status(HttpStatus.NOT_FOUND)
+//		                .body("Candidate not found");
+//		    }
+//		    
+////		    Candidate candidate = existingCandidate();
+//		    CandidateDTO dto = new CandidateDTO();
+//		    
+//	//	    dto.setCandidateId(candidate.getCandidateId());
+////		    dto.setFirst_name(candidate.getFirstName());
+////		    dto.setLast_name(candidate.getLastName());
+////		    dto.setMobNo(candidate.getMobNo());
+////		    dto.setEmail(candidate.getEmail());
+////		    dto.setEducation(candidate.getEducation());
+//	//	    dto.setResume(candidate.getResume());
+////		    dto.setSkills(candidate.getSkills());
+//	
+//	
+//		    return ResponseEntity.ok(dto);
+//	}
 	
 	 
 //===========================Candidate Specific service End ==========================================
@@ -161,16 +196,48 @@ public class AppService {
 	
 //===========================Company(Employer) Specific service ==========================================
 
-	
-	public ResponseEntity<?> employerRegister(@RequestBody Employeer company) {
-	
-			Employeer existingCompany= employeerRepo.findByEmail(company.getEmail());
-			if(existingCompany==null) {
-				throw new RuntimeException("Company already Register");
-			}
-			employeerRepo.save(company);
-			return ResponseEntity.ok(Map.of("message", "Company Registered Successfully" ));
+
+//Implememted Role base Registration to implement role based autharization	
+	public ResponseEntity<?> employerRegister(@RequestBody EmployerRegisterDTO dto) {
+		
+		if (userRepo.findByEmail(dto.getEmail()) != null) {
+	    	
+	        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
+	    }
+
+	    AppUser user = AppUser.builder()
+	            .email(dto.getEmail())
+	            .password(encoder.encode(dto.getPassword()))
+	            .role(Role.EMPLOYER)
+	            .build();
+
+	    Employeer employeer = Employeer.builder()
+	            .employeerName(dto.getEmployerName())
+	            .contact(dto.getContact())
+	            .website(dto.getWebsite())
+	            .user(user)
+	            .build();
+	    
+	    employeerRepo.save(employeer);
+	    
+	    return ResponseEntity.ok(Map.of("message","Employeer registered successfully"));
+
+
+	  
 	}
+	
+	
+//	
+//	public ResponseEntity<?> employerRegister(@RequestBody Employeer employeer) {
+//		  return ResponseEntity.ok(Map.of("message","Candidate registered successfully"));
+//			
+//			Employeer existingCompany= employeerRepo.findByEmail(employeer.getEmail());
+//			if(existingCompany==null) {
+//				throw new RuntimeException("Company already Register");
+//			}
+//			employeerRepo.save(company);
+//			return ResponseEntity.ok(Map.of("message", "Company Registered Successfully" ))
+//	}
 	
 	
 	

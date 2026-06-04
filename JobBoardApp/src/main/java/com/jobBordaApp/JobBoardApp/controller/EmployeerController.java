@@ -186,7 +186,7 @@ public class EmployeerController {
 		existingCompany.setEmployeerName(updatedComapny.getEmployeerName());
 		existingCompany.setWebsite(updatedComapny.getWebsite());
 		existingCompany.setContact(updatedComapny.getContact());
-		existingCompany.setEmail(updatedComapny.getEmail());
+//		existingCompany.setEmail(updatedComapny.getEmail());
 		existingCompany.setJoblist(updatedComapny.getJoblist());
 		//Comment job list beacouse it should not be part of Employeer entity
 		    

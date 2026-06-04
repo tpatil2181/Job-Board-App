@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -12,6 +13,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.web.csrf.CsrfToken;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
+import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
@@ -42,6 +46,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+
+@CrossOrigin(origins ="http://localhost:4200")
 @RestController
 //@RequestMapping()
 public class AppController {
@@ -80,13 +86,30 @@ public String test() {
 
 //===========================Candidate Specific Controller ==========================================
 
-		@PostMapping("/candidate/register")
-		public ResponseEntity<?> registerCandidate(@RequestBody Candidate newCandidate) {
+		@PostMapping("/cnd_register")
+		public ResponseEntity<?> registerCandidate( @RequestBody CandidateRegisterDTO dto) {
 			
-			return appService.registerCandidate(newCandidate);
+			return appService.registerCandidate(dto);
 		}
 		
+		@PostMapping("cnd_login")//Secure login
+		public String candLogin (@RequestBody LoginDTO loginDTO) {
+		
+				return appService.verify(loginDTO);
+		}
+		
+		@PostMapping("emp_register")
+		public ResponseEntity<?> registerCompany(@RequestBody EmployerRegisterDTO dto) {
+			
+				return appService.employerRegister(dto);
+		}
+		
+		@PostMapping("/emp_login")
+		public ResponseEntity<?> companyLogin(@RequestBody LoginDTO request  ) {
 
+				return appService.employerLogin(request);
+		}
+		
 //		@PostMapping("/candidate/login")
 //		public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
 //		
@@ -102,27 +125,7 @@ public String test() {
 		
 		
 //		completed till 2.37 generating token successfully and remaining is validating the token
-		@PostMapping("/candidate/login")//Secure login
-		public String candLogin (@RequestBody LoginDTO loginDTO) {
-		
-				return appService.verify(loginDTO);
-		}
-		
-		@PostMapping("/company/register")
-		public ResponseEntity<?> registerCompany(@RequestBody Employeer company) {
-			
-			return appService.employerRegister(company);
-			
-		}
-		
-		
-		@PostMapping("/company/login")
-		public ResponseEntity<?> companyLogin(@RequestBody LoginDTO request  ) {
-
-			return appService.employerLogin(request);
-			
-		}
-		
+//		
 		
 //===========================Main service of job board app Specific Controller ==========================================
 		
@@ -149,32 +152,32 @@ public String test() {
 		
 //-------------------------------------------------------------------------
 //	this should  be in company service only company can view candidate profile on candidate  email
-	@GetMapping("/candidate/{email}")
-	public ResponseEntity<?> getCandidate(@PathVariable String email) {
-
-		    Candidate existingCandidate = candidateRepo.findByEmail(email);
-		    
-		    if (existingCandidate==null) {
-		        return ResponseEntity
-		                .status(HttpStatus.NOT_FOUND)
-		                .body("Candidate not found");
-		    }
-		    
-//		    Candidate candidate = existingCandidate();
-		    CandidateDTO dto = new CandidateDTO();
-		    
-	//	    dto.setCandidateId(candidate.getCandidateId());
-//		    dto.setFirst_name(candidate.getFirstName());
-//		    dto.setLast_name(candidate.getLastName());
-//		    dto.setMobNo(candidate.getMobNo());
-//		    dto.setEmail(candidate.getEmail());
-//		    dto.setEducation(candidate.getEducation());
-	//	    dto.setResume(candidate.getResume());
-//		    dto.setSkills(candidate.getSkills());
-	
-	
-		    return ResponseEntity.ok(dto);
-	}
+//	@GetMapping("/candidate/{email}")
+//	public ResponseEntity<?> getCandidate(@PathVariable String email) {
+//
+//		    Candidate existingCandidate = candidateRepo.findByEmail(email);
+//		    
+//		    if (existingCandidate==null) {
+//		        return ResponseEntity
+//		                .status(HttpStatus.NOT_FOUND)
+//		                .body("Candidate not found");
+//		    }
+//		    
+////		    Candidate candidate = existingCandidate();
+//		    CandidateDTO dto = new CandidateDTO();
+//		    
+//	//	    dto.setCandidateId(candidate.getCandidateId());
+////		    dto.setFirst_name(candidate.getFirstName());
+////		    dto.setLast_name(candidate.getLastName());
+////		    dto.setMobNo(candidate.getMobNo());
+////		    dto.setEmail(candidate.getEmail());
+////		    dto.setEducation(candidate.getEducation());
+//	//	    dto.setResume(candidate.getResume());
+////		    dto.setSkills(candidate.getSkills());
+//	
+//	
+//		    return ResponseEntity.ok(dto);
+//	}
 	
 	 
 //===========================Candidate Specific service End ==========================================

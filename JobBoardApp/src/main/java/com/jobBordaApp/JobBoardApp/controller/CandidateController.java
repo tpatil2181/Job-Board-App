@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,11 +81,11 @@ public class CandidateController {
 		    	return candidateService.deleteCandidate(id);
 	 	}
 	 
-	   @PostMapping("/changePass")
-	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass) {	
-				
-				return candidateService.changeCandiddatePassword(newPass);
-		}
+//	   @PostMapping("/changePass")
+//	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass) {	
+//				
+//				return candidateService.changeCandiddatePassword(newPass);
+//		}
 	 
   
 //================================Education========================================
@@ -178,6 +179,7 @@ public class CandidateController {
 //================================Resume========================================
 //		1.View resume should be in resume service			
 	
+		@PreAuthorize("hasRole('CANDIDATE')")
 		@PostMapping("/uploadResume/{candidateId}")
 	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId) {
 	    	
