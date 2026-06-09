@@ -78,7 +78,7 @@ public class EmployeerController {
 	@GetMapping("/job/{id}")
 	public ResponseEntity<?> getJob( @PathVariable Integer jobId ) {
 			
-			return jobService.getJob(jobId);
+			return jobService.getJobByid(jobId);
 	}
 	
 	@PatchMapping("/job/{id}")
@@ -279,11 +279,11 @@ public class EmployeerController {
 	
 //============== Candidate operations by company=================
 	
-	@GetMapping("/getCandidate/{candidateId}")
-	public ResponseEntity<?> getPerticularCandidate(@PathVariable Integer id) {
-		return candidateService.getCandidateByCandidateId(id);
-	}
-	
+//	@GetMapping("/getCandidate/{candidateId}")
+//	public ResponseEntity<?> getPerticularCandidate(@PathVariable Integer id) {
+//		return candidateService.getCandidateByCandidateId(id);
+//	}
+//	
 	@GetMapping("resume/{candidateId}")
 	public ResponseEntity<org.springframework.core.io.Resource> getResume(@PathVariable Integer candidateId) throws IOException{
 			return fileService.getResume(candidateId);

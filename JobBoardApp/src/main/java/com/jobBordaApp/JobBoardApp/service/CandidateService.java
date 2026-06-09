@@ -8,14 +8,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+//import  com.jobBordaApp.JobBoardApp.entity.r;
+
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
@@ -25,6 +31,8 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
+import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateCertificationsRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateEducationRepo;
@@ -56,10 +64,18 @@ public class CandidateService {
 	private JobRepo jobRepo;
 	
 	@Autowired
+	private AppUserRepo appUserRepo;
+	
+	@Autowired
 	private ApplyJobRepo applyJobRepo;
 	
 	@Autowired
 	private CandidateResumeReop candidateResumeRepo;
+	
+	@Autowired
+	private CandidateMapper candidateMapper;
+	
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); 
 	
 	@Autowired
 	private FileService fileService;
@@ -68,117 +84,160 @@ public class CandidateService {
 	
 //---------------------------------------------Candidate-----------------------------------------------------------	
 	
-	
-	public ResponseEntity<?> getCandidateByCandidateId(@PathVariable Integer id) {
-		Optional<Candidate> candidate= candidateRepo.findById(id);
-		
-		if(candidate.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-			
-		}
-		Candidate Cnd=candidate.get();
-		
-		return ResponseEntity.ok(Cnd);	
-	}
-	
-	
-	public ResponseEntity<?> updateCandidate(@PathVariable Integer id, @RequestBody Candidate updatedCandidate) {
 
-		Candidate existingCandidate = candidateRepo.findById(id)
-	        .orElseThrow(() -> new RuntimeException("Candidate not found"));
+//	 Complete Method jwt Rolebased Autharization 
+	
+	
+	public ResponseEntity<?> getCandidateProfile(Authentication authentication ) {
+			String email = authentication.getName();
+
+			AppUser user = appUserRepo.findByEmail(email);
+
+		    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+		    
+			if(candidate.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			}
+			Candidate cand=candidate.get();
+			
+		    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(cand);
+		  
+		    return ResponseEntity.ok(candidateDTO);
+		    
+	}
+
+	
+	public ResponseEntity<?> updateCandidate(@RequestBody Candidate updatedCandidate, Authentication authentication) {
+
+	    String email = authentication.getName();
+
+	    AppUser user = appUserRepo.findByEmail(email);
+
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("message", "User not found"));
+	    }
+
+	    Candidate existingCandidate = candidateRepo.findByUser(user)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Candidate not found"));
 
 	    if (updatedCandidate.getFirstName() != null)
 	        existingCandidate.setFirstName(updatedCandidate.getFirstName());
 
 	    if (updatedCandidate.getLastName() != null)
 	        existingCandidate.setLastName(updatedCandidate.getLastName());
-	    
+
 	    if (updatedCandidate.getCandidateTitle() != null)
 	        existingCandidate.setCandidateTitle(updatedCandidate.getCandidateTitle());
-	    
+
 	    if (updatedCandidate.getCandidateAbout() != null)
 	        existingCandidate.setCandidateAbout(updatedCandidate.getCandidateAbout());
 
 	    if (updatedCandidate.getMobNo() != null)
 	        existingCandidate.setMobNo(updatedCandidate.getMobNo());
 
-//	    if (updatedCandidate.getEmail() != null)
-//	        existingCandidate.setEmail(updatedCandidate.getEmail());
-//
-//	    if (updatedCandidate.getPassword() != null)
-//	        existingCandidate.setPassword(updatedCandidate.getPassword());
-
-//	    if (updatedCandidate.getEducation() != null)
-//	        existingCandidate.setEducation(updatedCandidate.getEducation());
-
 	    if (updatedCandidate.getSkills() != null)
 	        existingCandidate.setSkills(updatedCandidate.getSkills());
-	    
-		return ResponseEntity.ok(Map.of("message", "Candidate updated successfully"));	
-	}
 
-	
-	
-	
-	public ResponseEntity<?> deleteCandidate(@PathVariable Integer id){
-		Optional<Candidate> candidate = candidateRepo.findById(id);
-		if(candidate.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-		}
-		Candidate cand=candidate.get();
-		candidateRepo.delete(cand);
-		return ResponseEntity.ok(Map.of("message", "Candidate Deleted successfully"));	
+	    Candidate savedCandidate = candidateRepo.save(existingCandidate);
+
+	    return ResponseEntity.ok(Map.of(
+	            "message", "Candidate updated successfully",
+	            "candidateId", savedCandidate.getCandidateId()
+	    ));
+	    
 	}
 	
 	
+	public ResponseEntity<?> deleteCandidate(Authentication authentication) {
+
+	    String email = authentication.getName();
+
+	    AppUser user = appUserRepo.findByEmail(email);
+
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("message", "User not found"));
+	    }
+
+	    Candidate candidate = candidateRepo.findByUser(user)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Candidate not found"));
+
+	    candidateRepo.delete(candidate);
+
+	    // Optional: delete login account too
+	    appUserRepo.delete(user);
+
+	    return ResponseEntity.ok(
+	            Map.of("message", "Candidate deleted successfully"));
+	}
 	
-//	
-//	public ResponseEntity<?> changeCandiddatePassword(@RequestBody ChangePasswordDTO newPass){
-//		
-//		Optional<Candidate> candidate=candidateRepo.findById(newPass.getId());
-//
-//		if(candidate.isEmpty())
-//			return ResponseEntity.badRequest().body(Map.of("message", "Candidate not found"));
-//		
-//		Candidate existingCandidate = candidate.get();
-//
-//
-//		if(!newPass.getCurrentPass().equals(existingCandidate.getPassword())){
-//			System.out.println("New pass current pass "+newPass.getCurrentPass());
-//			System.out.println("Existing pass current pass "+existingCandidate.getPassword());
-//			throw new ResourceNotFoundException("Your current password is not matching");
-//		}
-//		existingCandidate.setPassword(newPass.getNewPass());
-//		candidateRepo.save(existingCandidate);
-//
-//		return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
-//		
-//		//Forntend vaidation 
-//		//1 old pass is not same to new pass
-//		//2 new pass and conform pass should be match
-//}
+	
+	public ResponseEntity<?> changeCandidatePassword(@RequestBody ChangePasswordDTO newPass, Authentication authentication) {
+
+	    String email = authentication.getName();
+
+	    AppUser user = appUserRepo.findByEmail(email);
+
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("message", "User not found"));
+	    }
+
+	    // Verify current password
+	    if (!passwordEncoder.matches(newPass.getCurrentPass(), user.getPassword())) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("message", "Current password is incorrect"));
+	    }
+
+	    // Check if new password is same as current password
+	    if (passwordEncoder.matches(newPass.getNewPass(), user.getPassword())) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("message", "New password cannot be same as current password"));
+	    }
+
+	    // Update password
+	    user.setPassword(passwordEncoder.encode(newPass.getNewPass()));
+	    appUserRepo.save(user);
+
+	    return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+	}
 	
 	
 //---------------------------------------------Candidate Education----------------------------------------------	
 	
-		public ResponseEntity<?> addEducation(@PathVariable Integer candidateId, @RequestBody CandidateEducation education){
+		public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education,Authentication authentication){
 			
-				Optional<Candidate> candidate =candidateRepo.findById(candidateId);
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
+			
 				Candidate Cnd=candidate.get();
 				education.setCandidate(Cnd);
 			    candidateEducationRepo.save(education);
 			    return ResponseEntity.ok("Education Added");
 		}
 		
-		public ResponseEntity<?> getEducation(@PathVariable Integer candidateId, @PathVariable Integer EduId){
+		public ResponseEntity<?> getEducation(@PathVariable Integer candidateId, @PathVariable Integer EduId,Authentication authentication){
 				
-				Optional<Candidate> candidate =candidateRepo.findById(candidateId);
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
+				
 				Optional<CandidateEducation> CndEdu=candidateEducationRepo.findById(EduId);
 				if(CndEdu.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
@@ -189,13 +248,23 @@ public class CandidateService {
 			
 		}
 		
-		public ResponseEntity<?> updateEducation(@PathVariable Integer candidateId, @RequestBody CandidateEducation updatedEducation){
-			 Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication){
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				Candidate cnd=candidate.get();
 
 			    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
 
 			    // Validation
-			    if (!education.getCandidate().getCandidateId().equals(candidateId)) {
+			    if (!education.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
 			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
 			    }
 
@@ -211,22 +280,31 @@ public class CandidateService {
 		}
 		
 	
-		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId) {
-
-			    Candidate candidate = candidateRepo.findById(candidateId)
-			            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId,Authentication authentication) {
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				
+				Candidate cnd=candidate.get();
 	
 			    CandidateEducation education = candidateEducationRepo.findById(educationId)
 			            .orElseThrow(() -> new RuntimeException("Education not found"));
 	
-			    candidate.getEducations().remove(education);
+			    cnd.getEducations().remove(education);
 	
-			    candidateRepo.save(candidate);
+			    candidateRepo.save(cnd);
 	
 			    return ResponseEntity.ok("Education Deleted Successfully");
 		}
 		
-		
+		   
 //---------------------------------------------Candidate Certification----------------------------------------------	
 		
 		public ResponseEntity<?> addCandCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
@@ -354,10 +432,19 @@ public class CandidateService {
 		}
 		
 		
-//---------------------------------------------Candidate Resume----------------------------------------------		
-
+//---------------------------------------------Candidate Resume----------------------------------------------
 	
-		public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId) {
+		public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId,Authentication authentication) {
+			
+			String email = authentication.getName();
+			
+			AppUser user = appUserRepo.findByEmail(email);
+
+		    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+		    
+			if(candidate.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			}
 			try {
 	            int resumeId = fileService.uploadOrUpdateResume(candidateId,file);
 	            Candidate cnd=candidateRepo.findById(candidateId).orElseThrow(()-> new ResourceNotFoundException("Candidate Not found with this ID"));
@@ -382,31 +469,30 @@ public class CandidateService {
 		
 //---------------------------------------------Candidate Job----------------------------------------------	
 		
-		public ResponseEntity<?> jobApplication( @RequestBody ApplyJobDTO jobApplication ) {
+		public ResponseEntity<?> jobApplication( @RequestBody ApplyJobDTO jobApplication,Authentication authentication ) {
 			
+				String email = authentication.getName();
+	
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				
 				Optional<Employeer> emp= employeerRepo.findById(jobApplication.getEmployeerId()); 
 				
 				if(emp.isEmpty()) {
-			        return ResponseEntity.badRequest().body("Employeer not found");						
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Employeer not found"));						
 				}
-				Employeer emplor=emp.get();
 				
 				
 				Optional<Job> job= jobRepo.findById(jobApplication.getEmployeerId()); 
 				
 				if(job.isEmpty()) {
-			        return ResponseEntity.badRequest().body("Job not found");						
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job not found"));						
 				}
-				
-				Job jb=job.get();
-				
-				Optional<Candidate> candidate = candidateRepo.findById(jobApplication.getCandidateId());
-				
-				if(candidate.isEmpty()) {
-			        return ResponseEntity.badRequest().body("Candidate not found");						
-				}
-				Candidate cnd=candidate.get();
-				
 				
 				Optional<ApplyJob> AppliedJob=applyJobRepo.getJobApplicationByEmpJobCndId(
 																			jobApplication.getCandidateId(), jobApplication.getJobId(),
@@ -419,24 +505,40 @@ public class CandidateService {
 				applyJobRepo.save(aj);
 			    return ResponseEntity.ok("Job Applied");
 		}
+			
+		
+		
+		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId,Authentication authentication){
+			
+				String email = authentication.getName();
 				
-		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId){
-					
-					Optional<Candidate> candidate = candidateRepo.findById(candidateId);
-					
-					if(candidate.isEmpty()) {
-				        return ResponseEntity.badRequest().body("Candidate not found");						
-					}
-					
-					List<ApplyJob> allJobOfCandidate=applyJobRepo.findAllApplicationsByCandidateId(candidateId);
-					if(allJobOfCandidate.size()==0) {
-						throw new ResourceNotFoundException("No jobs applied by this Candidate");
-					}
-					return ResponseEntity.ok(allJobOfCandidate);		
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+						
+				List<ApplyJob> allJobOfCandidate=applyJobRepo.findAllApplicationsByCandidateId(candidateId);
+				if(allJobOfCandidate.size()==0) {
+					throw new ResourceNotFoundException("No jobs applied by this Candidate");
+				}
+				return ResponseEntity.ok(allJobOfCandidate);		
 
 		}
 		
-		public ResponseEntity<?> withdarwJobApplication(@RequestBody ApplyJobDTO deleteJob){
+		public ResponseEntity<?> withdarwJobApplication(@RequestBody ApplyJobDTO deleteJob, Authentication authentication){
+			
+			String email = authentication.getName();
+			
+			AppUser user = appUserRepo.findByEmail(email);
+
+		    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+		    
+			if(candidate.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			}
 			
 			int rowsDeleted = applyJobRepo.deleteByCandidateIdAndJobId(deleteJob.getCandidateId(),deleteJob.getJobId());
 
@@ -446,8 +548,20 @@ public class CandidateService {
 
 			return ResponseEntity.ok(Map.of("message", "Application withdrawn successfully"));
 		}
+		
+		
 	
-		public ResponseEntity<?> getJobApplication(@RequestBody ApplyJobDTO getJobAppln){
+		public ResponseEntity<?> getJobApplication(@RequestBody ApplyJobDTO getJobAppln,Authentication authentication){
+			
+			String email = authentication.getName();
+			
+			AppUser user = appUserRepo.findByEmail(email);
+
+		    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+		    
+			if(candidate.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			}
 			
 			Optional<ApplyJob> AppliedJob=applyJobRepo.getJobApplicationByEmpJobCndId(
 					getJobAppln.getCandidateId(), getJobAppln.getJobId(),
@@ -460,11 +574,6 @@ public class CandidateService {
 					applyJobRepo.save(aj);
 					return ResponseEntity.ok(aj);
 		}
-	
-	
 
-	
-		
-	
 
 }

@@ -21,6 +21,7 @@ import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
+import com.jobBordaApp.JobBoardApp.dto.LoginResponseDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
@@ -76,7 +77,110 @@ public class AppService {
 	 
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); 
 	 
+
+//----------------------------Login And Registration----------------------------	
 	
+		public ResponseEntity<?> registerCandidate(@RequestBody CandidateRegisterDTO dto) {
+	
+		    if (userRepo.findByEmail(dto.getEmail()) != null) {
+		    	
+		        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
+		    }
+	
+		    AppUser user = AppUser.builder()
+		            .email(dto.getEmail())
+		            .password(encoder.encode(dto.getPassword()))
+		            .role(Role.CANDIDATE)
+		            .build();
+	
+		    Candidate candidate = Candidate.builder()
+		            .firstName(dto.getFirstName())
+		            .lastName(dto.getLastName())
+		            .mobNo(dto.getMobNo())
+		            .user(user)
+		            .build();
+		    candidateRepo.save(candidate);
+	
+		    return ResponseEntity.ok(Map.of("message","Candidate registered successfully"));
+		}
+		
+		
+	
+		public ResponseEntity<?> employerRegister(@RequestBody EmployerRegisterDTO dto) {
+		
+			if (userRepo.findByEmail(dto.getEmail()) != null) {
+		    	
+		        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
+		    }
+	
+		    AppUser user = AppUser.builder()
+		            .email(dto.getEmail())
+		            .password(encoder.encode(dto.getPassword()))
+		            .role(Role.EMPLOYER)
+		            .build();
+	
+		    Employeer employeer = Employeer.builder()
+		            .employeerName(dto.getEmployerName())
+		            .contact(dto.getContact())
+		            .website(dto.getWebsite())
+		            .user(user)
+		            .build();
+		    
+		    employeerRepo.save(employeer);
+		    
+		    return ResponseEntity.ok(Map.of("message","Employeer registered successfully"));
+ 
+		}
+		
+		
+		
+		
+		public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+
+		    Authentication auth = authenticationManager.authenticate(
+		            new UsernamePasswordAuthenticationToken(
+		                    loginDTO.getEmail(),
+		                    loginDTO.getPassword()));
+
+		    if (auth.isAuthenticated()) {
+
+		        AppUser user = userRepo.findByEmail(loginDTO.getEmail());
+
+		        LoginResponseDTO response = LoginResponseDTO.builder()
+		                .token(jwtService.generateToken(user.getEmail()))
+		                .role(user.getRole().name())
+		                .userId(user.getUserId())
+		                .email(user.getEmail())
+		                .build();
+
+		        return ResponseEntity.ok(response);
+		    }
+
+		    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
+		}
+		
+//		public String verifyAndLogin( @RequestBody LoginDTO loginDTO) {
+//
+//		    Authentication auth =
+//		            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
+//
+//		    if (auth.isAuthenticated()) {
+//		    	
+//		    	return jwtService.generateToken(loginDTO.getEmail());
+////		        return ResponseEntity.ok(Map.of("message", "success"));
+//		    }
+//		    return "fail";
+////		    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
+//		}
+		
+//		public ResponseEntity<?> verify(User user) {
+//		
+//		Authentication auth=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//		if(auth.isAuthenticated()) {
+//			 return ResponseEntity.ok(Map.of("message", "success" ));
+//		}
+//    	return ResponseEntity.badRequest().body(Map.of( "message", "Fail "));
+//	}
 	
 	
 //===========================Candidate Specific service ==========================================
@@ -95,30 +199,7 @@ public class AppService {
 		
 		
 //Applied Role Base Autherization , this registration method set candidate role as a Condidate for limited autharization in code
-		public ResponseEntity<?> registerCandidate(@RequestBody CandidateRegisterDTO dto) {
-
-		    if (userRepo.findByEmail(dto.getEmail()) != null) {
-		    	
-		        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
-		    }
-
-		    AppUser user = AppUser.builder()
-		            .email(dto.getEmail())
-		            .password(encoder.encode(dto.getPassword()))
-		            .role(Role.CANDIDATE)
-		            .build();
-
-		    Candidate candidate = Candidate.builder()
-		            .firstName(dto.getFirstName())
-		            .lastName(dto.getLastName())
-		            .mobNo(dto.getMobNo())
-		            .user(user)
-		            .build();
-		    
-		    candidateRepo.save(candidate);
-
-		    return ResponseEntity.ok(Map.of("message","Candidate registered successfully"));
-		}
+		
 		
 		
 		
@@ -161,6 +242,8 @@ public class AppService {
 	
 //-------------------------------------------------------------------------
 	
+//	Only employeer can get any candidate so move this in employeer
+		
 //	@GetMapping("/candidate/{email}")
 //	public ResponseEntity<?> getCandidate(@PathVariable String email) {
 //
@@ -198,33 +281,6 @@ public class AppService {
 
 
 //Implememted Role base Registration to implement role based autharization	
-	public ResponseEntity<?> employerRegister(@RequestBody EmployerRegisterDTO dto) {
-		
-		if (userRepo.findByEmail(dto.getEmail()) != null) {
-	    	
-	        return ResponseEntity.badRequest().body(Map.of("message","Email already exists"));
-	    }
-
-	    AppUser user = AppUser.builder()
-	            .email(dto.getEmail())
-	            .password(encoder.encode(dto.getPassword()))
-	            .role(Role.EMPLOYER)
-	            .build();
-
-	    Employeer employeer = Employeer.builder()
-	            .employeerName(dto.getEmployerName())
-	            .contact(dto.getContact())
-	            .website(dto.getWebsite())
-	            .user(user)
-	            .build();
-	    
-	    employeerRepo.save(employeer);
-	    
-	    return ResponseEntity.ok(Map.of("message","Employeer registered successfully"));
-
-
-	  
-	}
 	
 	
 //	
@@ -286,35 +342,6 @@ public class AppService {
 	
 //===========================Main service of job board app Specific service ==========================================
 	
-	public ResponseEntity<?> getPerticularJob(@PathVariable Integer jobId){
-		
-			Job job = jobRepo.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job not found"));
-
-	    	JobDTO jobDTO =jobMapper.mapJobToJobDTO(job);
-
-	    return ResponseEntity.ok(jobDTO);
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -353,30 +380,8 @@ public class AppService {
 
 
 
-	public ResponseEntity<?> verify(User user) {
-		
-		Authentication auth=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-		if(auth.isAuthenticated()) {
-			 return ResponseEntity.ok(Map.of("message", "success" ));
-		}
-    	return ResponseEntity.badRequest().body(Map.of( "message", "Fail "));
 
-		
-		
-	}
 	
-	public String verify( @RequestBody LoginDTO loginDTO) {
 
-	    Authentication auth =
-	            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
-
-	    if (auth.isAuthenticated()) {
-	    	
-	    	return jwtService.generateToken(loginDTO.getEmail());
-//	        return ResponseEntity.ok(Map.of("message", "success"));
-	    }
-	    return "fail";
-//	    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
-	}
 		
 }

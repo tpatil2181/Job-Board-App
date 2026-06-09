@@ -1,6 +1,7 @@
 package com.jobBordaApp.JobBoardApp.service;
 
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +29,16 @@ public class JobService {
 	JobRepo jobRepo;
 	
 	
+
+	public ResponseEntity<?> getAllJobs(){
+		
+		List<Job> allJobs= jobRepo.findAll();
+		return (ResponseEntity<?>) allJobs;		
+
+	}
 	
-	public ResponseEntity<?> getJob(@PathVariable Integer jobId){
+	
+	public ResponseEntity<?> getJobByid(@PathVariable Integer jobId){
 		
 		Optional<Job> job =jobRepo.findById(jobId);
 		
@@ -41,21 +52,37 @@ public class JobService {
 	
 	
 	
-	          
-	public List<Job> findAllJobs(Pageable pageable, Integer jobId,String employer,String jobTitle,String status, String createDate){
-		
-		Specification<Job> spec= JobSpecification.getJobSpecification(jobId,employer,jobTitle,status,createDate);
-		return jobRepo.findAll(spec,pageable).getContent();
-		
-//		if(search==null) {
-//			return jobRepo.findAll(pageable).getContent();
-//			
-//		}else {
-//			return jobRepo.findByJobTitle(search,pageable).getContent();
-//		}
-		
-	}
+//	          
+//	public List<Job> findAllJobs(Pageable pageable, Integer jobId,String employer,String jobTitle,String status, String createDate){
+//		
+//		Specification<Job> spec= JobSpecification.getJobSpecification(jobId,employer,jobTitle,status,createDate);
+//		return jobRepo.findAll(spec,pageable).getContent();
+//		
+////		if(search==null) {
+////			return jobRepo.findAll(pageable).getContent();
+////			
+////		}else {
+////			return jobRepo.findByJobTitle(search,pageable).getContent();
+////		}
+//		
+//	}
 	
+	public Page <Job> findAllJobs(Pageable pageable, Integer jobId, String employer,
+			String jobTitle, String status, String createDate) {
+
+	    Specification<Job> spec =JobSpecification.getJobSpecification(jobId,employer,jobTitle,status,createDate);
+
+	    return jobRepo.findAll(spec, pageable);
+	}
+
+
+
+
+//	public @Nullable Object findAllJobs() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	
 	
 
 	

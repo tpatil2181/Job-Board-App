@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,58 +63,59 @@ public class CandidateController {
 	
 //================================Candidate========================================
 	
-	  @GetMapping("/candidate/{id}")
-	   public ResponseEntity<?> getCandidateByCandidateId(@PathVariable Integer id) {
-		
-	 	 		return candidateService.getCandidateByCandidateId(id);
-	   }
+		@GetMapping("/cnd_profile")
+		public ResponseEntity<?> getCndProfile(Authentication authentication) {
 	
-	   @PatchMapping("/candidate/{id}")
-	   public ResponseEntity<?> updatePartial(@PathVariable Integer id, @RequestBody Candidate updatedCandidate) {
+			return candidateService.getCandidateProfile(authentication);
+		}
+	
+	
+	   @PatchMapping("/cnd_update")
+	   public ResponseEntity<?> updatePartial( @RequestBody Candidate updatedCandidate,Authentication authentication) {
 		
-		 		return candidateService.updateCandidate(id,updatedCandidate);
+		 		return candidateService.updateCandidate(updatedCandidate,authentication);
 	 	}
 	
 	
-	   @DeleteMapping("/candidate/{id}")  //change id to email
-	   public ResponseEntity<?> deleteCandidate(@PathVariable Integer id) {
+	   @DeleteMapping("/cnd_delete")  //change id to email
+	   public ResponseEntity<?> deleteCandidate(Authentication authentication) {
 		
-		    	return candidateService.deleteCandidate(id);
+		    	return candidateService.deleteCandidate(authentication);
 	 	}
 	 
-//	   @PostMapping("/changePass")
-//	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass) {	
-//				
-//				return candidateService.changeCandiddatePassword(newPass);
-//		}
+	   @PostMapping("/cnd_changePass")
+	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
+				
+				return candidateService.changeCandidatePassword(newPass,authentication);
+		}
 	 
   
 //================================Education========================================
 	
-		@PostMapping("/candidate/{candidateId}/education")
-		public ResponseEntity<?> addEducation( @PathVariable Integer candidateId, @RequestBody CandidateEducation education) {
+		@PostMapping("/cnd_edu/{candidateId}")
+		public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education, Authentication authentication) {
 			
-				return candidateService.addEducation(candidateId, education);
+				return candidateService.addEducation(education,authentication);
 		}
 		
-		@PostMapping("/candidate/{candidateId}/{educationId}")
-		public ResponseEntity<?> getEducation( @PathVariable Integer candidateId, @PathVariable Integer EduId) {
+		@PostMapping("/cnd_edu/{candidateId}/{educationId}")
+		public ResponseEntity<?> getEducation(@PathVariable Integer CndId,@PathVariable Integer EduId,Authentication authentication) {
 			
-				return candidateService.getEducation(candidateId, EduId);
+				return candidateService.getEducation(CndId,EduId,authentication);
 		}
 		
 
-		@PutMapping("/candidate/{candidateId}/education")
-		public ResponseEntity<?> updateEducation(@PathVariable Integer candidateId, @RequestBody CandidateEducation updatedEducation) {
+		@PutMapping("/cnd_edu/{candidateId}/education")
+		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication) {
 
-				return candidateService.updateEducation(candidateId, updatedEducation);
+				return candidateService.updateEducation( updatedEducation, authentication);
 		}
 
 
-		@DeleteMapping("/candidate/{candidateId}/education/{educationId}")
-		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId) {
+		@DeleteMapping("/cnd_edu/{candidateId}/education/{educationId}")
+		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId,Authentication authentication) {
 			
-				return candidateService.deleteEducation(candidateId, educationId);
+				return candidateService.deleteEducation(candidateId, educationId, authentication);
 		}
 		
 		
@@ -181,12 +183,15 @@ public class CandidateController {
 	
 		@PreAuthorize("hasRole('CANDIDATE')")
 		@PostMapping("/uploadResume/{candidateId}")
-	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId) {
+	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId,Authentication authentication) {
 	    	
-	    		return candidateService.uploadResume(file, candidateId);	
+	    		return candidateService.uploadResume(file, candidateId, authentication);	
 	    }
 		
-		@GetMapping("resume/{resumeId}")
+		
+//		@PreAuthorize("hasRole('CANDIDATE')")
+		@PreAuthorize("hasAnyRole('CANDIDATE','EMPLOYER')")
+		@GetMapping("/resume/{resumeId}")
 		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
 			  
 			  return candidateService.getCandidateResume(resumeId);
@@ -201,96 +206,32 @@ public class CandidateController {
 		
 		
 		@PostMapping("ApplyJob/")
-		public ResponseEntity<?> applyJob(@RequestBody ApplyJobDTO jobApplicaation){
+		public ResponseEntity<?> applyJob(@RequestBody ApplyJobDTO jobApplicaation,Authentication authentication){
 			
-			 return candidateService.jobApplication(jobApplicaation);
+			 return candidateService.jobApplication(jobApplicaation,authentication);
 		}
 	
 		@GetMapping("allAppliedJob/{candidateId}")
-		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId){
+		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId,Authentication authentication){
 			
-			 return candidateService.allAppliedJobs(candidateId);
+			 return candidateService.allAppliedJobs(candidateId, authentication);
 		}
 		
 		
 		@PostMapping("/withdrawApln")
-		public ResponseEntity<?> withJobAppln(@RequestBody ApplyJobDTO deleteApplication){
+		public ResponseEntity<?> withJobAppln(@RequestBody ApplyJobDTO deleteApplication,Authentication authentication){
 			
-			 return candidateService.withdarwJobApplication(deleteApplication);
+			 return candidateService.withdarwJobApplication(deleteApplication,authentication);
 		}
 		
 		@PostMapping("/getJob/{applyId}")
-		public ResponseEntity<?> getJobAppln(@RequestBody ApplyJobDTO getjob){
+		public ResponseEntity<?> getJobAppln(@RequestBody ApplyJobDTO getjob,Authentication authentication){
 			
-			 return candidateService.getJobApplication(getjob);
+			 return candidateService.getJobApplication(getjob,authentication);
 		}
-		
-		
-								
-				
-	    
-	    
+
 	    
 //================================Candidate Services End========================================    
 	
-	    
-//		Candidate Object
-	//	
-//		{
-//			"first_name":"Tushar",
-//			"last_name":"Patil",
-//			"mobile_no":9561500379,
-//			"email":"tusharpatil2181@gmail.com",
-//			"password":123,
-//			"education":"Msc",
-//			"skills":"java"
-//			
-//		}
-	    
-	    
-	    
-	  //Candidate Service Implemented	
-//		@GetMapping("candidate/{id}")
-//		public Candidate getPerticularCandidate(@PathVariable Integer id) {
-//			return candidateService.getCandidateByCandidateId(id);
-//		}
-		
-//		@GetMapping("candidate/{email}")
-//		public ResponseEntity<Candidate> getCandidatebyEmail(@PathVariable String email) {
-//			
-//				Optional<Candidate> candidate=	candidateRepo.findByEmail(email);
-//				if(candidate.isPresent()) {
-////					return ResponseEntity.ok(candidate);
-//				}
-////					return ResponseEntity.ok(null;)
-//		}
-		
-//		@GetMapping("/candidate/{email}")
-//		public ResponseEntity<?> getCandidate(@PathVariable String email) {
-	//
-//		    Optional<Candidate> existingCandidate = candidateRepo.findByEmail(email);
-//		    
-//		    if (existingCandidate.isEmpty()) {
-//		        return ResponseEntity
-//		                .status(HttpStatus.NOT_FOUND)
-//		                .body("Candidate not found");
-//		    }
-//		    
-//		    Candidate candidate = existingCandidate.get();
-//		    CandidateDTO dto = new CandidateDTO();
-//		    
-////		    dto.setCandidateId(candidate.getCandidateId());
-//		    dto.setFirst_name(candidate.getFirst_name());
-//		    dto.setLast_name(candidate.getLast_name());
-//		    dto.setMobNo(candidate.getMobNo());
-//		    dto.setEmail(candidate.getEmail());
-//		    dto.setEducation(candidate.getEducation());
-////		    dto.setResume(candidate.getResume());
-//		    dto.setSkills(candidate.getSkills());
-	//
-	//
-//		    return ResponseEntity.ok(dto);
-//		}
-	//	
 
 }

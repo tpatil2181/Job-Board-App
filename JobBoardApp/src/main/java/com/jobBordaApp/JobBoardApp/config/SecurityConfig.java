@@ -59,10 +59,10 @@ public class SecurityConfig {
 //	                            "/candidate/login"
 //	                    ).permitAll()
 	                    .requestMatchers(
-	                    		"cnd_register",
-	                    		"emp_register",
-	                    		"cnd_login",
-	                    		"emp_login",
+	                    		"/cnd_register",
+	                    		"/emp_register",
+	                    		"/cnd_login",
+	                    		"/emp_login",
 	            
 	                            "/candidate/register",
 	                            "/employer/register",

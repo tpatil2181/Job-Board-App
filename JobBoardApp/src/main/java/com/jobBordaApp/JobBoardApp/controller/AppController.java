@@ -1,17 +1,17 @@
 package com.jobBordaApp.JobBoardApp.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.mapstruct.factory.Mappers;
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.security.core.Authentication;
@@ -24,27 +24,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
-import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
-import com.jobBordaApp.JobBoardApp.exception.RecordAvailableException;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
-import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
-import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
-import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
+import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.service.AppService;
 import com.jobBordaApp.JobBoardApp.service.FileService;
-
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
+import com.jobBordaApp.JobBoardApp.service.JobService;
 
 
 @CrossOrigin(origins ="http://localhost:4200")
@@ -56,7 +48,7 @@ public class AppController {
 	private CandidateRepo candidateRepo;   //Reporisotory variable
 	
 	@Autowired
-	private JobRepo jobRepo;
+	private JobService jobService;
 	
 	@Autowired
 	private EmployeerRepo employeerRepo;
@@ -82,7 +74,9 @@ public String test() {
 
 //ONLY JOB SEARCH FEATURE IS REMEAINING
 	 
-
+//Login Flow should be first user Login with credential and it gets loginResponce back witch contains token userEmail Id or time etc. and once we get login
+// Login DTO at the frontend autometically calls the mehode get profile for there respective controller
+//Loign-getProfile
 
 //===========================Candidate Specific Controller ==========================================
 
@@ -92,13 +86,13 @@ public String test() {
 			return appService.registerCandidate(dto);
 		}
 		
-		@PostMapping("cnd_login")//Secure login
-		public String candLogin (@RequestBody LoginDTO loginDTO) {
+		@PostMapping("/cnd_login")//Secure login
+		public ResponseEntity<?> candLogin (@RequestBody LoginDTO loginDTO) {
 		
-				return appService.verify(loginDTO);
+				return appService.login(loginDTO);
 		}
 		
-		@PostMapping("emp_register")
+		@PostMapping("/emp_register")
 		public ResponseEntity<?> registerCompany(@RequestBody EmployerRegisterDTO dto) {
 			
 				return appService.employerRegister(dto);
@@ -109,41 +103,56 @@ public String test() {
 
 				return appService.employerLogin(request);
 		}
-		
-//		@PostMapping("/candidate/login")
-//		public ResponseEntity<?> candLogin(@RequestBody LoginDTO request) {
-//		
-//				return appService.candidateLogin(request);
-//		}
-		
-		//Implementated Spring Security
-//		@PostMapping("/candidate/login")//Secure login
-//		public ResponseEntity<?> candLogin(Authentication authentication) {
-//		
-//				return appService.getProfile(authentication);
-//		}
-		
-		
-//		completed till 2.37 generating token successfully and remaining is validating the token
-//		
+			
 		
 //===========================Main service of job board app Specific Controller ==========================================
 		
 		
 		@GetMapping("/Jobs")
-		public List<Job> getAllJobs(){
+		public ResponseEntity<?> getAllJobs(){
 
-			List<Job> allJobs= jobRepo.findAll();
-			return allJobs;	
+			return jobService.getAllJobs();
 		}
 		
-//		
-//		@GetMapping("/job/{jobId}")
-//		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
-//			
-//			return appService.getPerticularJob(jobId);
-//		    
+		
+		@GetMapping("/job/{jobId}")
+		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
+			
+			return jobService.getJobByid(jobId);
+		    
+		}
+		
+//		@GetMapping("/jobs")
+//		public ResponseEntity<Page<Job>> getAllJobs(@RequestParam(required = false) Integer jobId,@RequestParam(required = false) String employer,
+//													@RequestParam(required = false) String jobTitle,@RequestParam(required = false) String status,
+//													@RequestParam(required = false) String createDate,Pageable pageable) {
+//
+//		    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
 //		}
+		
+		@GetMapping("/allJobs")
+		public Page<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
+									@RequestParam(required = false, defaultValue = "5")  int pageSize,
+									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
+									@RequestParam(required = false, defaultValue = "ASE")String sortDir,
+									@RequestParam(required = false)Integer jobId,
+									@RequestParam(required = false)String employer,
+									@RequestParam(required = false)String jobTitle,
+									@RequestParam(required = false)String status,
+									@RequestParam(required = false)String createDate){
+			Sort sort=null;
+			if(sortDir.equalsIgnoreCase("ASE")) {
+				sort=Sort.by(sortBy).ascending();
+				
+			}else {
+				sort=Sort.by(sortBy).descending();	
+			}
+			
+			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort),jobId,employer,jobTitle,status,createDate);
+			
+		}
+		
+		
 
 	 	
 		
@@ -181,13 +190,6 @@ public String test() {
 	
 	 
 //===========================Candidate Specific service End ==========================================
-	
-	
-//	
-//	 @GetMapping("resume/{resumeId}")
-//		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
-//				return fileService.getResume(resumeId);
-//		}
 	    
 		@GetMapping("candidate/{id}/applications")
 		public List<ApplyJob> getAllApplicationOfPerticularCandidate(@PathVariable Integer candidateId) {
@@ -204,10 +206,7 @@ public String test() {
 		
 		
 //===========================Company Specific service =========================================		
-		
 
-		
-		
 		@GetMapping("/company/{employeerId}")
 		public Employeer getCompanyProfile(@PathVariable int companyId) {
 			Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
@@ -218,18 +217,7 @@ public String test() {
 		
 //===========================Company Specific service End =========================================
 		
-		
-//===========================Job Specific service  =========================================
-		
-
-		
-		
-		
-		
-		
-		
-		
-//===========================Job Specific service End =========================================
+	
 	 
 	 
 //============================================================================= 
@@ -260,47 +248,6 @@ public String test() {
 //		return "applied";
 //	}
 //	
-	
-//====================================Spring security part====================================	
-	
-	//Getting session id
-//	@GetMapping("/")
-//	public String testsecurity(HttpServletRequest request)
-//	{
-//		
-//		return "hii    "+	request.getSession().getId();
-//	
-//	}
-//
-//	@GetMapping("/getCsrf")
-//	public CsrfToken getCsrfToken(HttpServletRequest request)
-//	{
-//		
-//		return (CsrfToken)request.getAttribute("_csrf");
-//		//Gertting problem to create obkject form postman
-//	}
-
-	
-//====================================Spring security part End ====================================	
-	
-	
-	
-	
-	
-//Controlers which should be app controller
-//	1.Create job using comany id
-//	2.Apply job user comopany and job
-//	3.
-//	4.
-//	5.
-//	6.
-//	7.
-	
-	
-	
-
-//		
-		
 	
 
 	

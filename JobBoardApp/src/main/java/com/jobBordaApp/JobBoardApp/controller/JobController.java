@@ -69,28 +69,28 @@ public class JobController {
 	
 //	@RequestParam(required = false)String search
 	
-	@GetMapping("/allJobs")
-	public List<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
-								@RequestParam(required = false, defaultValue = "5")  int pageSize,
-								@RequestParam(required = false, defaultValue = "jobId") String sortBy,
-								@RequestParam(required = false, defaultValue = "ASE")String sortDir,
-								@RequestParam(required = false)Integer jobId,
-								@RequestParam(required = false)String employer,
-								@RequestParam(required = false)String jobTitle,
-								@RequestParam(required = false)String status,
-								@RequestParam(required = false)String createDate){
-		Sort sort=null;
-		if(sortDir.equalsIgnoreCase("ASE")) {
-			sort=Sort.by(sortBy).ascending();
-			
-		}else {
-			sort=Sort.by(sortBy).descending();	
-		}
-		
-		return jobservice.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort),jobId,employer,jobTitle,status,createDate);
-		
-	}
-	
+//	@GetMapping("/allJobs")
+//	public List<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
+//								@RequestParam(required = false, defaultValue = "5")  int pageSize,
+//								@RequestParam(required = false, defaultValue = "jobId") String sortBy,
+//								@RequestParam(required = false, defaultValue = "ASE")String sortDir,
+//								@RequestParam(required = false)Integer jobId,
+//								@RequestParam(required = false)String employer,
+//								@RequestParam(required = false)String jobTitle,
+//								@RequestParam(required = false)String status,
+//								@RequestParam(required = false)String createDate){
+//		Sort sort=null;
+//		if(sortDir.equalsIgnoreCase("ASE")) {
+//			sort=Sort.by(sortBy).ascending();
+//			
+//		}else {
+//			sort=Sort.by(sortBy).descending();	
+//		}
+//		
+//		return jobservice.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort),jobId,employer,jobTitle,status,createDate);
+//		
+//	}
+//	
 	
 	
 	

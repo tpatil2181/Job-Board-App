@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 
 @Repository
@@ -16,6 +17,9 @@ public interface CandidateRepo  extends JpaRepository<Candidate,Integer> {
 //	public Candidate findByEmail(String email);
 	
 	public Candidate findByFirstName(String Name);
+	
+    Optional<Candidate> findByUser(AppUser user);
+
 	
 
 //	public User findByUsername(String username);
