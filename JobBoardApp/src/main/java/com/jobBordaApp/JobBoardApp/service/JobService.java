@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.jobBordaApp.JobBoardApp.entity.Job;
+import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.specification.JobSpecification;
@@ -67,10 +69,33 @@ public class JobService {
 //		
 //	}
 	
-	public Page <Job> findAllJobs(Pageable pageable, Integer jobId, String employer,
-			String jobTitle, String status, String createDate) {
+	public Page <Job> findAllJobs(
+					        Pageable pageable,
+					        String jobTitle,
+					        String jobLocation,
+					        String employerName,
+					        Integer minExperience,
+					        Integer maxExperience,
+					        WorkMode workMode,
+					        Integer minSalary,
+					        Integer maxSalary,
+					        String employmentType,
+					        String industryType,
+					        LocalDate datePosted) {
 
-	    Specification<Job> spec =JobSpecification.getJobSpecification(jobId,employer,jobTitle,status,createDate);
+	    Specification<Job> spec =JobSpecification.getJobSpecification(
+											            jobTitle,
+											            jobLocation,
+											            employerName,
+											            minExperience,
+											            maxExperience,
+											            workMode,
+											            minSalary,
+											            maxSalary,
+											            employmentType,
+											            industryType,
+											            datePosted
+											    );
 
 	    return jobRepo.findAll(spec, pageable);
 	}

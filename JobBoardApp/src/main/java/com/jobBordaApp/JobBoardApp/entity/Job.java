@@ -104,6 +104,10 @@ public class Job {
 	@Column(name = "status")
 	private JobStatus status;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "workmode")
+	private JobStatus WorkMode;
+	
 	@Column(name="date_posted")
 	private LocalDateTime datePosted;
 	

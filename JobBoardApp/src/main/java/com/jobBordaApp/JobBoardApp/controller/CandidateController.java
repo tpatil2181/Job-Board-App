@@ -121,60 +121,60 @@ public class CandidateController {
 		
 //================================Certification========================================
 		@PostMapping("/candidate/{candidateId}/certification")
-		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
+		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification,Authentication authentication) {
 			
-				return candidateService.addCandCertification(candidateId,certification);
+				return candidateService.addCandCertification(candidateId,certification,authentication);
 		}
 		
 		
 		@PostMapping("/candidate/{candidateId}/{certificationId}")
-		public ResponseEntity<?> getCertification( @PathVariable Integer candidateId, @PathVariable Integer CertificationId) {
+		public ResponseEntity<?> getCertification( @PathVariable Integer candidateId, @PathVariable Integer CertificationId, Authentication authentication) {
 			
-				return candidateService.getCertification(candidateId, CertificationId);
+				return candidateService.getCertification(candidateId, CertificationId,authentication);
 		}
 		
 		
 		@PutMapping("/candidateCerti/{candidateId}")
-		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateCertification updatedCedrtification) {
+		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateCertification updatedCedrtification, Authentication authentication) {
 			
-				return candidateService.updateCertification(candidateId, updatedCedrtification);
+				return candidateService.updateCertification(candidateId, updatedCedrtification,authentication);
 		}
 
 
 		@DeleteMapping("/candidate/{candidateId}/{certificationId}")
-		public ResponseEntity<?> deleteCertificate(@PathVariable Integer candidateId,@PathVariable Integer certificationId) {
+		public ResponseEntity<?> deleteCertificate(@PathVariable Integer candidateId,@PathVariable Integer certificationId,Authentication authentication) {
 
-				return candidateService.deleteCertification(candidateId, certificationId);
+				return candidateService.deleteCertification(candidateId, certificationId,authentication);
 		}
 		
 				
 //================================Experience========================================
 		@PostMapping("/candidate/{candidateId}/experience")
-		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId, @RequestBody CandidateExperience experience) {
+		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId, @RequestBody CandidateExperience experience,Authentication authentication) {
 			
 			
-				return candidateService.addExperience(candidateId, experience);
+				return candidateService.addExperience(candidateId, experience,authentication);
 		}
 		
 		
 		@PostMapping("/candidate/{candidateId}/{experienceId}")
-		public ResponseEntity<?> getExperience( @PathVariable Integer candidateId, @PathVariable Integer experienceId) {
+		public ResponseEntity<?> getExperience( @PathVariable Integer candidateId, @PathVariable Integer experienceId,Authentication authentication) {
 			
-				return candidateService.getExperience(candidateId, experienceId);
+				return candidateService.getExperience(candidateId, experienceId,authentication);
 		}
 		
 		
 		@PutMapping("/candidate/{candidateId}/certification")
-		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience) {
+		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience,Authentication authentication) {
 			
-				return candidateService.updateExperience(candidateId, updatedExperience);
+				return candidateService.updateExperience(candidateId, updatedExperience,authentication);
 		}
 		
 
 		@DeleteMapping("/candidate/{candidateId}/experience")
-		public ResponseEntity<?> deleteExperience(@PathVariable Integer candidateId,@PathVariable Integer experienceId) {
+		public ResponseEntity<?> deleteExperience(@PathVariable Integer candidateId,@PathVariable Integer experienceId,Authentication authentication) {
 			
-				return candidateService.deleteExperience(candidateId, experienceId);
+				return candidateService.deleteExperience(candidateId, experienceId,authentication);
 		}	
 										
 		
@@ -205,20 +205,20 @@ public class CandidateController {
 //================================Candidate Job ========================================	
 		
 		
-		@PostMapping("ApplyJob/")
+		@PostMapping("/cnd_ApplyJob/")
 		public ResponseEntity<?> applyJob(@RequestBody ApplyJobDTO jobApplicaation,Authentication authentication){
 			
 			 return candidateService.jobApplication(jobApplicaation,authentication);
 		}
 	
-		@GetMapping("allAppliedJob/{candidateId}")
+		@GetMapping("/cnd_allAppliedJob/{candidateId}")
 		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId,Authentication authentication){
 			
 			 return candidateService.allAppliedJobs(candidateId, authentication);
 		}
 		
 		
-		@PostMapping("/withdrawApln")
+		@PostMapping("/cnd_withdrawApln")
 		public ResponseEntity<?> withJobAppln(@RequestBody ApplyJobDTO deleteApplication,Authentication authentication){
 			
 			 return candidateService.withdarwJobApplication(deleteApplication,authentication);

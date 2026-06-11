@@ -106,7 +106,7 @@ public class AppService {
 		
 		
 	
-		public ResponseEntity<?> employerRegister(@RequestBody EmployerRegisterDTO dto) {
+		public ResponseEntity<?> registerEmployer(@RequestBody EmployerRegisterDTO dto) {
 		
 			if (userRepo.findByEmail(dto.getEmail()) != null) {
 		    	

@@ -4,7 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
+import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
@@ -95,7 +98,7 @@ public String test() {
 		@PostMapping("/emp_register")
 		public ResponseEntity<?> registerCompany(@RequestBody EmployerRegisterDTO dto) {
 			
-				return appService.employerRegister(dto);
+				return appService.registerEmployer(dto);
 		}
 		
 		@PostMapping("/emp_login")
@@ -122,24 +125,24 @@ public String test() {
 		    
 		}
 		
-//		@GetMapping("/jobs")
-//		public ResponseEntity<Page<Job>> getAllJobs(@RequestParam(required = false) Integer jobId,@RequestParam(required = false) String employer,
-//													@RequestParam(required = false) String jobTitle,@RequestParam(required = false) String status,
-//													@RequestParam(required = false) String createDate,Pageable pageable) {
-//
-//		    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
-//		}
-		
 		@GetMapping("/allJobs")
 		public Page<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
 									@RequestParam(required = false, defaultValue = "5")  int pageSize,
 									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
 									@RequestParam(required = false, defaultValue = "ASE")String sortDir,
-									@RequestParam(required = false)Integer jobId,
-									@RequestParam(required = false)String employer,
-									@RequestParam(required = false)String jobTitle,
-									@RequestParam(required = false)String status,
-									@RequestParam(required = false)String createDate){
+									@RequestParam(required = false) String jobTitle,
+							        @RequestParam(required = false) String jobLocation,
+							        @RequestParam(required = false) String employerName,
+							        @RequestParam(required = false) Integer minExperience,
+							        @RequestParam(required = false) Integer maxExperience,
+							        @RequestParam(required = false) WorkMode workMode,
+							        @RequestParam(required = false) Integer minSalary,
+							        @RequestParam(required = false) Integer maxSalary,
+							        @RequestParam(required = false) String employmentType,
+							        @RequestParam(required = false) String industryType,
+							        @RequestParam(required = false)
+							        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+							        LocalDate datePosted){
 			Sort sort=null;
 			if(sortDir.equalsIgnoreCase("ASE")) {
 				sort=Sort.by(sortBy).ascending();
@@ -148,14 +151,22 @@ public String test() {
 				sort=Sort.by(sortBy).descending();	
 			}
 			
-			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort),jobId,employer,jobTitle,status,createDate);
+			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
+																				   minExperience,maxExperience,workMode,
+																				   minSalary,maxSalary,employmentType,
+																				   industryType,datePosted);
+																	           
 			
-		}
+			}	
 		
 		
-
-	 	
-		
+//		@GetMapping("/jobs")
+//		public ResponseEntity<Page<Job>> getAllJobs(@RequestParam(required = false) Integer jobId,@RequestParam(required = false) String employer,
+//													@RequestParam(required = false) String jobTitle,@RequestParam(required = false) String status,
+//													@RequestParam(required = false) String createDate,Pageable pageable) {
+//
+//		    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
+//		}
 
 		
 		

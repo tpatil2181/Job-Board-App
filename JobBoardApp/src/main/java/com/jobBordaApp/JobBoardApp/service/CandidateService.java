@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-//import  com.jobBordaApp.JobBoardApp.entity.r;
 
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
@@ -280,7 +279,9 @@ public class CandidateService {
 		}
 		
 	
-		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId,Authentication authentication) {
+		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId,
+												  @PathVariable Integer educationId,
+												  Authentication authentication) {
 			
 				String email = authentication.getName();
 				
@@ -307,20 +308,41 @@ public class CandidateService {
 		   
 //---------------------------------------------Candidate Certification----------------------------------------------	
 		
-		public ResponseEntity<?> addCandCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification) {
+		public ResponseEntity<?> addCandCertification( @PathVariable Integer candidateId,
+													   @RequestBody CandidateCertification certification,
+													   Authentication authentication) {
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+		
+				Candidate Cnd=candidate.get();
 
-			    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
-			    certification.setCandidate(candidate);
+			    certification.setCandidate(Cnd);
 			    candidateCertificationRepo.save(certification);
 			    return ResponseEntity.ok("Certification Added");
 		}
 		
-		public ResponseEntity<?> getCertification(@PathVariable Integer candidateId, @PathVariable Integer CertificationId){
+		public ResponseEntity<?> getCertification(@PathVariable Integer candidateId,
+												  @PathVariable Integer CertificationId,
+												  Authentication authentication){
 				
-				Optional<Candidate> candidate =candidateRepo.findById(candidateId);
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
+					
 				Optional<CandidateCertification> CndCer=candidateCertificationRepo.findById(CertificationId);
 				if(CndCer.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
@@ -331,9 +353,20 @@ public class CandidateService {
 			
 		}
 		
-		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateCertification updatedCedrtification){
-				Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId,
+													 @RequestBody CandidateCertification updatedCedrtification,
+													 Authentication authentication){
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
 	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				
 				CandidateCertification certification = candidateCertificationRepo.findById(updatedCedrtification.getCertificationId()).orElseThrow(() -> new RuntimeException("Education not found"));
 
 			    // Validation
@@ -351,17 +384,28 @@ public class CandidateService {
 			    return ResponseEntity.ok("Certification Updated Successfully");
 		}
 		
-		public ResponseEntity<?> deleteCertification( @PathVariable Integer candidateId,@PathVariable Integer certificationId) {
+		public ResponseEntity<?> deleteCertification( @PathVariable Integer candidateId,
+													  @PathVariable Integer certificationId,
+													  Authentication authentication) {
+				
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
 	
-			    Candidate candidate = candidateRepo.findById(candidateId)
-			            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+		
+				Candidate Cnd=candidate.get();
 	
 			    CandidateCertification CandidateCertification = candidateCertificationRepo.findById(certificationId)
 			            .orElseThrow(() -> new RuntimeException("Education not found"));
 	
-			    candidate.getCertifications().remove(CandidateCertification);
+			    Cnd.getCertifications().remove(CandidateCertification);
 	
-			    candidateRepo.save(candidate);
+			    candidateRepo.save(Cnd);
 	
 			    return ResponseEntity.ok("Certification Deleted Successfully");
 		}
@@ -370,20 +414,41 @@ public class CandidateService {
 //---------------------------------------------Candidate Experience----------------------------------------------
 		
 		
-		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId, @RequestBody CandidateExperience experience) {
+		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId,
+												@RequestBody CandidateExperience experience,
+												Authentication authentication) {
 			
-			    Candidate candidate =candidateRepo.findById(candidateId).orElseThrow(() ->new RuntimeException("Candidate not found"));
-			    experience.setCandidate(candidate);
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+		
+				Candidate Cnd=candidate.get();
+			
+			    experience.setCandidate(Cnd);
 			    candidateExperienceRepo.save(experience);
 			    return ResponseEntity.ok("Experience Added");
 		}
 		
-		public ResponseEntity<?> getExperience(@PathVariable Integer candidateId, @PathVariable Integer CertificationId){
+		public ResponseEntity<?> getExperience(@PathVariable Integer candidateId,
+											   @PathVariable Integer CertificationId,
+											   Authentication authentication){
 			
-				Optional<Candidate> candidate =candidateRepo.findById(candidateId);
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
+			
 				Optional<CandidateCertification> CndCer=candidateCertificationRepo.findById(CertificationId);
 				if(CndCer.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
@@ -394,9 +459,21 @@ public class CandidateService {
 		
 		}
 		
-		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience){
-			 	Candidate candidate = candidateRepo.findById(candidateId).orElseThrow(() -> new RuntimeException("Candidate not found"));
-
+		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId,
+												  @RequestBody CandidateExperience updatedExperience,
+												  Authentication authentication){
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+	
+		
 			 	CandidateExperience exp = candidateExperienceRepo.findById(updatedExperience.getCandExpId()).orElseThrow(() -> new RuntimeException("Education not found"));
 
 			    // Validation
@@ -416,17 +493,28 @@ public class CandidateService {
 			    return ResponseEntity.ok("Expericence Updated Successfully");
 		}
 		
-		public ResponseEntity<?> deleteExperience( @PathVariable Integer candidateId,@PathVariable Integer experienceId) {
+		public ResponseEntity<?> deleteExperience( @PathVariable Integer candidateId,
+												   @PathVariable Integer experienceId,
+												   Authentication authentication) {
 			
-			    Candidate candidate = candidateRepo.findById(candidateId)
-			            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
 	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+		
+				Candidate Cnd=candidate.get();
+			
 			    CandidateExperience candExp = candidateExperienceRepo.findById(experienceId)
 			            .orElseThrow(() -> new RuntimeException("Experience not found"));
 	
-			    candidate.getExperiences().remove(candExp);
+			    Cnd.getExperiences().remove(candExp);
 	
-			    candidateRepo.save(candidate);
+			    candidateRepo.save(Cnd);
 	
 			    return ResponseEntity.ok("Certification Deleted Successfully");
 		}
