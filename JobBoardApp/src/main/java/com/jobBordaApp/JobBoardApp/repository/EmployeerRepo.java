@@ -4,10 +4,14 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 
 
 public interface EmployeerRepo  extends JpaRepository<Employeer,Integer> {
+	
+	
+	  Optional<Employeer> findByUser(AppUser user);
 
 	
 //	public Optional<Employeer> findByEmail(String email);

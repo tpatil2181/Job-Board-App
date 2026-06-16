@@ -8,6 +8,7 @@ import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
@@ -35,7 +37,7 @@ import com.jobBordaApp.JobBoardApp.service.CandidateService;
 import com.jobBordaApp.JobBoardApp.service.EmployerService;
 
 @RestController
-@RequestMapping("/jobBoardApp/employeer")
+@RequestMapping("/employer")
 public class EmployeerController {
 	
 	@Autowired
@@ -61,18 +63,48 @@ public class EmployeerController {
 	
 	
 	
+//================================Employer Profile related service========================================	
+	
+	@PostMapping("/emp_profile")
+	public ResponseEntity<?> getEmployerProfile( Authentication authentication ) {
+			
+			return EmprService.getCompanyProfile(authentication);
+	}
+	
+	 @PatchMapping("/emp_update")
+	 public ResponseEntity<?> updatePartial( @RequestBody Employeer updatedEmployer,Authentication authentication) {
+		
+		 		return EmprService.updateEmployer(updatedEmployer,authentication);
+	 }
 	
 	
-	
+	 @DeleteMapping("/emp_delete")  //change id to email
+	 public ResponseEntity<?> deleteEmployer(Authentication authentication) {
+		
+		    	return EmprService.deleteEmployer(authentication);
+	 }
+	 
+	 @PostMapping("/emp_changePass")
+	 public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
+				
+				return EmprService.changeEmployerPassword(newPass,authentication);
+	}
+	 
 	
 	
 //================================Job releted CURD and service========================================
 	
 	
-	@PostMapping("/createJob")
-	public ResponseEntity<?> postNewJob( @RequestBody Job newJob) {
-		
-			return EmprService.CreateNewJob(newJob);
+//	@PostMapping("/postJob")
+//	public ResponseEntity<?> postNewJob( @RequestBody Job newJob) {
+//		
+//			return EmprService.CreateNewJob(newJob);
+//	}
+	
+	@PostMapping("/postJob")
+	public ResponseEntity<?> postNewJob(@RequestBody Job newJob,Authentication authentication) {
+
+	    return EmprService.createNewJob(newJob, authentication);
 	}
 	
 	@GetMapping("/job/{id}")
@@ -93,17 +125,19 @@ public class EmployeerController {
 			return EmprService.DeleteExistingJob(jobId,EmployeerId);
 	}
 	
+
+	@GetMapping("/AllPostedJobs/{employeerId}")
+	public ResponseEntity<?> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
+		
+			return EmprService.getAllJobsPostedByCompany(employeerId);
+	}
+	
 	@GetMapping("/allAppln/{jobId}")
 	public ResponseEntity<?> getAllApplicant(@PathVariable Integer jobId){
 		
 			return EmprService.getAllApplicantByJob(jobId);
 	}
 
-	@GetMapping("/getAllJobs/{employeerId}")
-	public ResponseEntity<?> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
-		
-			return EmprService.getAllJobsPostedByCompany(employeerId);
-	}
 	
 	
 	
@@ -135,10 +169,10 @@ public class EmployeerController {
 	
 
 	
-	@GetMapping("/test")
-	public String testEmoployeer() {
-		return "Employeer run successfully";
-	}
+//	@GetMapping("/test")
+//	public String testEmoployeer() {
+//		return "Employeer run successfully";
+//	}
 	
 	
 //==============Comapny  releted  CURD operations by company=================
@@ -290,10 +324,7 @@ public class EmployeerController {
 	}
 	
 	//create a function which will return of Candidates by search for particular skill
-	
-	
-	
-	
+
 	
 	
 	

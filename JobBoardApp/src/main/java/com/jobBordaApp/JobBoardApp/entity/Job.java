@@ -89,13 +89,13 @@ public class Job {
 	private String educations;
 	
 	
-	@ManyToMany
-	@JoinTable(
-	    name = "job_skills",
-	    joinColumns = @JoinColumn(name = "job_id"),
-	    inverseJoinColumns = @JoinColumn(name = "skill_id")
-	)
-	private List<Skill> skills;
+//	@ManyToMany
+//	@JoinTable(
+//	    name = "job_skills",
+//	    joinColumns = @JoinColumn(name = "job_id"),
+//	    inverseJoinColumns = @JoinColumn(name = "skill_id")
+//	)
+//	private List<Skill> skills;
 	
 //	@Column(name="skills")
 //	private String skills;

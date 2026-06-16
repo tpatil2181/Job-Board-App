@@ -106,11 +106,11 @@ public class JobController {
 		return allJobs;
 	}
 	
-	@GetMapping("/job/{jobId}")
-	public Job findPerticularJob(@PathVariable Integer JobId) {
-		Job isJobExist=jobRepo.findById(JobId).orElseThrow(()-> new ResourceNotFoundException("No job found with this jobId"));
-		return isJobExist; 
-	}
+//	@GetMapping("/job/{jobId}")
+//	public Job findPerticularJob(@PathVariable Integer JobId) {
+//		Job isJobExist=jobRepo.findById(JobId).orElseThrow(()-> new ResourceNotFoundException("No job found with this jobId"));
+//		return isJobExist; 
+//	}
 	
 		
 //===================Advance Part=================	

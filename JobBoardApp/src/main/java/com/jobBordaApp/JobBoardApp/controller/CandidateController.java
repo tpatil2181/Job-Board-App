@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +38,7 @@ import com.jobBordaApp.JobBoardApp.service.CandidateService;
 
 @CrossOrigin(origins ="http://localhost:4200")
 @RestController
-//@RequestMapping("/jobBoardApp/candidate")
+@RequestMapping("/jobBoardApp/candidate")
 public class CandidateController {
 	
 	
@@ -70,20 +71,20 @@ public class CandidateController {
 		}
 	
 	
-	   @PatchMapping("/cnd_update")
+	   @PatchMapping("/update")
 	   public ResponseEntity<?> updatePartial( @RequestBody Candidate updatedCandidate,Authentication authentication) {
 		
 		 		return candidateService.updateCandidate(updatedCandidate,authentication);
 	 	}
 	
 	
-	   @DeleteMapping("/cnd_delete")  //change id to email
+	   @DeleteMapping("/delete")  //change id to email
 	   public ResponseEntity<?> deleteCandidate(Authentication authentication) {
 		
 		    	return candidateService.deleteCandidate(authentication);
 	 	}
 	 
-	   @PostMapping("/cnd_changePass")
+	   @PostMapping("/changePass")
 	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
 				
 				return candidateService.changeCandidatePassword(newPass,authentication);
@@ -92,27 +93,27 @@ public class CandidateController {
   
 //================================Education========================================
 	
-		@PostMapping("/cnd_edu/{candidateId}")
+		@PostMapping("/edu/{candidateId}")
 		public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education, Authentication authentication) {
 			
 				return candidateService.addEducation(education,authentication);
 		}
 		
-		@PostMapping("/cnd_edu/{candidateId}/{educationId}")
+		@PostMapping("/edu/{candidateId}/{educationId}")
 		public ResponseEntity<?> getEducation(@PathVariable Integer CndId,@PathVariable Integer EduId,Authentication authentication) {
 			
 				return candidateService.getEducation(CndId,EduId,authentication);
 		}
 		
 
-		@PutMapping("/cnd_edu/{candidateId}/education")
+		@PutMapping("/edu/{candidateId}/education")
 		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication) {
 
 				return candidateService.updateEducation( updatedEducation, authentication);
 		}
 
 
-		@DeleteMapping("/cnd_edu/{candidateId}/education/{educationId}")
+		@DeleteMapping("/edu/{candidateId}/education/{educationId}")
 		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId,Authentication authentication) {
 			
 				return candidateService.deleteEducation(candidateId, educationId, authentication);
@@ -120,14 +121,14 @@ public class CandidateController {
 		
 		
 //================================Certification========================================
-		@PostMapping("/candidate/{candidateId}/certification")
+		@PostMapping("/newCertification/{candidateId}/certification")
 		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification,Authentication authentication) {
 			
 				return candidateService.addCandCertification(candidateId,certification,authentication);
 		}
 		
 		
-		@PostMapping("/candidate/{candidateId}/{certificationId}")
+		@PostMapping("/certificate/{candidateId}/{certificationId}")
 		public ResponseEntity<?> getCertification( @PathVariable Integer candidateId, @PathVariable Integer CertificationId, Authentication authentication) {
 			
 				return candidateService.getCertification(candidateId, CertificationId,authentication);

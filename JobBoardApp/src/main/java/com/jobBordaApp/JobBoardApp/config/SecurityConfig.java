@@ -63,6 +63,8 @@ public class SecurityConfig {
 	                    		"/emp_register",
 	                    		"/cnd_login",
 	                    		"/emp_login",
+	                    		"/Jobs",
+	                    		"/jobsearch",
 	            
 	                            "/candidate/register",
 	                            "/employer/register",

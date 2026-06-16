@@ -35,7 +35,8 @@ public class JobService {
 	public ResponseEntity<?> getAllJobs(){
 		
 		List<Job> allJobs= jobRepo.findAll();
-		return (ResponseEntity<?>) allJobs;		
+		return ResponseEntity.ok(allJobs);	
+//		return  allJobs;		
 
 	}
 	

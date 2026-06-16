@@ -90,9 +90,9 @@ public String test() {
 		}
 		
 		@PostMapping("/cnd_login")//Secure login
-		public ResponseEntity<?> candLogin (@RequestBody LoginDTO loginDTO) {
+		public ResponseEntity<?> candLogin (@RequestBody LoginDTO loginRequest) {
 		
-				return appService.login(loginDTO);
+				return appService.login(loginRequest);
 		}
 		
 		@PostMapping("/emp_register")
@@ -102,9 +102,16 @@ public String test() {
 		}
 		
 		@PostMapping("/emp_login")
-		public ResponseEntity<?> companyLogin(@RequestBody LoginDTO request  ) {
+		public ResponseEntity<?> companyLogin(@RequestBody LoginDTO loginRequest  ) {
 
-				return appService.employerLogin(request);
+				return appService.login(loginRequest);
+		}
+		
+		
+		@PostMapping("/login")//Secure login
+		public ResponseEntity<?> Login (@RequestBody LoginDTO loginRequest) {
+		
+				return appService.login(loginRequest);
 		}
 			
 		
@@ -125,7 +132,7 @@ public String test() {
 		    
 		}
 		
-		@GetMapping("/allJobs")
+		@GetMapping("/jobsearch")
 		public Page<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
 									@RequestParam(required = false, defaultValue = "5")  int pageSize,
 									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
@@ -282,10 +289,10 @@ public String test() {
 //		return "Job applied Sussfully";
 //	}
 //	
-	@PostMapping("/applyJob")
-	public ResponseEntity<?> applyJob(@RequestBody ApplyJob newApplication) {
-		
-		return appService.JobApplication(newApplication);
+//	@PostMapping("/applyJob")
+//	public ResponseEntity<?> applyJob(@RequestBody ApplyJob newApplication) {
+//		
+//		return appService.JobApplication(newApplication);
 //
 //	    Integer candidateId = newApplication.getCandidate().getCandidateId();
 //	    Integer jobId = newApplication.getJob().getJobId();
@@ -308,7 +315,7 @@ public String test() {
 //	    applicationRepo.save(newApplication);
 //
 //	    return "Applied Successfully";
-	}
+//	}
 	
 //Ambiguty error comming for this methode for same name get resume	
 //	@GetMapping("resume/{userId}")

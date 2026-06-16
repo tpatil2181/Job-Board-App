@@ -35,10 +35,6 @@ public class Employeer {
 	String employeerName;
 	@Column(name="website")
 	String website;
-//	@Column(name="email")
-//	String email;
-//	@Column(name="password")
-//	String password;
 	@Column(name="contact")
 	Long contact;
 	@Column(name="joblist")
