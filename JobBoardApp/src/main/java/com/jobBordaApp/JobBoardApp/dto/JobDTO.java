@@ -30,10 +30,8 @@ public class JobDTO {
 
 	    private String jobTitle;
 
-	    // Instead of sending full employer entity
 	    private Integer employerId;
 
-	    // Optional employer details
 	    private String employerName;
 
 	    private WorkMode workMode;
@@ -60,7 +58,7 @@ public class JobDTO {
 
 	    private String educations;
 
-	    private List<Skill> skills;
+//	    private List<Skill> skills;
 
 	    private JobStatus status;
 

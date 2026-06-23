@@ -38,7 +38,7 @@ import com.jobBordaApp.JobBoardApp.service.CandidateService;
 
 @CrossOrigin(origins ="http://localhost:4200")
 @RestController
-@RequestMapping("/jobBoardApp/candidate")
+@RequestMapping("/Hireflow/candidate")
 public class CandidateController {
 	
 	
@@ -64,7 +64,7 @@ public class CandidateController {
 	
 //================================Candidate========================================
 	
-		@GetMapping("/cnd_profile")
+		@PostMapping("/profile")
 		public ResponseEntity<?> getCndProfile(Authentication authentication) {
 	
 			return candidateService.getCandidateProfile(authentication);

@@ -74,6 +74,7 @@ public class SecurityConfig {
 
 	                    // Candidate APIs
 	                    .requestMatchers("/candidate/**")
+//	                    .requestMatchers("/Hireflow/candidate/**")
 	                    .hasRole("CANDIDATE")
 
 	                    // Employer APIs

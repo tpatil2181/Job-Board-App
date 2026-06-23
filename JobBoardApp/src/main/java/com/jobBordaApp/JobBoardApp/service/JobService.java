@@ -11,17 +11,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
+import com.jobBordaApp.JobBoardApp.mapper.JobMapper;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.specification.JobSpecification;
+
+
 
 @Service
 public class JobService {
@@ -29,6 +35,9 @@ public class JobService {
 
 	@Autowired
 	JobRepo jobRepo;
+	
+	@Autowired
+	private JobMapper jobMapper;
 	
 	
 
@@ -70,7 +79,7 @@ public class JobService {
 //		
 //	}
 	
-	public Page <Job> findAllJobs(
+	public Page <JobDTO> findAllJobs(
 					        Pageable pageable,
 					        String jobTitle,
 					        String jobLocation,
@@ -98,7 +107,10 @@ public class JobService {
 											            datePosted
 											    );
 
-	    return jobRepo.findAll(spec, pageable);
+//	    return jobRepo.findAll(spec, pageable);
+	    Page<Job> jobs = jobRepo.findAll(spec, pageable);
+	    
+	    return jobs.map(jobMapper::mapJobToJobDTO);
 	}
 
 

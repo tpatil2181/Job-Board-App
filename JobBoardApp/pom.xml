@@ -54,7 +54,7 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		 <dependency>
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
 		    <scope>provided</scope>
@@ -142,9 +142,9 @@
 
         </annotationProcessorPaths>
 
-        <compilerArgs>
+        <!-- <compilerArgs>
             <arg>-Amapstruct.defaultComponentModel=spring</arg>
-        </compilerArgs>
+        </compilerArgs>-->
 
     </configuration>
 </plugin>

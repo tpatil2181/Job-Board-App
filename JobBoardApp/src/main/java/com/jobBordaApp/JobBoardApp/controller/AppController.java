@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
+import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
@@ -118,12 +119,12 @@ public String test() {
 //===========================Main service of job board app Specific Controller ==========================================
 		
 		
-		@GetMapping("/Jobs")
-		public ResponseEntity<?> getAllJobs(){
-
-			return jobService.getAllJobs();
-		}
-		
+////		@GetMapping("/Jobs")
+//		public ResponseEntity<?> getAllJobs(){
+//
+//			return jobService.getAllJobs();
+//		}
+//		if no parameter pass in jobsearch it automatically pass the all job list
 		
 		@GetMapping("/job/{jobId}")
 		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
@@ -133,7 +134,7 @@ public String test() {
 		}
 		
 		@GetMapping("/jobsearch")
-		public Page<Job> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
+		public Page<JobDTO> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
 									@RequestParam(required = false, defaultValue = "5")  int pageSize,
 									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
 									@RequestParam(required = false, defaultValue = "ASE")String sortDir,

@@ -6,6 +6,8 @@ import org.mapstruct.Mapping;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 
+
+
 @Mapper(componentModel = "spring")
 public interface JobMapper {
 
