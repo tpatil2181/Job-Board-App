@@ -64,9 +64,12 @@ public class CandidateController {
 	
 //================================Candidate========================================
 	
+//		@PreAuthorize("hasRole('CANDIDATE')")
 		@PostMapping("/profile")
 		public ResponseEntity<?> getCndProfile(Authentication authentication) {
+//			   System.out.println("PROFILE API HIT");
 	
+			
 			return candidateService.getCandidateProfile(authentication);
 		}
 	
@@ -182,7 +185,7 @@ public class CandidateController {
 //================================Resume========================================
 //		1.View resume should be in resume service			
 	
-		@PreAuthorize("hasRole('CANDIDATE')")
+//		@PreAuthorize("hasRole('CANDIDATE')")
 		@PostMapping("/uploadResume/{candidateId}")
 	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId,Authentication authentication) {
 	    	
@@ -206,23 +209,26 @@ public class CandidateController {
 //================================Candidate Job ========================================	
 		
 		
-		@PostMapping("/cnd_ApplyJob/")
+		@PostMapping("/jobApplication")
 		public ResponseEntity<?> applyJob(@RequestBody ApplyJobDTO jobApplicaation,Authentication authentication){
+			System.out.println(jobApplicaation.getCandidateId());
+			System.out.println(jobApplicaation.getEmployeerId());
+			System.out.println(jobApplicaation.getJobId());
 			
 			 return candidateService.jobApplication(jobApplicaation,authentication);
 		}
 	
-		@GetMapping("/cnd_allAppliedJob/{candidateId}")
-		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId,Authentication authentication){
+		@GetMapping("/allAppliedJobs")
+		public ResponseEntity<?> allAppliedJobs(Authentication authentication){
 			
-			 return candidateService.allAppliedJobs(candidateId, authentication);
+			 return candidateService.allAppliedJobs(authentication);
 		}
 		
 		
-		@PostMapping("/cnd_withdrawApln")
-		public ResponseEntity<?> withJobAppln(@RequestBody ApplyJobDTO deleteApplication,Authentication authentication){
+		@DeleteMapping("/withdrawAppln/{applicationId}")
+		public ResponseEntity<?> withdrawJobApplication(@PathVariable Integer applicationId,Authentication authentication){
 			
-			 return candidateService.withdarwJobApplication(deleteApplication,authentication);
+			 return candidateService.withdarwJobApplication(applicationId,authentication);
 		}
 		
 		@PostMapping("/getJob/{applyId}")

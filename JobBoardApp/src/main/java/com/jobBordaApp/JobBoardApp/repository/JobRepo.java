@@ -15,7 +15,7 @@ import com.jobBordaApp.JobBoardApp.entity.Job;
 public interface JobRepo  extends JpaRepository<Job,Integer>, JpaSpecificationExecutor<Job> {
 
 	
-	@Query(value="select * from job u where employeerId=?1",nativeQuery = true)
+	@Query(value="select * from job u where employer_id=?1",nativeQuery = true)
 	public List<Job> findAllJobsByComapanyId(int companyID); 
 	
 	@Query(value="select * from job u where candidate_Id=?1",nativeQuery = true)

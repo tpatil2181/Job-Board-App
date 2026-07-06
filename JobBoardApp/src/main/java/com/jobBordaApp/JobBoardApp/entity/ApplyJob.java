@@ -35,10 +35,15 @@ public class ApplyJob {
     
     @ManyToOne
     @JoinColumn(name = "employeer_id")
-    private Employeer employeerId;     // reference to Employeer table
+    private Employeer employeer;     // reference to Employeer table
+    
+//    private Boolean isStatusApplied =true;
 
 
-    private String status;
+    
+//    for withdraw use 0 to validate at frontend
+    @Builder.Default
+    private  String status = "Applied";
     
 //    
 //    {

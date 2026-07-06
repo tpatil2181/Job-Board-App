@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.jobBordaApp.JobBoardApp.dto.AppliedJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
@@ -30,6 +30,7 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.mapper.AppliedJobMapper;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
 import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
@@ -73,6 +74,10 @@ public class CandidateService {
 	
 	@Autowired
 	private CandidateMapper candidateMapper;
+	
+	@Autowired
+	private AppliedJobMapper appliedJobMapper;
+	
 	
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); 
 	
@@ -561,42 +566,54 @@ public class CandidateService {
 			
 				String email = authentication.getName();
 	
-				AppUser user = appUserRepo.findByEmail(email);
+		 		AppUser user = appUserRepo.findByEmail(email);
 	
 			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
 			    
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
-				
+				Candidate cnd=candidate.get();
 				Optional<Employeer> emp= employeerRepo.findById(jobApplication.getEmployeerId()); 
 				
 				if(emp.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Employeer not found"));						
 				}
 				
-				
-				Optional<Job> job= jobRepo.findById(jobApplication.getEmployeerId()); 
+				Employeer empr=emp.get();				
+			
+				Optional<Job> job= jobRepo.findById(jobApplication.getJobId()); 
 				
 				if(job.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job not found"));						
 				}
 				
+				Job jb=job.get();
+			
 				Optional<ApplyJob> AppliedJob=applyJobRepo.getJobApplicationByEmpJobCndId(
 																			jobApplication.getCandidateId(), jobApplication.getJobId(),
 																			jobApplication.getEmployeerId());
 				if(AppliedJob.isPresent()) {
 					
-			        return ResponseEntity.badRequest().body("You have already allied for the job");	
-				}
-				ApplyJob aj=AppliedJob.get();
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","You have already applied for the job"));						
+					}
+				
+				ApplyJob aj=new ApplyJob();
+				
+				aj.setCandidate(cnd);
+				aj.setEmployeer(empr);
+				aj.setJob(jb);
+				
 				applyJobRepo.save(aj);
-			    return ResponseEntity.ok("Job Applied");
+				return ResponseEntity.ok(
+					    Map.of("message", "Job Applied")
+					);
+//			    return ResponseEntity.ok("Job Applied");
 		}
 			
 		
 		
-		public ResponseEntity<?> allAppliedJobs(@PathVariable Integer candidateId,Authentication authentication){
+		public ResponseEntity<?> allAppliedJobs(Authentication authentication){
 			
 				String email = authentication.getName();
 				
@@ -607,16 +624,23 @@ public class CandidateService {
 				if(candidate.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 				}
-						
-				List<ApplyJob> allJobOfCandidate=applyJobRepo.findAllApplicationsByCandidateId(candidateId);
-				if(allJobOfCandidate.size()==0) {
-					throw new ResourceNotFoundException("No jobs applied by this Candidate");
+				
+				Candidate cnd=candidate.get();
+				
+				List<ApplyJob> allAppliedJobs=applyJobRepo.findAllApplicationsByCandidateId(cnd.getCandidateId());
+				if(allAppliedJobs.size()==0) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No jobs applied by this Candidate"));
+
+//					throw new ResourceNotFoundException("No jobs applied by this Candidate");
 				}
-				return ResponseEntity.ok(allJobOfCandidate);		
+			
+				List<AppliedJobDTO> appliedJobsDTO = allAppliedJobs.stream().map(appliedJobMapper::mapAppiedJobToApplyjobDTO).toList();
+			    
+			    return ResponseEntity.ok(appliedJobsDTO);		
 
 		}
 		
-		public ResponseEntity<?> withdarwJobApplication(@RequestBody ApplyJobDTO deleteJob, Authentication authentication){
+		public ResponseEntity<?> withdarwJobApplication(@RequestBody Integer ApplicationId, Authentication authentication){
 			
 			String email = authentication.getName();
 			
@@ -628,11 +652,19 @@ public class CandidateService {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
 			}
 			
-			int rowsDeleted = applyJobRepo.deleteByCandidateIdAndJobId(deleteJob.getCandidateId(),deleteJob.getJobId());
-
-			if (rowsDeleted == 0) {
-			    return ResponseEntity.badRequest().body(Map.of("message","Application not found"));
+			if(applyJobRepo.findById(ApplicationId).isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Application not found"));
+				
 			}
+			applyJobRepo.deleteById(ApplicationId);
+			
+			
+//			in case of multipal delete
+//			int rowsDeleted = applyJobRepo.deleteByCandidateIdAndJobId(deleteJob.getCandidateId(),deleteJob.getJobId());
+//
+//			if (rowsDeleted == 0) {
+//			    return ResponseEntity.badRequest().body(Map.of("message","Application not found"));
+//			}
 
 			return ResponseEntity.ok(Map.of("message", "Application withdrawn successfully"));
 		}

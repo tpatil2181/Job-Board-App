@@ -13,9 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.jobBordaApp.JobBoardApp.dto.AppliedJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.ChangeJobStatusDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployeerDTO;
+import com.jobBordaApp.JobBoardApp.dto.JobDTO;
+import com.jobBordaApp.JobBoardApp.dto.PostedJobDTO;
 import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
@@ -24,6 +28,7 @@ import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
 import com.jobBordaApp.JobBoardApp.mapper.EmployerMapper;
+import com.jobBordaApp.JobBoardApp.mapper.JobMapper;
 import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
@@ -47,6 +52,9 @@ public class EmployerService {
 	
 	@Autowired
 	private EmployerMapper empMapper;
+	
+	@Autowired
+	private JobMapper jobMapper;
 	
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); 
 
@@ -280,9 +288,31 @@ public class EmployerService {
 			{
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No Job posted yet"));
 			}
-			return ResponseEntity.ok(allJobs);
+			List<PostedJobDTO> postedJobsDTO = allJobs.stream().map(jobMapper::JobTopostedJobDTO).toList();
+		    
+		    return ResponseEntity.ok(postedJobsDTO);		
+
+//			return ResponseEntity.ok(allJobs);
 		}
 
+		
+		public ResponseEntity<?> changeJobStatus(@PathVariable ChangeJobStatusDTO updatedStatus ){
+			
+			Optional<Job> job =jobRepo.findById(updatedStatus.getJobId());
+			
+			if(job.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job Not Found"));
+			}
+			Job jb=job.get();
+			jb.setStatus(updatedStatus.getStatus());
+			
+			jobRepo.save(jb);
+			
+			 return ResponseEntity.ok(Map.of("message","Job updated successfully"));
+			  
+//		    return ResponseEntity.ok();		
+					
+		}
 
 	
 

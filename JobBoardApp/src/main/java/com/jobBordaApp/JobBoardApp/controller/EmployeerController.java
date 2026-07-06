@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobBordaApp.JobBoardApp.dto.ChangeJobStatusDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
@@ -37,7 +38,7 @@ import com.jobBordaApp.JobBoardApp.service.CandidateService;
 import com.jobBordaApp.JobBoardApp.service.EmployerService;
 
 @RestController
-@RequestMapping("/employer")
+@RequestMapping("/Hireflow/employer")
 public class EmployeerController {
 	
 	@Autowired
@@ -137,6 +138,14 @@ public class EmployeerController {
 		
 			return EmprService.getAllApplicantByJob(jobId);
 	}
+	
+	@PostMapping("/changeStatus")
+	public ResponseEntity<?> chngJbSta(@RequestBody ChangeJobStatusDTO updatedStatus) {
+
+	    return EmprService.changeJobStatus(updatedStatus );
+	}
+	
+	
 
 	
 	

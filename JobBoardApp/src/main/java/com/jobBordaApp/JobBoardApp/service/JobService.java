@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.enums.WorkMode;
@@ -58,7 +59,9 @@ public class JobService {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job Not Found"));
 		}
 		Job jb=job.get();
-		return ResponseEntity.ok(jb);	
+		JobDTO JobDTO =jobMapper.mapJobToJobDTO(jb);
+		  
+	    return ResponseEntity.ok(JobDTO);
 
 	}
 	

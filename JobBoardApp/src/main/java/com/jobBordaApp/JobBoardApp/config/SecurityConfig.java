@@ -1,6 +1,13 @@
 package com.jobBordaApp.JobBoardApp.config;
 
 
+import java.util.List;
+
+
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration;
@@ -26,6 +33,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 
 //Configuration File file 
@@ -46,18 +54,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
 	  
+		
 		return http
-	            .csrf(customizer -> customizer.disable())
-	            .authorizeHttpRequests(auth -> auth
-//
-	            		//Add Job serch api in this
-//	                    // Public APIs
-//	                    .requestMatchers(
-//	                            "/register",
-//	                            "/api/register",
-//	                            "/candidate/register",
-//	                            "/candidate/login"
-//	                    ).permitAll()
+		        .cors(Customizer.withDefaults())
+		        .csrf(csrf -> csrf.disable())
+		        .authorizeHttpRequests(auth -> auth
 	                    .requestMatchers(
 	                    		"/cnd_register",
 	                    		"/emp_register",
@@ -70,11 +71,13 @@ public class SecurityConfig {
 	                            "/employer/register",
 	                            "/candidate/login",
 	                            "/employer/login"
+//	                            "/employer/AllPostedJobs/**"
+	                            
 	                    ).permitAll()
 
 	                    // Candidate APIs
-	                    .requestMatchers("/candidate/**")
-//	                    .requestMatchers("/Hireflow/candidate/**")
+//	                    .requestMatchers("/candidate/**")
+	                    .requestMatchers("/Hireflow/candidate/**")
 	                    .hasRole("CANDIDATE")
 
 	                    // Employer APIs
@@ -97,18 +100,37 @@ public class SecurityConfig {
 	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 	            .build();
 	}
-		
-//		http.formLogin(Customizer.withDefaults());
-		//49.45 build it returns the object of security object filter chain 
 	
-//My code 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:4200"));
+
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        configuration.setAllowedHeaders(
+                List.of("*"));
+
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+		
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		 
 		 DaoAuthenticationProvider provider =new DaoAuthenticationProvider(userDetailsService);
-		 provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-//		 provider.setUserDetailsService(userDetailsService);
-		
+		 provider.setPasswordEncoder(new BCryptPasswordEncoder(12));		
 		return provider;
 	}
 
@@ -119,35 +141,5 @@ public class SecurityConfig {
 		
 		
 	}
-//chatgpt codde 
-//	 @Bean
-//	    public AuthenticationProvider authenticationProvider() {
-//
-//	        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//
-//	        provider.setUserDetailsService(userDetailsService);
-//	        provider.setPasswordEncoder(passwordEncoder());
-//
-//	        return provider;
-//	    }
-	
-	
-//	@Bean 
-//	public UserDetailsService userDetailsService() {
-//		
-//		UserDetails user1=User.withDefaultPasswordEncoder()
-//				.username("Tushar")
-//				.password("T@123")
-//				.roles("USER")
-//				.build();
-//		
-//		UserDetails user2=User.withDefaultPasswordEncoder()
-//				.username("Patil")
-//				.password("P@123")
-//				.roles("ADMIN")
-//				.build();
-//		return  new InMemoryUserDetailsManager();
-//		
-//	}
 
 }
