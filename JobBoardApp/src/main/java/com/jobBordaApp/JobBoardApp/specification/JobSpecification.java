@@ -37,87 +37,91 @@ public class JobSpecification {
 				    List<Predicate> list = new ArrayList<>();
 				
 				    if(employerName != null && !employerName.isEmpty()) {
-				        list.add(criteriaBuilder.equal(
-				                root.get("employer").get("employeerName"),
-				                employerName));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				        list.add(criteriaBuilder.like(
+				                criteriaBuilder.lower(root.get("employer").get("employeerName")),
+				                "%" + employerName.toLowerCase() + "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(jobTitle != null && !jobTitle.isEmpty()) {
-				        list.add(criteriaBuilder.equal(root.get("jobTitle"), jobTitle));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				        list.add(criteriaBuilder.like(
+				                criteriaBuilder.lower(root.get("jobTitle")),
+				                "%" + jobTitle.toLowerCase() + "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(jobLocation != null && !jobLocation.isEmpty()) {
-				        list.add(criteriaBuilder.equal(root.get("jobLocation"), jobLocation));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				        list.add(criteriaBuilder.like(
+				                criteriaBuilder.lower(root.get("jobLocation")),
+				                "%" + jobLocation.toLowerCase() + "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(minExperience != null) {
 				        list.add(criteriaBuilder.greaterThanOrEqualTo(
 				                root.get("minExperience"),
 				                minExperience));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(maxExperience != null) {
 				        list.add(criteriaBuilder.lessThanOrEqualTo(
 				                root.get("maxExperience"),
 				                maxExperience));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(workMode != null) {
 				        list.add(criteriaBuilder.equal(
 				                root.get("workMode"),
 				                workMode));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(minSalary != null) {
 				        list.add(criteriaBuilder.greaterThanOrEqualTo(
 				                root.get("minSalary"),
 				                minSalary));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(maxSalary != null) {
 				        list.add(criteriaBuilder.lessThanOrEqualTo(
 				                root.get("maxSalary"),
 				                maxSalary));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(employmentType != null && !employmentType.isEmpty()) {
-				        list.add(criteriaBuilder.equal(
-				                root.get("employmentType"),
-				                employmentType));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				        list.add(criteriaBuilder.like(
+				                criteriaBuilder.lower(root.get("employmentType")),
+				                "%" + employmentType.toLowerCase() + "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(industryType != null && !industryType.isEmpty()) {
-				        list.add(criteriaBuilder.equal(
-				                root.get("industryType"),
-				                industryType));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				        list.add(criteriaBuilder.like(
+				                criteriaBuilder.lower(root.get("industryType")),
+				                "%" + industryType.toLowerCase() + "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-				
+
 				    if(datePosted != null) {
 				        list.add(criteriaBuilder.greaterThanOrEqualTo(
 				                root.get("datePosted"),
 				                datePosted.atStartOfDay()));
-				//                              OR
-				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
 				
 				//  list.add(criteriaBuilder.equal(root.get("jobTitle"),search));
@@ -142,6 +146,137 @@ public class JobSpecification {
 
 }
 
+//========================================Second Code==================================
+//public class JobSpecification {
+//	
+//	public static Specification<Job> getJobSpecification (String jobTitle, String jobLocation, String employerName,
+//			Integer minExperience, Integer maxExperience, WorkMode workMode, Integer minSalary, Integer maxSalary,
+//			String employmentType, String industryType, LocalDate datePosted) {
+//		return new Specification<Job>() {
+//			
+//
+//				@Override
+//				public @Nullable Predicate toPredicate(
+//				        Root<Job> root,
+//				        CriteriaQuery<?> query,
+//				        CriteriaBuilder criteriaBuilder) {
+//				
+//				    // TODO Auto-generated method stub
+//				//  if(search==null || search.isEmpty()) {
+//				//      criteriaBuilder.conjunction();
+//				//  }
+//				
+//				    List<Predicate> list = new ArrayList<>();
+//				
+//				    if(employerName != null && !employerName.isEmpty()) {
+//				        list.add(criteriaBuilder.equal(
+//				                root.get("employer").get("employeerName"),
+//				                employerName));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(jobTitle != null && !jobTitle.isEmpty()) {
+//				        list.add(criteriaBuilder.equal(root.get("jobTitle"), jobTitle));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(jobLocation != null && !jobLocation.isEmpty()) {
+//				        list.add(criteriaBuilder.equal(root.get("jobLocation"), jobLocation));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(minExperience != null) {
+//				        list.add(criteriaBuilder.greaterThanOrEqualTo(
+//				                root.get("minExperience"),
+//				                minExperience));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(maxExperience != null) {
+//				        list.add(criteriaBuilder.lessThanOrEqualTo(
+//				                root.get("maxExperience"),
+//				                maxExperience));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(workMode != null) {
+//				        list.add(criteriaBuilder.equal(
+//				                root.get("workMode"),
+//				                workMode));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(minSalary != null) {
+//				        list.add(criteriaBuilder.greaterThanOrEqualTo(
+//				                root.get("minSalary"),
+//				                minSalary));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(maxSalary != null) {
+//				        list.add(criteriaBuilder.lessThanOrEqualTo(
+//				                root.get("maxSalary"),
+//				                maxSalary));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(employmentType != null && !employmentType.isEmpty()) {
+//				        list.add(criteriaBuilder.equal(
+//				                root.get("employmentType"),
+//				                employmentType));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(industryType != null && !industryType.isEmpty()) {
+//				        list.add(criteriaBuilder.equal(
+//				                root.get("industryType"),
+//				                industryType));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				    if(datePosted != null) {
+//				        list.add(criteriaBuilder.greaterThanOrEqualTo(
+//				                root.get("datePosted"),
+//				                datePosted.atStartOfDay()));
+//				//                              OR
+//				//      list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
+//				
+//				//  list.add(criteriaBuilder.equal(root.get("jobTitle"),search));
+//				//  list.add(criteriaBuilder.equal(root.get("status"),search));
+//				
+//				//  list.add(criteriaBuilder.equal(root.get("skills"),search));//It is no used right now but use it letter
+//				
+//				//  It is used when result should be get on sub string like jav= java developer
+//				//  list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				//  list.add(criteriaBuilder.like(root.get("status"),"%"+ search +"%"));
+//				
+//				    return criteriaBuilder.and(list.toArray(new Predicate[0]));
+//				
+//				//  complete till 10:00;
+//				}
+//			
+//		};
+//		
+//	}
+//
+//
+//
+//}
+
+
+
+//===========================================================First code===========================================
 //
 //@Override
 //public @Nullable Predicate toPredicate(
