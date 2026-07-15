@@ -141,16 +141,23 @@ public String test() {
 									@RequestParam(required = false) String jobTitle,
 							        @RequestParam(required = false) String jobLocation,
 							        @RequestParam(required = false) String employerName,
+//							        @RequestParam(required = false)  List<ExperienceFilterDTO> experiences;
 							        @RequestParam(required = false) Integer minExperience,
 							        @RequestParam(required = false) Integer maxExperience,
-							        @RequestParam(required = false) WorkMode workMode,
+							        @RequestParam(name = "workMode",required = false) List<WorkMode> workModes,
+//							        @RequestParam(required = false) WorkMode workMode,
 							        @RequestParam(required = false) Integer minSalary,
 							        @RequestParam(required = false) Integer maxSalary,
-							        @RequestParam(required = false) String employmentType,
-							        @RequestParam(required = false) String industryType,
+							        @RequestParam(required = false) List<String> employmentTypes,
+//							        @RequestParam(required = false) List<EmplyementType> employmentTypes,
+//							        @RequestParam(required = false) String employmentType,
+							        @RequestParam(required = false) List<String> industryType,
+//							        @RequestParam(required = false) String industryType,
 							        @RequestParam(required = false)
 							        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 							        LocalDate datePosted){
+//			System.out.println(workModes);
+//			System.out.println(employmentTypes);
 			Sort sort=null;
 			if(sortDir.equalsIgnoreCase("ASE")) {
 				sort=Sort.by(sortBy).ascending();
@@ -160,8 +167,8 @@ public String test() {
 			}
 			
 			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
-																				   minExperience,maxExperience,workMode,
-																				   minSalary,maxSalary,employmentType,
+																				   minExperience,maxExperience,workModes,
+																				   minSalary,maxSalary,employmentTypes,
 																				   industryType,datePosted);
 																	           
 			

@@ -18,8 +18,8 @@ import jakarta.persistence.criteria.Root;
 public class JobSpecification {
 	
 	public static Specification<Job> getJobSpecification (String jobTitle, String jobLocation, String employerName,
-			Integer minExperience, Integer maxExperience, WorkMode workMode, Integer minSalary, Integer maxSalary,
-			String employmentType, String industryType, LocalDate datePosted) {
+			Integer minExperience, Integer maxExperience, List<WorkMode> workModes, Integer minSalary, Integer maxSalary,
+			List<String> employmentTypes, List<String> industryTypes, LocalDate datePosted) {
 		return new Specification<Job>() {
 			
 
@@ -75,14 +75,19 @@ public class JobSpecification {
 //				                                  OR
 //				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
-
-				    if(workMode != null) {
-				        list.add(criteriaBuilder.equal(
-				                root.get("workMode"),
-				                workMode));
+				    
+				    
+				    //multivalue search
+				    if (workModes != null && !workModes.isEmpty()) {
+				        list.add(root.get("workMode").in(workModes));
+				    }
+//				    if(workMode != null) {
+//				        list.add(criteriaBuilder.equal(
+//				                root.get("workMode"),
+//				                workMode));
 //				                                  OR
 //				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
-				    }
+//				    }
 
 				    if(minSalary != null) {
 				        list.add(criteriaBuilder.greaterThanOrEqualTo(
@@ -100,21 +105,31 @@ public class JobSpecification {
 //				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
 				    }
 
-				    if(employmentType != null && !employmentType.isEmpty()) {
-				        list.add(criteriaBuilder.like(
-				                criteriaBuilder.lower(root.get("employmentType")),
-				                "%" + employmentType.toLowerCase() + "%"));
-//				                                  OR
-//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+				    
+//				    with this we can accepes multipal values of same type
+				    if (employmentTypes != null && !employmentTypes.isEmpty()) {
+				        list.add(root.get("employmentType").in(employmentTypes));
 				    }
+//				    for single value
+//				    if(employmentType != null && !employmentType.isEmpty()) {
+//				        list.add(criteriaBuilder.like(
+//				                criteriaBuilder.lower(root.get("employmentType")),
+//				                "%" + employmentType.toLowerCase() + "%"));
+////				                                  OR
+//				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
+//				    }
 
-				    if(industryType != null && !industryType.isEmpty()) {
-				        list.add(criteriaBuilder.like(
-				                criteriaBuilder.lower(root.get("industryType")),
-				                "%" + industryType.toLowerCase() + "%"));
+//				  multivalue search  
+				    if (industryTypes != null && !industryTypes.isEmpty()) {
+				        list.add(root.get("employmentType").in(industryTypes));
+				    }
+//				    if(industryType != null && !industryType.isEmpty()) {
+//				        list.add(criteriaBuilder.like(
+//				                criteriaBuilder.lower(root.get("industryType")),
+//				                "%" + industryType.toLowerCase() + "%"));
 //				                                  OR
 //				          list.add(criteriaBuilder.like(root.get("jobTitle"),"%" + search+ "%"));
-				    }
+//				    }
 
 				    if(datePosted != null) {
 				        list.add(criteriaBuilder.greaterThanOrEqualTo(

@@ -89,11 +89,11 @@ public class JobService {
 					        String employerName,
 					        Integer minExperience,
 					        Integer maxExperience,
-					        WorkMode workMode,
+					        List<WorkMode> workMode,
 					        Integer minSalary,
 					        Integer maxSalary,
-					        String employmentType,
-					        String industryType,
+					        List<String> employmentTypes,
+					        List<String> industryTypes,
 					        LocalDate datePosted) {
 
 	    Specification<Job> spec =JobSpecification.getJobSpecification(
@@ -105,8 +105,8 @@ public class JobService {
 											            workMode,
 											            minSalary,
 											            maxSalary,
-											            employmentType,
-											            industryType,
+											            employmentTypes,
+											            industryTypes,
 											            datePosted
 											    );
 
