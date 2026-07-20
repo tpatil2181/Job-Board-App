@@ -43,7 +43,11 @@ import com.jobBordaApp.JobBoardApp.service.FileService;
 import com.jobBordaApp.JobBoardApp.service.JobService;
 
 
-@CrossOrigin(origins ="http://localhost:4200")
+// @CrossOrigin(origins ="http://localhost:4200")
+// @CrossOrigin(origins = {
+//     "http://localhost:4200",
+//     "https://curly-happiness-69gvp65gq79wcr55-4200.app.github.dev"
+// })
 @RestController
 //@RequestMapping()
 public class AppController {

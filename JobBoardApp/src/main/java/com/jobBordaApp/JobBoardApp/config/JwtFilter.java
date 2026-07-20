@@ -35,9 +35,12 @@ public class JwtFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-//		System.out.println("REQUEST = " + request.getRequestURI());
-//		System.out.println("AUTH HEADER = " + request.getHeader("Authorization"));
 		
+		System.out.println("REQUEST = " + request.getRequestURI());
+		System.out.println("AUTH HEADER = " + request.getHeader("Authorization"));
+
+
+	
 		
 		// TODO Auto-generated method stub
 		String authHeader= request.getHeader("Authorization");
@@ -51,14 +54,42 @@ public class JwtFilter extends OncePerRequestFilter{
 		}
 		
 		if(username !=null && SecurityContextHolder.getContext().getAuthentication()==null ) {
+			// Local Host Configuration
+
+
+			// UserDetails userDetails=context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
+			// if(jwtService.validateToken(token,userDetails)) {
+			// 	UsernamePasswordAuthenticationToken authToken =
+			// 			new UsernamePasswordAuthenticationToken( userDetails,null ,userDetails.getAuthorities());
+			// 	authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			// 	SecurityContextHolder.getContext().setAuthentication(authToken);
 			
-			UserDetails userDetails=context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
-			if(jwtService.validateToken(token,userDetails)) {
+
+			//CodeSpace Configuration
+			
+			System.out.println("USERNAME = " + username);
+
+			UserDetails userDetails = context.getBean(MyUserDetailsService.class)
+											.loadUserByUsername(username);
+
+			System.out.println("DB USER = " + userDetails.getUsername());
+			System.out.println("AUTHORITIES = " + userDetails.getAuthorities());
+
+			boolean valid = jwtService.validateToken(token, userDetails);
+
+			System.out.println("TOKEN VALID = " + valid);
+
+			if (valid) {
+
 				UsernamePasswordAuthenticationToken authToken =
-						new UsernamePasswordAuthenticationToken( userDetails,null ,userDetails.getAuthorities());
-				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					new UsernamePasswordAuthenticationToken(
+						userDetails,
+						null,
+						userDetails.getAuthorities());
+
 				SecurityContextHolder.getContext().setAuthentication(authToken);
-				
+
+				System.out.println("AUTHENTICATION SET");
 			}
 			
 		}
