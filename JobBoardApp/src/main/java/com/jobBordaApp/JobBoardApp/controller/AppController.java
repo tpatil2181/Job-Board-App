@@ -139,7 +139,7 @@ public String test() {
 		}
 		
 		
-//New code for Job seraching=========================================		
+//===============================New code for Job seraching=========================================		
 		@PostMapping("/jobsearch")
 		public Page<JobDTO> getAllJobs(
 		        @RequestParam(defaultValue = "1") int pageNo,

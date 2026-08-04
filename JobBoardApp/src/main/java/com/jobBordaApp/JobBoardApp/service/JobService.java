@@ -86,7 +86,7 @@ public class JobService {
 	
 	
 	
-//New code for Job seraching=========================================		
+//======================================New code for Job seraching=========================================		
 	public Page<JobDTO> findAllJobs(Pageable pageable,JobSearchDTO jobSearchDTO) {
 
 	    Specification<Job> spec =
