@@ -106,9 +106,12 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of("http://localhost:4200"));
-
+        // configuration.setAllowedOrigins(
+        //         List.of("http://localhost:4200","http://127.0.0.1/","https://curly-happiness-69gvp65gq79wcr55-8080.app.github.dev"));
+		configuration.setAllowedOrigins(List.of(
+			"http://localhost:4200",
+			"https://curly-happiness-69gvp65gq79wcr55-4200.app.github.dev"
+		));
         configuration.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

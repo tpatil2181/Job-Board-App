@@ -36,7 +36,7 @@ import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.service.CandidateService;
 
 
-@CrossOrigin(origins ="http://localhost:4200")
+// @CrossOrigin(origins ="http://localhost:4200")
 @RestController
 @RequestMapping("/Hireflow/candidate")
 public class CandidateController {
