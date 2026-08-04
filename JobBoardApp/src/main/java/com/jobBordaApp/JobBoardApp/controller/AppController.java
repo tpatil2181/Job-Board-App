@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
+import com.jobBordaApp.JobBoardApp.dto.JobSearchDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
@@ -109,11 +110,11 @@ public String test() {
 		}
 		
 		
-		@PostMapping("/login")//Secure login
-		public ResponseEntity<?> Login (@RequestBody LoginDTO loginRequest) {
-		
-				return appService.login(loginRequest);
-		}
+//		@PostMapping("/login")//Secure login
+//		public ResponseEntity<?> Login (@RequestBody LoginDTO loginRequest) {
+//		
+//				return appService.login(loginRequest);
+//		}
 			
 		
 //===========================Main service of job board app Specific Controller ==========================================
@@ -133,46 +134,72 @@ public String test() {
 		    
 		}
 		
-		@GetMapping("/jobsearch")
-		public Page<JobDTO> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
-									@RequestParam(required = false, defaultValue = "5")  int pageSize,
-									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
-									@RequestParam(required = false, defaultValue = "ASE")String sortDir,
-									@RequestParam(required = false) String jobTitle,
-							        @RequestParam(required = false) String jobLocation,
-							        @RequestParam(required = false) String employerName,
-//							        @RequestParam(required = false)  List<ExperienceFilterDTO> experiences;
-							        @RequestParam(required = false) Integer minExperience,
-							        @RequestParam(required = false) Integer maxExperience,
-							        @RequestParam(name = "workMode",required = false) List<WorkMode> workModes,
-//							        @RequestParam(required = false) WorkMode workMode,
-							        @RequestParam(required = false) Integer minSalary,
-							        @RequestParam(required = false) Integer maxSalary,
-							        @RequestParam(required = false) List<String> employmentTypes,
-//							        @RequestParam(required = false) List<EmplyementType> employmentTypes,
-//							        @RequestParam(required = false) String employmentType,
-							        @RequestParam(required = false) List<String> industryType,
-//							        @RequestParam(required = false) String industryType,
-							        @RequestParam(required = false)
-							        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-							        LocalDate datePosted){
-//			System.out.println(workModes);
-//			System.out.println(employmentTypes);
-			Sort sort=null;
-			if(sortDir.equalsIgnoreCase("ASE")) {
-				sort=Sort.by(sortBy).ascending();
-				
-			}else {
-				sort=Sort.by(sortBy).descending();	
-			}
-			
-			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
-																				   minExperience,maxExperience,workModes,
-																				   minSalary,maxSalary,employmentTypes,
-																				   industryType,datePosted);
-																	           
-			
-			}	
+		
+//New code for Job seraching=========================================		
+		@PostMapping("/jobsearch")
+		public Page<JobDTO> getAllJobs(
+		        @RequestParam(defaultValue = "1") int pageNo,
+		        @RequestParam(defaultValue = "5") int pageSize,
+		        @RequestParam(defaultValue = "jobId") String sortBy,
+		        @RequestParam(defaultValue = "ASE") String sortDir,
+		        @RequestBody JobSearchDTO jobSearchDTO) {
+
+		    Sort sort = null;
+
+		    if (sortDir.equalsIgnoreCase("ASE")) {
+		        sort = Sort.by(sortBy).ascending();
+		    } else {
+		        sort = Sort.by(sortBy).descending();
+		    }
+
+		    return jobService.findAllJobs(
+		            PageRequest.of(pageNo - 1, pageSize, sort),
+		            jobSearchDTO);
+		}
+		
+		
+//===================================================================Old running Code for job searching===================================================================
+		
+//		@GetMapping("/jobsearch")
+//		public Page<JobDTO> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
+//									@RequestParam(required = false, defaultValue = "5")  int pageSize,
+//									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
+//									@RequestParam(required = false, defaultValue = "ASE")String sortDir,
+//									@RequestParam(required = false) String jobTitle,
+//							        @RequestParam(required = false) String jobLocation,
+//							        @RequestParam(required = false) String employerName,
+////							        @RequestParam(required = false)  List<ExperienceFilterDTO> experiences;
+//							        @RequestParam(required = false) Integer minExperience,
+//							        @RequestParam(required = false) Integer maxExperience,
+//							        @RequestParam(name = "workMode",required = false) List<WorkMode> workModes,
+////							        @RequestParam(required = false) WorkMode workMode,
+//							        @RequestParam(required = false) Integer minSalary,
+//							        @RequestParam(required = false) Integer maxSalary,
+//							        @RequestParam(required = false) List<String> employmentTypes,
+////							        @RequestParam(required = false) List<EmplyementType> employmentTypes,
+////							        @RequestParam(required = false) String employmentType,
+//							        @RequestParam(required = false) List<String> industryType,
+////							        @RequestParam(required = false) String industryType,
+//							        @RequestParam(required = false)
+//							        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//							        LocalDate datePosted){
+////			System.out.println(workModes);
+////			System.out.println(employmentTypes);
+//			Sort sort=null;
+//			if(sortDir.equalsIgnoreCase("ASE")) {
+//				sort=Sort.by(sortBy).ascending();
+//				
+//			}else {
+//				sort=Sort.by(sortBy).descending();	
+//			}
+//			
+//			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
+//																				   minExperience,maxExperience,workModes,
+//																				   minSalary,maxSalary,employmentTypes,
+//																				   industryType,datePosted);
+//																	           
+//			
+//			}	
 		
 		
 //		@GetMapping("/jobs")
@@ -183,7 +210,7 @@ public String test() {
 //		    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
 //		}
 
-		
+//===================================================================	===================================================================	
 		
 //-------------------------------------------------------------------------
 //	this should  be in company service only company can view candidate profile on candidate  email

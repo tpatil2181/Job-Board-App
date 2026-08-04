@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
+import com.jobBordaApp.JobBoardApp.dto.JobSearchDTO;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
@@ -82,39 +83,55 @@ public class JobService {
 //		
 //	}
 	
-	public Page <JobDTO> findAllJobs(
-					        Pageable pageable,
-					        String jobTitle,
-					        String jobLocation,
-					        String employerName,
-					        Integer minExperience,
-					        Integer maxExperience,
-					        List<WorkMode> workMode,
-					        Integer minSalary,
-					        Integer maxSalary,
-					        List<String> employmentTypes,
-					        List<String> industryTypes,
-					        LocalDate datePosted) {
+	
+	
+	
+//New code for Job seraching=========================================		
+	public Page<JobDTO> findAllJobs(Pageable pageable,JobSearchDTO jobSearchDTO) {
 
-	    Specification<Job> spec =JobSpecification.getJobSpecification(
-											            jobTitle,
-											            jobLocation,
-											            employerName,
-											            minExperience,
-											            maxExperience,
-											            workMode,
-											            minSalary,
-											            maxSalary,
-											            employmentTypes,
-											            industryTypes,
-											            datePosted
-											    );
+	    Specification<Job> spec =
+	            JobSpecification.getJobSpecification(jobSearchDTO);
 
-//	    return jobRepo.findAll(spec, pageable);
 	    Page<Job> jobs = jobRepo.findAll(spec, pageable);
-	    
+
 	    return jobs.map(jobMapper::mapJobToJobDTO);
 	}
+
+//===================================================================Old running Code for job searching===================================================================
+	
+//	public Page <JobDTO> findAllJobs(
+//					        Pageable pageable,
+//					        String jobTitle,
+//					        String jobLocation,
+//					        String employerName,
+//					        Integer minExperience,
+//					        Integer maxExperience,
+//					        List<WorkMode> workMode,
+//					        Integer minSalary,
+//					        Integer maxSalary,
+//					        List<String> employmentTypes,
+//					        List<String> industryTypes,
+//					        LocalDate datePosted) {
+//
+//	    Specification<Job> spec =JobSpecification.getJobSpecification(
+//											            jobTitle,
+//											            jobLocation,
+//											            employerName,
+//											            minExperience,
+//											            maxExperience,
+//											            workMode,
+//											            minSalary,
+//											            maxSalary,
+//											            employmentTypes,
+//											            industryTypes,
+//											            datePosted
+//											    );
+//
+////	    return jobRepo.findAll(spec, pageable);
+//	    Page<Job> jobs = jobRepo.findAll(spec, pageable);
+//	    
+//	    return jobs.map(jobMapper::mapJobToJobDTO);
+//	}
 
 
 
