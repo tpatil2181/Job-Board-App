@@ -58,22 +58,15 @@ public class Candidate {
 	@Column(name="mobile_no")
 	String mobNo;
 	
-//	Scince We are using role base autherization email and password will be part of UserEntity
-//	@Column(name="email", unique=true)
-//	String email;
-//	
-//	@Column(name="password")
-//	String password;
-	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private AppUser user;
 	
-	
+	// ✅ Educations
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CandidateEducation> educations;
     
- // ✅ Experience
+    // ✅ Experience
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CandidateExperience> experiences;
 
@@ -81,7 +74,9 @@ public class Candidate {
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CandidateCertification> certifications;
 
-	
+    // ✅ Language
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Language> language;
 
 	@OneToOne
 	@JoinColumn(name = "resume_id")

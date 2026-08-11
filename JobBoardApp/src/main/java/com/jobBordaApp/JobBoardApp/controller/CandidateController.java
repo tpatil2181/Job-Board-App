@@ -30,6 +30,7 @@ import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
 import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
 import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
+import com.jobBordaApp.JobBoardApp.entity.Language;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
@@ -180,7 +181,36 @@ public class CandidateController {
 			
 				return candidateService.deleteExperience(candidateId, experienceId,authentication);
 		}	
-										
+
+//================================Language========================================
+		@PostMapping("/{candidateId}/language")
+		public ResponseEntity<?> addLanguage( @PathVariable Integer candidateId, @RequestBody Language lang,Authentication authentication) {
+			
+				System.out.println("Hii");
+				return candidateService.addLanguage(candidateId, lang, authentication);
+		}
+//		
+//		
+		@PostMapping("/candidate/lang/{candidateId}/{langId}")
+		public ResponseEntity<?> getLanguage( @PathVariable Integer candidateId, @PathVariable Integer langId ,Authentication authentication) {
+			
+				return candidateService.getCndLang(candidateId, langId ,authentication);
+		}
+//		
+//		
+//		@PutMapping("/candidate/{candidateId}/certification")
+//		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience,Authentication authentication) {
+//			
+//				return candidateService.updateExperience(candidateId, updatedExperience,authentication);
+//		}
+//		
+//
+		@DeleteMapping("/candidate/{candidateId}/language")
+		public ResponseEntity<?> deleteCandLang(@PathVariable Integer candidateId,@PathVariable Integer cndLangId,Authentication authentication) {
+			
+				return candidateService.deleteCndLang(candidateId, cndLangId, authentication);
+		}	
+						
 		
 //================================Resume========================================
 //		1.View resume should be in resume service			

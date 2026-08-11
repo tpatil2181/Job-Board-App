@@ -29,6 +29,7 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
+import com.jobBordaApp.JobBoardApp.entity.Language;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.AppliedJobMapper;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
@@ -41,6 +42,7 @@ import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateResumeReop;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
+import com.jobBordaApp.JobBoardApp.repository.LanguageRepo;
 
 @Service
 public class CandidateService {
@@ -73,10 +75,14 @@ public class CandidateService {
 	private CandidateResumeReop candidateResumeRepo;
 	
 	@Autowired
+	private LanguageRepo langRepo;
+	
+	@Autowired
 	private CandidateMapper candidateMapper;
 	
 	@Autowired
 	private AppliedJobMapper appliedJobMapper;
+	
 	
 	
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); 
@@ -523,7 +529,117 @@ public class CandidateService {
 	
 			    return ResponseEntity.ok("Certification Deleted Successfully");
 		}
+
 		
+//---------------------------------------------Candidate Language----------------------------------------------
+				
+				
+				public ResponseEntity<?> addLanguage( @PathVariable Integer candidateId,
+														@RequestBody Language lang,
+														Authentication authentication) {
+					
+						String email = authentication.getName();
+						
+						AppUser user = appUserRepo.findByEmail(email);
+			
+					    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+					    
+						if(candidate.isEmpty()) {
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+						}
+				
+						Candidate Cnd=candidate.get();
+					
+						
+						lang.setCandidate(Cnd);
+						langRepo.save(lang);
+					    return ResponseEntity.ok("Language Added");
+				}
+				
+				public ResponseEntity<?> getCndLang(@PathVariable Integer candidateId,
+													   @PathVariable Integer cndLangId,
+													   Authentication authentication){
+					
+						String email = authentication.getName();
+						
+						AppUser user = appUserRepo.findByEmail(email);
+			
+					    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+					    
+						if(candidate.isEmpty()) {
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+						}
+					
+						Optional<Language> CndLang=langRepo.findById(cndLangId);
+						if(CndLang.isEmpty()) {
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Language Not Found"));
+						}
+						Language CL=CndLang.get();			
+			
+						return ResponseEntity.ok(CL);		
+				
+				}
+//				
+//				public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId,
+//														  @RequestBody CandidateExperience updatedExperience,
+//														  Authentication authentication){
+//					
+//						String email = authentication.getName();
+//						
+//						AppUser user = appUserRepo.findByEmail(email);
+//			
+//					    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//					    
+//						if(candidate.isEmpty()) {
+//							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//						}
+//			
+//				
+//					 	CandidateExperience exp = candidateExperienceRepo.findById(updatedExperience.getCandExpId()).orElseThrow(() -> new RuntimeException("Education not found"));
+//
+//					    // Validation
+//					    if (!exp.getCandidate().getCandidateId().equals(candidateId)) {
+//					        return ResponseEntity.badRequest().body("Experience does not belong to this candidate");
+//					    }
+//
+//					    exp.setCompanyName(updatedExperience.getCompanyName());
+//					    exp.setJobTitle(updatedExperience.getJobTitle());
+//					    exp.setJoiningDate(updatedExperience.getJoiningDate());
+//					    exp.setEndingDate(updatedExperience.getEndingDate());
+//					    exp.setIsCurrentCompanny(updatedExperience.getIsCurrentCompanny());
+//					    exp.setAboutJobProfile(updatedExperience.getAboutJobProfile());
+//
+//					    candidateExperienceRepo.save(exp);
+//
+//					    return ResponseEntity.ok("Expericence Updated Successfully");
+//				}
+//				
+				public ResponseEntity<?> deleteCndLang( @PathVariable Integer candidateId,
+														   @PathVariable Integer cndLangId,
+														   Authentication authentication) {
+					
+						String email = authentication.getName();
+						
+						AppUser user = appUserRepo.findByEmail(email);
+			
+					    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+					    
+						if(candidate.isEmpty()) {
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+						}
+				
+						Candidate Cnd=candidate.get();
+					
+					    Language cndlang = langRepo.findById(cndLangId)
+					            .orElseThrow(() -> new RuntimeException("language not found"));
+			
+					    Cnd.getLanguage().remove(cndlang);
+			
+					    langRepo.save(cndlang);
+			
+					    return ResponseEntity.ok("Language Deleted Successfully");
+				}
+				
 		
 //---------------------------------------------Candidate Resume----------------------------------------------
 	

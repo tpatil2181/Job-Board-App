@@ -20,7 +20,8 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 		componentModel = "spring", uses = {
         CandidateEducationMapper.class,
         CandidateExperienceMapper.class,
-        CandidateCertificateMapper.class
+        CandidateCertificateMapper.class,
+        CandidateLanguageMapper.class
 })
 public interface CandidateMapper {
 

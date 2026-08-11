@@ -39,13 +39,42 @@ public class CandidateExperience {
 	String companyName;
 	@Column(name="job_title")
 	String jobTitle;
+	
+//	@Column(name="joinMonth")
+//	private String joinMonth;
+	
 	@Column(name="joining_date")
 	Date joiningDate;
+	
+	
+//	@Column(name="joining_date")
+//	Date joiningDate;
 	@Column(name="ending_date")
 	Date endingDate;
 	@Column(name="is_current_company")
 	Boolean isCurrentCompanny; 
 	@Column(name="about_job")
 	String aboutJobProfile;
+	
+	   
+	    
+//	    @Column(name="start_year")
+//	    private String startYear;
+//
+//	    @Column(name="endMonth")
+//	    private String endMonts;
+//	    
+//	    @Column(name="end_year")
+//	    private String endYear;
+//	    
+//	    @Column(name="isPuercing")
+//	    private Boolean isPuercing;
+//
+//	    @Column(name="percentage")
+//	    private Double percentage;
+	    
+//	    @Column(name="disc")
+//	    private Boolean Discription;
+
 	
 }
