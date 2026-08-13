@@ -2,6 +2,8 @@ package com.jobBordaApp.JobBoardApp.dto;
 
 import java.sql.Date;
 
+import com.jobBordaApp.JobBoardApp.enums.LanguageProficiency;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +20,5 @@ public class CandidateLanguageDTO {
 	Integer langId;
 	private Integer candidateId; // reference to Candidate table
 	private String language;
-	private String proficiency;
+	private LanguageProficiency proficiency;
 }

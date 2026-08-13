@@ -1,7 +1,12 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
+import com.jobBordaApp.JobBoardApp.enums.JobStatus;
+import com.jobBordaApp.JobBoardApp.enums.LanguageProficiency;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,11 +32,12 @@ public class Language {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer langId;
     
-    @Column(name="degree")
+    @Column(name="language")
     private String language;
-
-    @Column(name="college")
-    private String proficiency;
+    
+	@Enumerated(EnumType.STRING)
+	@Column(name = "proficiency")
+	private LanguageProficiency proficiency;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id")

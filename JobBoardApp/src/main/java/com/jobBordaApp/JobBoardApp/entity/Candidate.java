@@ -76,7 +76,7 @@ public class Candidate {
 
     // ✅ Language
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Language> language;
+    private List<Language> languages;
 
 	@OneToOne
 	@JoinColumn(name = "resume_id")

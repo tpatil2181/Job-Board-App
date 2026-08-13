@@ -183,11 +183,10 @@ public class CandidateController {
 		}	
 
 //================================Language========================================
-		@PostMapping("/{candidateId}/language")
-		public ResponseEntity<?> addLanguage( @PathVariable Integer candidateId, @RequestBody Language lang,Authentication authentication) {
+		@PostMapping("/addlang")
+		public ResponseEntity<?> addLanguage(@RequestBody Language lang,Authentication authentication) {
 			
-				System.out.println("Hii");
-				return candidateService.addLanguage(candidateId, lang, authentication);
+				return candidateService.addLanguage(lang, authentication);
 		}
 //		
 //		
@@ -198,17 +197,17 @@ public class CandidateController {
 		}
 //		
 //		
-//		@PutMapping("/candidate/{candidateId}/certification")
-//		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience,Authentication authentication) {
-//			
-//				return candidateService.updateExperience(candidateId, updatedExperience,authentication);
-//		}
+		@PutMapping("/updatelang")
+		public ResponseEntity<?> updateLanguage(@RequestBody Language lang,Authentication authentication) {
+			
+				return candidateService.updateCndLang(lang,authentication);
+		}
 //		
 //
-		@DeleteMapping("/candidate/{candidateId}/language")
-		public ResponseEntity<?> deleteCandLang(@PathVariable Integer candidateId,@PathVariable Integer cndLangId,Authentication authentication) {
+		@DeleteMapping("/deletelang/{cndLangId}")
+		public ResponseEntity<?> deleteCandLang(@PathVariable Integer cndLangId,Authentication authentication) {
 			
-				return candidateService.deleteCndLang(candidateId, cndLangId, authentication);
+				return candidateService.deleteCndLang(cndLangId, authentication);
 		}	
 						
 		
