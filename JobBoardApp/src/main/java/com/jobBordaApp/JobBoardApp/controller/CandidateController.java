@@ -154,11 +154,11 @@ public class CandidateController {
 		
 				
 //================================Experience========================================
-		@PostMapping("/candidate/{candidateId}/experience")
-		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId, @RequestBody CandidateExperience experience,Authentication authentication) {
+		@PostMapping("/experience")
+		public ResponseEntity<?> addExperience( @RequestBody CandidateExperience experience,Authentication authentication) {
 			
 			
-				return candidateService.addExperience(candidateId, experience,authentication);
+				return candidateService.addExperience( experience,authentication);
 		}
 		
 		
@@ -169,17 +169,17 @@ public class CandidateController {
 		}
 		
 		
-		@PutMapping("/candidate/{candidateId}/certification")
-		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId, @RequestBody CandidateExperience updatedExperience,Authentication authentication) {
+		@PostMapping("/updateExperience")
+		public ResponseEntity<?> updateExperience( @RequestBody CandidateExperience updatedExperience,Authentication authentication) {
 			
-				return candidateService.updateExperience(candidateId, updatedExperience,authentication);
+				return candidateService.updateExperience(updatedExperience,authentication);
 		}
 		
 
-		@DeleteMapping("/candidate/{candidateId}/experience")
-		public ResponseEntity<?> deleteExperience(@PathVariable Integer candidateId,@PathVariable Integer experienceId,Authentication authentication) {
+		@DeleteMapping("/experience/{experienceId}")
+		public ResponseEntity<?> deleteExperience(@PathVariable Integer experienceId,Authentication authentication) {
 			
-				return candidateService.deleteExperience(candidateId, experienceId,authentication);
+				return candidateService.deleteExperience( experienceId,authentication);
 		}	
 
 //================================Language========================================

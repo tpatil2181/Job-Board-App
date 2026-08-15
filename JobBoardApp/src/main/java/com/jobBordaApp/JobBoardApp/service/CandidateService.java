@@ -425,8 +425,7 @@ public class CandidateService {
 //---------------------------------------------Candidate Experience----------------------------------------------
 		
 		
-		public ResponseEntity<?> addExperience( @PathVariable Integer candidateId,
-												@RequestBody CandidateExperience experience,
+		public ResponseEntity<?> addExperience(@RequestBody CandidateExperience experience,
 												Authentication authentication) {
 			
 				String email = authentication.getName();
@@ -443,7 +442,9 @@ public class CandidateService {
 			
 			    experience.setCandidate(Cnd);
 			    candidateExperienceRepo.save(experience);
-			    return ResponseEntity.ok("Experience Added");
+//			    return ResponseEntity.ok("Experience Added");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Experience Added"));
+
 		}
 		
 		public ResponseEntity<?> getExperience(@PathVariable Integer candidateId,
@@ -470,8 +471,7 @@ public class CandidateService {
 		
 		}
 		
-		public ResponseEntity<?> updateExperience(@PathVariable Integer candidateId,
-												  @RequestBody CandidateExperience updatedExperience,
+		public ResponseEntity<?> updateExperience( @RequestBody CandidateExperience updatedExperience,
 												  Authentication authentication){
 			
 				String email = authentication.getName();
@@ -488,24 +488,32 @@ public class CandidateService {
 			 	CandidateExperience exp = candidateExperienceRepo.findById(updatedExperience.getCandExpId()).orElseThrow(() -> new RuntimeException("Education not found"));
 
 			    // Validation
-			    if (!exp.getCandidate().getCandidateId().equals(candidateId)) {
-			        return ResponseEntity.badRequest().body("Experience does not belong to this candidate");
-			    }
+//			    if (!exp.getCandidate().getCandidateId().equals(updatedExperience.getCandidate().getCandidateId())) {
+//			        return ResponseEntity.badRequest().body("Experience does not belong to this candidate");
+//			    }
 
 			    exp.setCompanyName(updatedExperience.getCompanyName());
 			    exp.setJobTitle(updatedExperience.getJobTitle());
-			    exp.setJoiningDate(updatedExperience.getJoiningDate());
-			    exp.setEndingDate(updatedExperience.getEndingDate());
+			    exp.setLocation(updatedExperience.getLocation());
+			    exp.setWorkMode(updatedExperience.getWorkMode());
+			    exp.setSmonth(updatedExperience.getSmonth());
+			    exp.setSyear(updatedExperience.getSyear());
+			    exp.setEmonth(updatedExperience.getEmonth());
+			    exp.setEyear(updatedExperience.getEyear());
+//			    exp.setJobTitle(updatedExperience.getJobTitle());
+//			    exp.setJoiningDate(updatedExperience.getJoiningDate());
+//			    exp.setEndingDate(updatedExperience.getEndingDate());
 			    exp.setIsCurrentCompanny(updatedExperience.getIsCurrentCompanny());
 			    exp.setAboutJobProfile(updatedExperience.getAboutJobProfile());
 
 			    candidateExperienceRepo.save(exp);
 
-			    return ResponseEntity.ok("Expericence Updated Successfully");
+//			    return ResponseEntity.ok("Expericence Updated Successfully");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Expericence Updated Successfully"));
+
 		}
 		
-		public ResponseEntity<?> deleteExperience( @PathVariable Integer candidateId,
-												   @PathVariable Integer experienceId,
+		public ResponseEntity<?> deleteExperience( @PathVariable Integer experienceId,
 												   Authentication authentication) {
 			
 				String email = authentication.getName();
@@ -527,7 +535,9 @@ public class CandidateService {
 	
 			    candidateRepo.save(Cnd);
 	
-			    return ResponseEntity.ok("Certification Deleted Successfully");
+//			    return ResponseEntity.ok("Certification Deleted Successfully");
+			    return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Expericence Deleted"));
+			    
 		}
 
 		
@@ -552,7 +562,9 @@ public class CandidateService {
 						
 						lang.setCandidate(Cnd);
 						langRepo.save(lang);
-					    return ResponseEntity.ok("Language Added");
+//					    return ResponseEntity.ok("Language Added");
+						return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Language Added Successfully"));
+
 				}
 				
 				public ResponseEntity<?> getCndLang(@PathVariable Integer candidateId,
@@ -576,7 +588,7 @@ public class CandidateService {
 						Language CL=CndLang.get();			
 			
 //						return ResponseEntity.ok(CL);	
-						return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Language Added Successfully"));
+						return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Language get Successfully"));
 
 						
 				

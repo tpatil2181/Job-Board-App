@@ -2,8 +2,13 @@ package com.jobBordaApp.JobBoardApp.entity;
 
 import java.sql.Date;
 
+import com.jobBordaApp.JobBoardApp.enums.Months;
+import com.jobBordaApp.JobBoardApp.enums.WorkMode;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,27 +39,54 @@ public class CandidateExperience {
 	@ManyToOne
     @JoinColumn(name = "candidate_id")
 	private Candidate candidate;   // reference to Candidate table
+	
+	@Column(name="job_title")
+	String jobTitle;
 
 	@Column(name="company_name")
 	String companyName;
-	@Column(name="job_title")
-	String jobTitle;
+	
+	@Column(name="location")
+	String location;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="workmode")
+	private WorkMode workMode;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="startmonth")
+	Months smonth;
+	
+	@Column(name="startyear")
+	Integer syear;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="endmonth")
+	Months  emonth;
+	
+	@Column(name="endyear")
+	Integer eyear;
+	
+	@Column(name="is_current_company")
+	Boolean isCurrentCompanny; 
+	
+	@Column(name="about_job")
+	String aboutJobProfile;
+	
 	
 //	@Column(name="joinMonth")
 //	private String joinMonth;
 	
-	@Column(name="joining_date")
-	Date joiningDate;
+//	@Column(name="joining_date")
+//	Date joiningDate;
 	
 	
 //	@Column(name="joining_date")
-//	Date joiningDate;
-	@Column(name="ending_date")
-	Date endingDate;
-	@Column(name="is_current_company")
-	Boolean isCurrentCompanny; 
-	@Column(name="about_job")
-	String aboutJobProfile;
+////	Date joiningDate;
+//	@Column(name="ending_date")
+//	Date endingDate;
+	
+
 	
 	   
 	    
