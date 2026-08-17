@@ -313,6 +313,12 @@ public class EmployerService {
 //		    return ResponseEntity.ok();		
 					
 		}
+		
+		
+		
+//-----------------------------------------Employeer Logo Service------------------------------------------
+		
+		
 
 	
 

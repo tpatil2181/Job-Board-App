@@ -70,7 +70,8 @@ public class SecurityConfig {
 	                            "/candidate/register",
 	                            "/employer/register",
 	                            "/candidate/login",
-	                            "/employer/login"
+	                            "/employer/login",
+	                            "/employerLogo/**"
 //	                            "/employer/AllPostedJobs/**"
 	                            
 	                    ).permitAll()

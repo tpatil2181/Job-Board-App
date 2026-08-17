@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.service.AppService;
+import com.jobBordaApp.JobBoardApp.service.EmployerLogoService;
 import com.jobBordaApp.JobBoardApp.service.FileService;
 import com.jobBordaApp.JobBoardApp.service.JobService;
 
@@ -67,6 +69,9 @@ public class AppController {
 
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
+	
+	@Autowired
+	private EmployerLogoService employerLogoService;
 	
 	@Autowired
 	private AppService appService;
@@ -270,7 +275,15 @@ public String test() {
 			return company;
 		}
 		
+//---------------------------------Employer---------------------------------
 		
+//		@PreAuthorize("hasAnyRole('CANDIDATE','EMPLOYER')")
+		@GetMapping("/employerLogo/{logoId}")
+		public ResponseEntity<org.springframework.core.io.Resource> getEmployerLogo(
+		        @PathVariable Integer logoId) throws IOException {
+
+		    return employerLogoService.getEmployerLogo(logoId);
+		}
 		
 //===========================Company Specific service End =========================================
 		
@@ -376,5 +389,8 @@ public String test() {
 //		return allJobs;
 //		
 //	}
+		
+		
+		
 
 }

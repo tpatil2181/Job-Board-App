@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -35,7 +36,9 @@ import com.jobBordaApp.JobBoardApp.entity.Language;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
+import com.jobBordaApp.JobBoardApp.service.CandidateImageService;
 import com.jobBordaApp.JobBoardApp.service.CandidateService;
+import com.jobBordaApp.JobBoardApp.service.FileService;
 
 
 // @CrossOrigin(origins ="http://localhost:4200")
@@ -49,6 +52,9 @@ public class CandidateController {
 	
 	@Autowired
 	private CandidateService candidateService;   //Reporisotory variable
+	
+	@Autowired
+	private CandidateImageService candidateImageService; 
 	
 	
 
@@ -295,6 +301,40 @@ public class CandidateController {
 		public ResponseEntity<?> getJobAppln(@RequestBody ApplyJobDTO getjob,Authentication authentication){
 			
 			 return candidateService.getJobApplication(getjob,authentication);
+		}
+		
+		
+		
+		
+//-----------------------------------Candidate Image--------------------------------------		
+		@PostMapping("/uploadImage/{candidateId}")
+		public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer candidateId, Authentication authentication) {
+
+		    try {
+
+		        int imageId = candidateImageService.uploadOrUpdateImage(candidateId,file);
+
+		        return ResponseEntity.ok(
+		                Map.of(
+		                    "message", "Image uploaded successfully",
+		                    "imageId", imageId
+		                )
+		        );
+
+		    } 
+		    catch (IOException e) {
+
+		        return ResponseEntity .status(HttpStatus.INTERNAL_SERVER_ERROR).body("Image upload failed");
+		    }
+		}
+		
+		
+		@PreAuthorize("hasAnyRole('CANDIDATE','EMPLOYER')")
+		@GetMapping("/candidateImage/{imageId}")
+		public ResponseEntity<org.springframework.core.io.Resource> getCandidateImage(
+		        @PathVariable Integer imageId) throws IOException {
+
+		    return candidateImageService.getCandidateImage(imageId);
 		}
 
 	    
