@@ -412,7 +412,9 @@ public class CandidateService {
 				    
 				    candidateEducationRepo.save(education);
 
-				    return ResponseEntity.ok("Education Updated Successfully");
+				    // return ResponseEntity.ok("Education Updated Successfully");
+					return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Education Updated"));
+
 			}
 			
 		

@@ -28,7 +28,7 @@ public class CandidateEducationDTO {
     private Integer educationId;
     private String degree;
     private String college;
-    private String FieldOfStudy;
+    private String fieldOfStudy;
     private Months smonth;
 	private Integer syear;
 	private Months  emonth;

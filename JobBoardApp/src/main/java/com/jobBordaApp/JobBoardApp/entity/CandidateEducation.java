@@ -46,7 +46,7 @@ public class CandidateEducation {
     private String college;
     
     @Column(name="fieldOfStudy")
-    private String FieldOfStudy;
+    private String fieldOfStudy;
 
 //    @Column(name="start_yaer")
 //    private String startYear;
