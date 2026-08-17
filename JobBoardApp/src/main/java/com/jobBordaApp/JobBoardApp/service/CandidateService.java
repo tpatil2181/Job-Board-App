@@ -26,10 +26,12 @@ import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
 import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
 import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
+import com.jobBordaApp.JobBoardApp.entity.CandidateProject;
 import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.Language;
+import com.jobBordaApp.JobBoardApp.enums.Months;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.AppliedJobMapper;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
@@ -38,6 +40,7 @@ import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateCertificationsRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateEducationRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateExperienceRepo;
+import com.jobBordaApp.JobBoardApp.repository.CandidateProjectRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateResumeReop;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
@@ -61,6 +64,9 @@ public class CandidateService {
 	
 	@Autowired
 	private CandidateExperienceRepo candidateExperienceRepo;
+	
+	@Autowired
+	private CandidateProjectRepo candidateProjectRepo;
 	
 	@Autowired
 	private JobRepo jobRepo;
@@ -216,9 +222,9 @@ public class CandidateService {
 	}
 	
 	
-//---------------------------------------------Candidate Education----------------------------------------------	
+//---------------------------------------------Candidate Project----------------------------------------------	
 	
-		public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education,Authentication authentication){
+		public ResponseEntity<?> addProject( @RequestBody CandidateProject project,Authentication authentication){
 			
 				String email = authentication.getName();
 				
@@ -231,96 +237,217 @@ public class CandidateService {
 				}
 			
 				Candidate Cnd=candidate.get();
-				education.setCandidate(Cnd);
-			    candidateEducationRepo.save(education);
-			    return ResponseEntity.ok("Education Added");
+				project.setCandidate(Cnd);
+				candidateProjectRepo.save(project);
+//			    return ResponseEntity.ok("Education Added");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Project Added"));
+
 		}
+//		
+//		public ResponseEntity<?> getEducation(@PathVariable Integer candidateId, @PathVariable Integer EduId,Authentication authentication){
+//				
+//				String email = authentication.getName();
+//				
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+//				
+//				Optional<CandidateEducation> CndEdu=candidateEducationRepo.findById(EduId);
+//				if(CndEdu.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
+//				}
+//				CandidateEducation CE=CndEdu.get();			
+//	
+//				return ResponseEntity.ok(CE);		
+//			
+//		}
+//		
+//		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication){
+//			
+//				String email = authentication.getName();
+//				
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+//				Candidate cnd=candidate.get();
+//
+//			    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
+//
+//			    // Validation
+//			    if (!education.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
+//			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+//			    }
+//
+//			    education.setDegree(updatedEducation.getDegree());
+//			    education.setCollege(updatedEducation.getCollege());
+//			    education.setFieldOfStudy(updatedEducation.getFieldOfStudy());
+//			    education.setSmonth(updatedEducation.getSmonth());
+//			    education.setSyear(updatedEducation.getSyear());
+//			    education.setEmonth(updatedEducation.getEmonth());
+//			    education.setEyear(updatedEducation.getEyear());
+//			    education.setIsCurrentlystudying(updatedEducation.getIsCurrentlystudying());
+//			    education.setPercentage(updatedEducation.getPercentage());
+////			    education.setStartYear(updatedEducation.getStartYear());
+////			    education.setEndYear(updatedEducation.getEndYear());
+//			    
+//			    
+//			    candidateEducationRepo.save(education);
+//
+//			    return ResponseEntity.ok("Education Updated Successfully");
+//		}
+//		
+//	
+//		public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,
+//												  Authentication authentication) {
+//			
+//				String email = authentication.getName();
+//				
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+//				
+//				Candidate cnd=candidate.get();
+//	
+//			    CandidateEducation education = candidateEducationRepo.findById(educationId)
+//			            .orElseThrow(() -> new RuntimeException("Education not found"));
+//	
+//			    cnd.getEducations().remove(education);
+//	
+//			    candidateRepo.save(cnd);
+//	
+////			    return ResponseEntity.ok("Education Deleted Successfully");
+//				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Education Deleted"));
+//
+//		}
 		
-		public ResponseEntity<?> getEducation(@PathVariable Integer candidateId, @PathVariable Integer EduId,Authentication authentication){
-				
-				String email = authentication.getName();
-				
-				AppUser user = appUserRepo.findByEmail(email);
-	
-			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-			    
-				if(candidate.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-				}
-				
-				Optional<CandidateEducation> CndEdu=candidateEducationRepo.findById(EduId);
-				if(CndEdu.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
-				}
-				CandidateEducation CE=CndEdu.get();			
-	
-				return ResponseEntity.ok(CE);		
-			
-		}
 		
-		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication){
-			
-				String email = authentication.getName();
-				
-				AppUser user = appUserRepo.findByEmail(email);
-	
-			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-			    
-				if(candidate.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-				}
-				Candidate cnd=candidate.get();
-
-			    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
-
-			    // Validation
-			    if (!education.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
-			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
-			    }
-
-			    education.setDegree(updatedEducation.getDegree());
-			    education.setCollege(updatedEducation.getCollege());
-			    education.setStartYear(updatedEducation.getStartYear());
-			    education.setEndYear(updatedEducation.getEndYear());
-			    education.setPercentage(updatedEducation.getPercentage());
-
-			    candidateEducationRepo.save(education);
-
-			    return ResponseEntity.ok("Education Updated Successfully");
-		}
+		//---------------------------------------------Candidate Education----------------------------------------------	
 		
-	
-		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId,
-												  @PathVariable Integer educationId,
-												  Authentication authentication) {
+			public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education,Authentication authentication){
+				
+					String email = authentication.getName();
+					
+					AppUser user = appUserRepo.findByEmail(email);
+		
+				    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+				    
+					if(candidate.isEmpty()) {
+						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+					}
+				
+					Candidate Cnd=candidate.get();
+					education.setCandidate(Cnd);
+				    candidateEducationRepo.save(education);
+//				    return ResponseEntity.ok("Education Added");
+					return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Education Added"));
+
+			}
+//			
+//			public ResponseEntity<?> getEducation(@PathVariable Integer candidateId, @PathVariable Integer EduId,Authentication authentication){
+//					
+//					String email = authentication.getName();
+//					
+//					AppUser user = appUserRepo.findByEmail(email);
+	//	
+//				    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//				    
+//					if(candidate.isEmpty()) {
+//						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//					}
+//					
+//					Optional<CandidateEducation> CndEdu=candidateEducationRepo.findById(EduId);
+//					if(CndEdu.isEmpty()) {
+//						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
+//					}
+//					CandidateEducation CE=CndEdu.get();			
+	//	
+//					return ResponseEntity.ok(CE);		
+//				
+//			}
+//			
+			public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication){
+				
+					String email = authentication.getName();
+					
+					AppUser user = appUserRepo.findByEmail(email);
+		
+				    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+				    
+					if(candidate.isEmpty()) {
+						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+					}
+					Candidate cnd=candidate.get();
+
+				    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
+
+				    // Validation
+				    if (!education.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
+				        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+				    }
+
+				    education.setDegree(updatedEducation.getDegree());
+				    education.setCollege(updatedEducation.getCollege());
+				    education.setFieldOfStudy(updatedEducation.getFieldOfStudy());
+				    education.setSmonth(updatedEducation.getSmonth());
+				    education.setSyear(updatedEducation.getSyear());
+				    education.setEmonth(updatedEducation.getEmonth());
+				    education.setEyear(updatedEducation.getEyear());
+				    education.setIsCurrentlystudying(updatedEducation.getIsCurrentlystudying());
+				    education.setPercentage(updatedEducation.getPercentage());
+//				    education.setStartYear(updatedEducation.getStartYear());
+//				    education.setEndYear(updatedEducation.getEndYear());
+				    
+				    
+				    candidateEducationRepo.save(education);
+
+				    return ResponseEntity.ok("Education Updated Successfully");
+			}
 			
-				String email = authentication.getName();
+		
+			public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,
+													  Authentication authentication) {
 				
-				AppUser user = appUserRepo.findByEmail(email);
-	
-			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-			    
-				if(candidate.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-				}
-				
-				Candidate cnd=candidate.get();
-	
-			    CandidateEducation education = candidateEducationRepo.findById(educationId)
-			            .orElseThrow(() -> new RuntimeException("Education not found"));
-	
-			    cnd.getEducations().remove(education);
-	
-			    candidateRepo.save(cnd);
-	
-			    return ResponseEntity.ok("Education Deleted Successfully");
-		}
+					String email = authentication.getName();
+					
+					AppUser user = appUserRepo.findByEmail(email);
+		
+				    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+				    
+					if(candidate.isEmpty()) {
+						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+					}
+					
+					Candidate cnd=candidate.get();
+		
+				    CandidateEducation education = candidateEducationRepo.findById(educationId)
+				            .orElseThrow(() -> new RuntimeException("Education not found"));
+		
+				    cnd.getEducations().remove(education);
+		
+				    candidateRepo.save(cnd);
+		
+//				    return ResponseEntity.ok("Education Deleted Successfully");
+					return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Education Deleted"));
+
+			}
+					
 		
 		   
 //---------------------------------------------Candidate Certification----------------------------------------------	
 		
-		public ResponseEntity<?> addCandCertification( @PathVariable Integer candidateId,
-													   @RequestBody CandidateCertification certification,
+		public ResponseEntity<?> addCandCertification(  @RequestBody CandidateCertification certification,
 													   Authentication authentication) {
 			
 				String email = authentication.getName();
@@ -337,35 +464,36 @@ public class CandidateService {
 
 			    certification.setCandidate(Cnd);
 			    candidateCertificationRepo.save(certification);
-			    return ResponseEntity.ok("Certification Added");
+//			    return ResponseEntity.ok("Certification Added");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Certification Added"));
+
 		}
 		
-		public ResponseEntity<?> getCertification(@PathVariable Integer candidateId,
-												  @PathVariable Integer CertificationId,
-												  Authentication authentication){
-				
-				String email = authentication.getName();
-				
-				AppUser user = appUserRepo.findByEmail(email);
-	
-			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-			    
-				if(candidate.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-				}
-					
-				Optional<CandidateCertification> CndCer=candidateCertificationRepo.findById(CertificationId);
-				if(CndCer.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
-				}
-				CandidateCertification CC=CndCer.get();			
-	
-				return ResponseEntity.ok(CC);		
-			
-		}
-		
-		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId,
-													 @RequestBody CandidateCertification updatedCedrtification,
+//		public ResponseEntity<?> getCertification(@PathVariable Integer candidateId,
+//												  @PathVariable Integer CertificationId,
+//												  Authentication authentication){
+//				
+//				String email = authentication.getName();
+//				
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+//					
+//				Optional<CandidateCertification> CndCer=candidateCertificationRepo.findById(CertificationId);
+//				if(CndCer.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Education Not Found"));
+//				}
+//				CandidateCertification CC=CndCer.get();			
+//	
+//				return ResponseEntity.ok(CC);		
+//			
+//		}
+//		
+		public ResponseEntity<?> updateCertification( @RequestBody CandidateCertification updatedCedrtification,
 													 Authentication authentication){
 			
 				String email = authentication.getName();
@@ -381,9 +509,9 @@ public class CandidateService {
 				CandidateCertification certification = candidateCertificationRepo.findById(updatedCedrtification.getCertificationId()).orElseThrow(() -> new RuntimeException("Education not found"));
 
 			    // Validation
-			    if (!certification.getCandidate().getCandidateId().equals(candidateId)) {
-			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
-			    }
+//			    if (!certification.getCandidate().getCandidateId().equals(candidateId)) {
+//			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+//			    }
 
 			    certification.setCertificateName(updatedCedrtification.getCertificateName());
 //			    certification.setCollege(updatedCedrtification.ge());
@@ -392,11 +520,12 @@ public class CandidateService {
 
 			    candidateCertificationRepo.save(certification);
 
-			    return ResponseEntity.ok("Certification Updated Successfully");
+//			    return ResponseEntity.ok("Certification Updated Successfully");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Certification Updated Successfully"));
+
 		}
-		
-		public ResponseEntity<?> deleteCertification( @PathVariable Integer candidateId,
-													  @PathVariable Integer certificationId,
+//		
+		public ResponseEntity<?> deleteCertification( @PathVariable Integer certificationId,
 													  Authentication authentication) {
 				
 				String email = authentication.getName();
@@ -412,13 +541,15 @@ public class CandidateService {
 				Candidate Cnd=candidate.get();
 	
 			    CandidateCertification CandidateCertification = candidateCertificationRepo.findById(certificationId)
-			            .orElseThrow(() -> new RuntimeException("Education not found"));
+			            .orElseThrow(() -> new RuntimeException("Certificate not found"));
 	
 			    Cnd.getCertifications().remove(CandidateCertification);
 	
 			    candidateRepo.save(Cnd);
 	
-			    return ResponseEntity.ok("Certification Deleted Successfully");
+//			    return ResponseEntity.ok("Certification Deleted Successfully");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Certification Deleted Successfully"));
+
 		}
 	
 	

@@ -1,10 +1,6 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
-import java.util.Date;
-import java.util.List;
-
 import com.jobBordaApp.JobBoardApp.enums.Months;
-import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,12 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-
 
 @Getter
 @Setter
@@ -31,20 +24,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="candidate_certification")
-public class CandidateCertification {
+@Table(name="candidate_project")
+public class CandidateProject {
+	
 	
 		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Integer certificationId;
-
-	    @Column(name="certiname")
-	    private String certificateName;
+	    private Integer educationId;
 	    
-	    @Column(name="issueorg")
-	    private String issueingOrganization;
-	   
-		@Enumerated(EnumType.STRING)
+	    @Column(name="projTitle")
+	    private String ProjectTitle;
+
+	    @Column(name="role")
+	    private String role;
+	    
+	    @Enumerated(EnumType.STRING)
 		@Column(name="startmonth")
 		Months smonth;
 		
@@ -58,19 +52,17 @@ public class CandidateCertification {
 		@Column(name="endyear")
 		Integer eyear;
 		
-//		@Column(name="isexpired")
-//		Boolean isexpired;
-		
-		@Column(name="certiid")
-		Integer certiid;
-		
-		@Column(name="certiurl")
-		String certiurl;
+		@Column(name="isongoing")
+		Boolean isOngoing; 
+
+	    @Column(name="disc")
+	    private String discription;
 	    
+	    @Column(name="csurl")
+	    private String casestudyurl;
+
 	    @ManyToOne
 	    @JoinColumn(name = "candidate_id")
 	    private Candidate candidate;
-	       
-	    
 
 }

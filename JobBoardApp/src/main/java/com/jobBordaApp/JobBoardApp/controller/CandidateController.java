@@ -30,6 +30,7 @@ import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
 import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
 import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
+import com.jobBordaApp.JobBoardApp.entity.CandidateProject;
 import com.jobBordaApp.JobBoardApp.entity.Language;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
@@ -97,59 +98,58 @@ public class CandidateController {
   
 //================================Education========================================
 	
-		@PostMapping("/edu/{candidateId}")
+		@PostMapping("/edu")
 		public ResponseEntity<?> addEducation( @RequestBody CandidateEducation education, Authentication authentication) {
 			
 				return candidateService.addEducation(education,authentication);
 		}
-		
-		@PostMapping("/edu/{candidateId}/{educationId}")
-		public ResponseEntity<?> getEducation(@PathVariable Integer CndId,@PathVariable Integer EduId,Authentication authentication) {
-			
-				return candidateService.getEducation(CndId,EduId,authentication);
-		}
-		
-
-		@PutMapping("/edu/{candidateId}/education")
+//		
+//		@PostMapping("/edu/{candidateId}/{educationId}")
+//		public ResponseEntity<?> getEducation(@PathVariable Integer CndId,@PathVariable Integer EduId,Authentication authentication) {
+//			
+//				return candidateService.getEducation(CndId,EduId,authentication);
+//		}
+//		
+//
+		@PostMapping("/updateEdu")
 		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication) {
 
 				return candidateService.updateEducation( updatedEducation, authentication);
 		}
 
 
-		@DeleteMapping("/edu/{candidateId}/education/{educationId}")
-		public ResponseEntity<?> deleteEducation( @PathVariable Integer candidateId, @PathVariable Integer educationId,Authentication authentication) {
+		@DeleteMapping("/edu/{educationId}")
+		public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,Authentication authentication) {
 			
-				return candidateService.deleteEducation(candidateId, educationId, authentication);
+				return candidateService.deleteEducation( educationId, authentication);
 		}
 		
 		
 //================================Certification========================================
-		@PostMapping("/newCertification/{candidateId}/certification")
-		public ResponseEntity<?> addCertification( @PathVariable Integer candidateId, @RequestBody CandidateCertification certification,Authentication authentication) {
+		@PostMapping("/certification")
+		public ResponseEntity<?> addCertification( @RequestBody CandidateCertification certification,Authentication authentication) {
 			
-				return candidateService.addCandCertification(candidateId,certification,authentication);
+				return candidateService.addCandCertification(certification,authentication);
 		}
-		
-		
-		@PostMapping("/certificate/{candidateId}/{certificationId}")
-		public ResponseEntity<?> getCertification( @PathVariable Integer candidateId, @PathVariable Integer CertificationId, Authentication authentication) {
+	
+//		@PostMapping("/certificate/{candidateId}/{certificationId}")
+//		public ResponseEntity<?> getCertification( @PathVariable Integer candidateId, @PathVariable Integer CertificationId, Authentication authentication) {
+//			
+//				return candidateService.getCertification(candidateId, CertificationId,authentication);
+//		}
+//		
+//		
+		@PostMapping("/updateCertificate")
+		public ResponseEntity<?> updateCertification( @RequestBody CandidateCertification updatedCedrtification, Authentication authentication) {
 			
-				return candidateService.getCertification(candidateId, CertificationId,authentication);
-		}
-		
-		
-		@PutMapping("/candidateCerti/{candidateId}")
-		public ResponseEntity<?> updateCertification(@PathVariable Integer candidateId, @RequestBody CandidateCertification updatedCedrtification, Authentication authentication) {
-			
-				return candidateService.updateCertification(candidateId, updatedCedrtification,authentication);
+				return candidateService.updateCertification(updatedCedrtification,authentication);
 		}
 
+//
+		@DeleteMapping("/certification/{certificationId}")
+		public ResponseEntity<?> deleteCertificate(@PathVariable Integer certificationId,Authentication authentication) {
 
-		@DeleteMapping("/candidate/{candidateId}/{certificationId}")
-		public ResponseEntity<?> deleteCertificate(@PathVariable Integer candidateId,@PathVariable Integer certificationId,Authentication authentication) {
-
-				return candidateService.deleteCertification(candidateId, certificationId,authentication);
+				return candidateService.deleteCertification(certificationId,authentication);
 		}
 		
 				
@@ -181,6 +181,37 @@ public class CandidateController {
 			
 				return candidateService.deleteExperience( experienceId,authentication);
 		}	
+		
+		
+//================================Project========================================
+		
+			@PostMapping("/proj")
+			public ResponseEntity<?> addProject( @RequestBody CandidateProject project, Authentication authentication) {
+				
+					return candidateService.addProject(project,authentication);
+			}
+//			
+//			@PostMapping("/edu/{candidateId}/{educationId}")
+//			public ResponseEntity<?> getEducation(@PathVariable Integer CndId,@PathVariable Integer EduId,Authentication authentication) {
+//				
+//					return candidateService.getEducation(CndId,EduId,authentication);
+//			}
+//			
+//
+//			@PostMapping("/updateEdu")
+//			public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication) {
+//
+//					return candidateService.updateEducation( updatedEducation, authentication);
+//			}
+//
+//
+//			@DeleteMapping("/edu/{educationId}")
+//			public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,Authentication authentication) {
+//				
+//					return candidateService.deleteEducation( educationId, authentication);
+//			}
+//					
+		
 
 //================================Language========================================
 		@PostMapping("/addlang")

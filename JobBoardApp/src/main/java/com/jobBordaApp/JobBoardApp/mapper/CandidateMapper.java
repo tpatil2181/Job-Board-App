@@ -21,6 +21,7 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
         CandidateEducationMapper.class,
         CandidateExperienceMapper.class,
         CandidateCertificateMapper.class,
+        CandidateProjectMapper.class,
         CandidateLanguageMapper.class
 })
 public interface CandidateMapper {

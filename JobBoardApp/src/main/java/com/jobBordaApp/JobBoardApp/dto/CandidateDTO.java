@@ -43,6 +43,7 @@ public class CandidateDTO {
 	List<CandidateEducationDTO> educations;
     List<CandidateExperienceDTO> experiences;
     List<CandidateCertificationDTO> certifications;
+    List<CandidateProjectDTO> projects;
     List<CandidateLanguageDTO> languages;
 	Integer resumeId;
 	Integer imageId;

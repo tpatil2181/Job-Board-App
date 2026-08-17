@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jobBordaApp.JobBoardApp.enums.Months;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,12 +44,32 @@ public class CandidateEducation {
 
     @Column(name="college")
     private String college;
+    
+    @Column(name="fieldOfStudy")
+    private String FieldOfStudy;
 
-    @Column(name="start_yaer")
-    private String startYear;
-
-    @Column(name="end_year")
-    private String endYear;
+//    @Column(name="start_yaer")
+//    private String startYear;
+//
+//    @Column(name="end_year")
+//    private String endYear;
+    
+    @Enumerated(EnumType.STRING)
+	@Column(name="startmonth")
+	Months smonth;
+	
+	@Column(name="startyear")
+	Integer syear;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="endmonth")
+	Months  emonth;
+	
+	@Column(name="endyear")
+	Integer eyear;
+	
+	@Column(name="is_current_studying")
+	Boolean isCurrentlystudying; 
 
     @Column(name="percentage")
     private Double percentage;

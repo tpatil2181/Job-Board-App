@@ -69,6 +69,11 @@ public class Candidate {
     // ✅ Experience
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CandidateExperience> experiences;
+    
+    
+    // ✅ Project
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CandidateProject> projects;
 
     // ✅ Certification
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
