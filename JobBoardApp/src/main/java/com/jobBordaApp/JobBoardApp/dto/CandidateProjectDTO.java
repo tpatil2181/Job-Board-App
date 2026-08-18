@@ -25,9 +25,9 @@ import lombok.Setter;
 public class CandidateProjectDTO {
 	
 	    private Integer projectId;
-	    private String ProjectTitle;
+	    private String projectTitle;
 	    private String role;
-	    private String FieldOfStudy;
+//	    private String FieldOfStudy;
 	    private Months smonth;
 		private Integer syear;
 		private Months  emonth;

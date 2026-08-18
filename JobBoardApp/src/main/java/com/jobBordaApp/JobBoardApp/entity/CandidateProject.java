@@ -30,10 +30,11 @@ public class CandidateProject {
 	
 		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Integer educationId;
+		@Column(name = "projectId")
+	    private Integer projectId;
 	    
 	    @Column(name="projTitle")
-	    private String ProjectTitle;
+	    private String projectTitle;
 
 	    @Column(name="role")
 	    private String role;

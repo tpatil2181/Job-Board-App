@@ -204,19 +204,19 @@ public class CandidateController {
 //			}
 //			
 //
-//			@PostMapping("/updateEdu")
-//			public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication) {
-//
-//					return candidateService.updateEducation( updatedEducation, authentication);
-//			}
-//
-//
-//			@DeleteMapping("/edu/{educationId}")
-//			public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,Authentication authentication) {
-//				
-//					return candidateService.deleteEducation( educationId, authentication);
-//			}
-//					
+			@PostMapping("/updateProj")
+			public ResponseEntity<?> updateEducation(@RequestBody CandidateProject updatedProject ,Authentication authentication) {
+
+					return candidateService.updateProject( updatedProject, authentication);
+			}
+
+
+			@DeleteMapping("/delpro/{projectId}")
+			public ResponseEntity<?> deleteProject( @PathVariable Integer projectId,Authentication authentication) {
+				
+					return candidateService.deleteProject( projectId, authentication);
+			}
+					
 		
 
 //================================Language========================================

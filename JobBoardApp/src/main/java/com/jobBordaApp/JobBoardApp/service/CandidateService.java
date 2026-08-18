@@ -266,71 +266,74 @@ public class CandidateService {
 //			
 //		}
 //		
-//		public ResponseEntity<?> updateEducation(@RequestBody CandidateEducation updatedEducation,Authentication authentication){
-//			
-//				String email = authentication.getName();
-//				
-//				AppUser user = appUserRepo.findByEmail(email);
-//	
-//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-//			    
-//				if(candidate.isEmpty()) {
-//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-//				}
-//				Candidate cnd=candidate.get();
-//
-//			    CandidateEducation education = candidateEducationRepo.findById(updatedEducation.getEducationId()).orElseThrow(() -> new RuntimeException("Education not found"));
-//
-//			    // Validation
-//			    if (!education.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
-//			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
-//			    }
-//
-//			    education.setDegree(updatedEducation.getDegree());
-//			    education.setCollege(updatedEducation.getCollege());
-//			    education.setFieldOfStudy(updatedEducation.getFieldOfStudy());
-//			    education.setSmonth(updatedEducation.getSmonth());
-//			    education.setSyear(updatedEducation.getSyear());
-//			    education.setEmonth(updatedEducation.getEmonth());
-//			    education.setEyear(updatedEducation.getEyear());
-//			    education.setIsCurrentlystudying(updatedEducation.getIsCurrentlystudying());
-//			    education.setPercentage(updatedEducation.getPercentage());
-////			    education.setStartYear(updatedEducation.getStartYear());
-////			    education.setEndYear(updatedEducation.getEndYear());
-//			    
-//			    
-//			    candidateEducationRepo.save(education);
-//
-//			    return ResponseEntity.ok("Education Updated Successfully");
-//		}
+		public ResponseEntity<?> updateProject(@RequestBody CandidateProject updatedProject,Authentication authentication){
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				Candidate cnd=candidate.get();
+
+			    CandidateProject proj = candidateProjectRepo.findById(updatedProject.getProjectId()).orElseThrow(() -> new RuntimeException("Project not found"));
+
+			    // Validation
+			    if (!proj.getCandidate().getCandidateId().equals(cnd.getCandidateId())) {
+			        return ResponseEntity.badRequest().body("Education does not belong to this candidate");
+			    }
+
+			    proj.setProjectTitle(updatedProject.getProjectTitle());
+			    proj.setRole(updatedProject.getRole());
+			    proj.setSmonth(updatedProject.getSmonth());
+			    proj.setSyear(updatedProject.getSyear());
+			    proj.setEmonth(updatedProject.getEmonth());
+			    proj.setEyear(updatedProject.getEyear());
+			    proj.setIsOngoing(updatedProject.getIsOngoing());
+			    proj.setDiscription(updatedProject.getDiscription());
+			    proj.setCasestudyurl(updatedProject.getCasestudyurl());
+//			    proj.setFieldOfStudy(updatedProject.getFieldOfStudy());
+
+//			    education.setStartYear(updatedEducation.getStartYear());
+//			    education.setEndYear(updatedEducation.getEndYear());
+			    
+			    
+			    candidateProjectRepo.save(proj);
+
+//			    return ResponseEntity.ok("Project Updated Successfully");
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Project Updated"));
+
+		}
 //		
 //	
-//		public ResponseEntity<?> deleteEducation( @PathVariable Integer educationId,
-//												  Authentication authentication) {
-//			
-//				String email = authentication.getName();
-//				
-//				AppUser user = appUserRepo.findByEmail(email);
-//	
-//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-//			    
-//				if(candidate.isEmpty()) {
-//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-//				}
-//				
-//				Candidate cnd=candidate.get();
-//	
-//			    CandidateEducation education = candidateEducationRepo.findById(educationId)
-//			            .orElseThrow(() -> new RuntimeException("Education not found"));
-//	
-//			    cnd.getEducations().remove(education);
-//	
-//			    candidateRepo.save(cnd);
-//	
-////			    return ResponseEntity.ok("Education Deleted Successfully");
-//				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Education Deleted"));
-//
-//		}
+		public ResponseEntity<?> deleteProject( @PathVariable Integer projectId,
+												  Authentication authentication) {
+			
+				String email = authentication.getName();
+				
+				AppUser user = appUserRepo.findByEmail(email);
+	
+			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+			    
+				if(candidate.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+				}
+				
+				Candidate cnd=candidate.get();
+	
+			    CandidateProject project = candidateProjectRepo.findById(projectId)
+			    		.orElseThrow(() -> new RuntimeException("Project not found"));
+	
+			    cnd.getProjects().remove(project);
+	
+			    candidateRepo.save(cnd);
+	
+				return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Project Deleted"));
+
+		}
 		
 		
 		//---------------------------------------------Candidate Education----------------------------------------------	
