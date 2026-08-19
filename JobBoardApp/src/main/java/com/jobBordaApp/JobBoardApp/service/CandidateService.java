@@ -519,6 +519,15 @@ public class CandidateService {
 //			    }
 
 			    certification.setCertificateName(updatedCedrtification.getCertificateName());
+			    certification.setIssueingOrganization(updatedCedrtification.getIssueingOrganization());
+			    certification.setSmonth(updatedCedrtification.getSmonth());
+			    certification.setSyear(updatedCedrtification.getSyear());
+			    certification.setEmonth(updatedCedrtification.getEmonth());
+			    certification.setEyear(updatedCedrtification.getEyear());
+			    certification.setCertiid(updatedCedrtification.getCertiid());
+			    certification.setCertiurl(updatedCedrtification.getCertiurl());
+//			    certification.setCertificateName(updatedCedrtification.getCertificateName());
+			    
 //			    certification.setCollege(updatedCedrtification.ge());
 //			    certification.setStartYear(updatedEducation.getStartYear());
 	

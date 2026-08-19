@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobSearchDTO {
+	
+	private String search;
 
     private String jobTitle;
 

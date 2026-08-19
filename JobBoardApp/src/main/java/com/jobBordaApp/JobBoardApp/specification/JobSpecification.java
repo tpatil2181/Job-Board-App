@@ -33,7 +33,95 @@ public class JobSpecification {
                 // }
 
                 List<Predicate> list = new ArrayList<>();
+                
+                if (jobSearchDTO.getSearch() != null
+                        && !jobSearchDTO.getSearch().isEmpty()) {
 
+                    String search = "%" + jobSearchDTO.getSearch().toLowerCase() + "%";
+
+                    List<Predicate> searchPredicates = new ArrayList<>();
+
+                    // Job title
+                    searchPredicates.add(
+                        criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("jobTitle")),
+                            search
+                        )
+                    );
+
+                    // Employer name
+                    searchPredicates.add(
+                        criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                root.get("employer").get("employeerName")
+                            ),
+                            search
+                        )
+                    );
+
+                    list.add(
+                        criteriaBuilder.or(
+                            searchPredicates.toArray(new Predicate[0])
+                        )
+                    );
+                }
+                
+      // =========================================After Adding skills=========================================
+//                if (jobSearchDTO.getSearch() != null
+//                        && !jobSearchDTO.getSearch().isEmpty()) {
+//
+//                    String search = "%" + jobSearchDTO.getSearch().toLowerCase() + "%";
+//
+//                    List<Predicate> searchPredicates = new ArrayList<>();
+//
+//                    // Job title
+//                    searchPredicates.add(
+//                        criteriaBuilder.like(
+//                            criteriaBuilder.lower(root.get("jobTitle")),
+//                            search
+//                        )
+//                    );
+//
+//                    // Employer name
+//                    searchPredicates.add(
+//                        criteriaBuilder.like(
+//                            criteriaBuilder.lower(
+//                                root.get("employer").get("employeerName")
+//                            ),
+//                            search
+//                        )
+//                    );
+//
+//                    // Skill name
+//                    Join<Job, Skill> skillJoin = root.join("skills");
+//
+//                    searchPredicates.add(
+//                        criteriaBuilder.like(
+//                            criteriaBuilder.lower(skillJoin.get("skillName")),
+//                            search
+//                        )
+//                    );
+//
+//                    list.add(
+//                        criteriaBuilder.or(
+//                            searchPredicates.toArray(new Predicate[0])
+//                        )
+//                    );
+//
+//                    // Avoid duplicate Job records because of multiple skills
+//                    query.distinct(true);
+//                }
+
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 if (jobSearchDTO.getEmployerName() != null
                         && !jobSearchDTO.getEmployerName().isEmpty()) {
 
