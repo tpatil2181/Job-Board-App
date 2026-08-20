@@ -1,4 +1,8 @@
 package com.jobBordaApp.JobBoardApp.dto;
+import java.time.LocalDateTime;
+
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +20,7 @@ public class AppliedJobDTO {
 	String JobTitle;
 	String Comapny;
 	String WorkMode;
-//	String AppliedOn;
-	String Status;
-
+	LocalDateTime dateApplied;
+	JobApplicationStatus status;
+	
 }

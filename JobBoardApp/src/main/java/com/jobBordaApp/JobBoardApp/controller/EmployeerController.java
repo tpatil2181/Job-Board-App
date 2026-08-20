@@ -30,6 +30,7 @@ import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
@@ -318,7 +319,7 @@ public class EmployeerController {
 //============== Candidate-Job Application releted operations by company=================
 	
 	@PatchMapping("/applyJobStatus/{applyid}/{status}")
-	public String changeApplyJobStatus(@PathVariable Integer applyId,@PathVariable String Status) {
+	public String changeApplyJobStatus(@PathVariable Integer applyId,@PathVariable JobApplicationStatus Status) {
 		ApplyJob application=applyJobRepo.findById(applyId).orElseThrow(()-> new ResourceNotFoundException("Job application not found with this ID"));
 		application.setStatus(Status);
 		applyJobRepo.save(application);

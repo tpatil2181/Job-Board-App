@@ -1,7 +1,14 @@
 package com.jobBordaApp.JobBoardApp.entity;
 
+import java.time.LocalDateTime;
+
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
+import com.jobBordaApp.JobBoardApp.enums.Months;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,25 +32,37 @@ public class ApplyJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer applyid;
+
     @ManyToOne
     @JoinColumn(name = "candidate_id")
-    private Candidate candidate;   // reference to Candidate table
+    private Candidate candidate;  
 
     @ManyToOne
     @JoinColumn(name = "job_id")
-    private Job job;     // reference to Job table
+    private Job job;   
     
     @ManyToOne
     @JoinColumn(name = "employeer_id")
-    private Employeer employeer;     // reference to Employeer table
-    
-//    private Boolean isStatusApplied =true;
-
-
-    
-//    for withdraw use 0 to validate at frontend
+    private Employeer employeer;   
+      
     @Builder.Default
-    private  String status = "Applied";
+	@Enumerated(EnumType.STRING)
+	@Column(name="status")
+	JobApplicationStatus  status =JobApplicationStatus.APPLIED;;
+	
+	@Builder.Default
+	@Column(name = "date_applied")
+	private LocalDateTime dateApplied = LocalDateTime.now();
+	
+	
+	
+//  private Boolean isStatusApplied =true;
+
+
+    
+//  for withdraw use 0 to validate at frontend
+//  @Builder.Default
+//  private  String status = "Applied";
     
 //    
 //    {
