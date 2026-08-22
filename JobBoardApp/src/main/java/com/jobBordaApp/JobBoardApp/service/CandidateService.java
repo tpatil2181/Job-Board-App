@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jobBordaApp.JobBoardApp.dto.AppliedJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateProfileUpdateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
@@ -123,7 +124,7 @@ public class CandidateService {
 	}
 
 	
-	public ResponseEntity<?> updateCandidate(@RequestBody Candidate updatedCandidate, Authentication authentication) {
+	public ResponseEntity<?> updateCandidate(@RequestBody CandidateProfileUpdateDTO updatedCandidate, Authentication authentication) {
 
 	    String email = authentication.getName();
 
@@ -152,16 +153,24 @@ public class CandidateService {
 
 	    if (updatedCandidate.getMobNo() != null)
 	        existingCandidate.setMobNo(updatedCandidate.getMobNo());
+	    
+	    if (updatedCandidate.getContactEmail() != null)
+	        existingCandidate.setContactEmail(updatedCandidate.getContactEmail());
 
-	    if (updatedCandidate.getSkills() != null)
-	        existingCandidate.setSkills(updatedCandidate.getSkills());
+//	    if (updatedCandidate.getImageId() != null)
+//	        existingCandidate.setMobNo(updatedCandidate.getImageId());
+	    
+//	    if (updatedCandidate.getSkills() != null)
+//	        existingCandidate.setSkills(updatedCandidate.getSkills());
 
 	    Candidate savedCandidate = candidateRepo.save(existingCandidate);
 
-	    return ResponseEntity.ok(Map.of(
-	            "message", "Candidate updated successfully",
-	            "candidateId", savedCandidate.getCandidateId()
-	    ));
+//	    return ResponseEntity.ok(HTTP.of(
+//	            "message", "Candidate updated successfully",
+//	            "candidateId", savedCandidate.getCandidateId()
+//	    ));
+	    
+	    return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Candidate updated successfully"));
 	    
 	}
 	

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
+import com.jobBordaApp.JobBoardApp.dto.CandidateProfileUpdateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
@@ -82,8 +83,8 @@ public class CandidateController {
 		}
 	
 	
-	   @PatchMapping("/update")
-	   public ResponseEntity<?> updatePartial( @RequestBody Candidate updatedCandidate,Authentication authentication) {
+	   @PostMapping("/updateProfile")
+	   public ResponseEntity<?> updatePartial( @RequestBody CandidateProfileUpdateDTO updatedCandidate,Authentication authentication) {
 		
 		 		return candidateService.updateCandidate(updatedCandidate,authentication);
 	 	}

@@ -52,11 +52,14 @@ public class Candidate {
 	@Column(name="cand_title")
 	String candidateTitle;
 	
-	@Column(name="about")
+	@Column(name="about",length= 500)
 	String candidateAbout;
 	
 	@Column(name="mobile_no")
 	String mobNo;
+	
+	@Column(name="contactemail")
+	String contactEmail;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
