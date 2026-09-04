@@ -72,7 +72,8 @@ public class Job {
 	@Column(name="openings")
 	private Integer noOfOpenings;
 	
-	@Column(name="job_dis")
+//	@Column(name="job_dis")
+	@Column(name="job_dis",length= 7000)
 	private String jobDescription;
 	
 	@Column(name="role")
