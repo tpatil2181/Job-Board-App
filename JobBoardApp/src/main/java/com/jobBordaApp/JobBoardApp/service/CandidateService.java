@@ -886,8 +886,10 @@ public class CandidateService {
 				aj.setCandidate(cnd);
 				aj.setEmployeer(empr);
 				aj.setJob(jb);
+				jb.setNoOfApplicants(jb.getNoOfApplicants()+1);
 				
 				applyJobRepo.save(aj);
+				jobRepo.save(jb);
 				return ResponseEntity.ok(
 					    Map.of("message", "Job Applied")
 					);

@@ -4,6 +4,7 @@ package com.jobBordaApp.JobBoardApp.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
 import com.jobBordaApp.JobBoardApp.enums.JobStatus;
 import com.jobBordaApp.JobBoardApp.enums.WorkMode;
 
@@ -109,10 +110,12 @@ public class Job {
 	@Column(name = "workmode")
 	private JobStatus WorkMode;
 	
+	@Builder.Default
+	@Column(name="applicants_no")
+	private  Integer noOfApplicants=0;
+	
 	@Column(name="date_posted")
 	private LocalDateTime datePosted;
-	
-	
 	
 	
 }

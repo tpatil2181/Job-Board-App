@@ -48,7 +48,7 @@ public class ApplyJob {
     @Builder.Default
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	JobApplicationStatus  status =JobApplicationStatus.APPLIED;;
+	JobApplicationStatus  status =JobApplicationStatus.APPLIED;
 	
 	@Builder.Default
 	@Column(name = "date_applied")
