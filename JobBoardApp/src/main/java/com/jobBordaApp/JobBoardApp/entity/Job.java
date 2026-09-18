@@ -111,8 +111,8 @@ public class Job {
 	private JobStatus WorkMode;
 	
 	@Builder.Default
-	@Column(name="applicants_no")
-	private  Integer noOfApplicants=0;
+	@Column(name = "applicants_no", nullable = false)
+	private Integer noOfApplicants = 0;
 	
 	@Column(name="date_posted")
 	private LocalDateTime datePosted;
