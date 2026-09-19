@@ -18,6 +18,7 @@ import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangeJobStatusDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployeerDTO;
+import com.jobBordaApp.JobBoardApp.dto.JobApplicationsDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.PostedJobDTO;
 import com.jobBordaApp.JobBoardApp.entity.AppUser;
@@ -28,6 +29,7 @@ import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.CandidateMapper;
 import com.jobBordaApp.JobBoardApp.mapper.EmployerMapper;
+import com.jobBordaApp.JobBoardApp.mapper.JobApplicationMapper;
 import com.jobBordaApp.JobBoardApp.mapper.JobMapper;
 import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
@@ -55,6 +57,9 @@ public class EmployerService {
 	
 	@Autowired
 	private JobMapper jobMapper;
+	
+	@Autowired
+	private JobApplicationMapper JobApplnMapper;
 	
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); 
 
@@ -272,7 +277,9 @@ public class EmployerService {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Np Applications Yet"));
 			}
 			
-			return ResponseEntity.ok(applnList);
+			List<JobApplicationsDTO> allApplicationslist = applnList.stream().map(JobApplnMapper::mapAppiedJobToJobApplicationDTO).toList();
+			
+			return ResponseEntity.ok(allApplicationslist);
 
 		}
 		
