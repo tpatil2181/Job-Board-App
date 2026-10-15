@@ -16,6 +16,7 @@ public interface JobApplicationMapper {
 	@Mapping(source = "candidate.lastName", target = "cndLname")
 	@Mapping(source = "job.jobId", target = "jobId")
 	@Mapping(source = "employeer.employeerId", target = "employeerId")
+	@Mapping(source = "candidate.resume.resumeId", target = "resumeId")
 	
 	JobApplicationsDTO mapAppiedJobToJobApplicationDTO(ApplyJob appliedJob);
 

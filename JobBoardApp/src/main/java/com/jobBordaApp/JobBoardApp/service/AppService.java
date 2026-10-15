@@ -1,5 +1,6 @@
 package com.jobBordaApp.JobBoardApp.service;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -376,6 +377,19 @@ public class AppService {
 			 return ResponseEntity.ok(Map.of("message", "Apply for job successfully" ));
 
 			}
+	
+	
+	
+	
+	
+//	============================Resume================================================
+	
+	
+	public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+		
+		return fileService.getResume(resumeId);
+	
+}
 
 
 

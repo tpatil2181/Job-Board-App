@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.web.csrf.CsrfToken;
@@ -286,6 +288,22 @@ public String test() {
 		}
 		
 //===========================Company Specific service End =========================================
+		
+		
+		
+//		==================================Resume============================================
+		
+		@PreAuthorize("hasAnyRole('CANDIDATE','ROLE_EMPLOYER')")
+		@GetMapping("/resume/{resumeId}")
+		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+			  
+			  return appService.getCandidateResume(resumeId);
+		}
+	  
+		@DeleteMapping("/deleteResume/{candidateId}")
+	  	public void deleteResume() {
+		  
+	  	}	
 		
 	
 	 

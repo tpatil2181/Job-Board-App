@@ -77,9 +77,15 @@ public class CandidateController {
 		@PostMapping("/profile")
 		public ResponseEntity<?> getCndProfile(Authentication authentication) {
 //			   System.out.println("PROFILE API HIT");
-	
-			
 			return candidateService.getCandidateProfile(authentication);
+		}
+		
+		
+		@PreAuthorize("hasRole('EMPLOYEER')")
+		@PostMapping("/profileEmpView")
+		public ResponseEntity<?> getCndProfileEmployerView(@PathVariable Integer Cndid ) {
+//			   System.out.println("PROFILE API HIT");
+			return candidateService.getCandidateProfileEmplrView(Cndid);
 		}
 	
 	
@@ -261,17 +267,17 @@ public class CandidateController {
 		
 		
 //		@PreAuthorize("hasRole('CANDIDATE')")
-		@PreAuthorize("hasAnyRole('CANDIDATE','EMPLOYER')")
-		@GetMapping("/resume/{resumeId}")
-		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
-			  
-			  return candidateService.getCandidateResume(resumeId);
-		}
-	  
-		@DeleteMapping("/deleteResume/{candidateId}")
-	  	public void deleteResume() {
-		  
-	  	}	  
+//		@PreAuthorize("hasAnyRole('CANDIDATE','ROLE_EMPLOYER')")
+//		@GetMapping("/resume/{resumeId}")
+//		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+//			  
+//			  return candidateService.getCandidateResume(resumeId);
+//		}
+//	  
+//		@DeleteMapping("/deleteResume/{candidateId}")
+//	  	public void deleteResume() {
+//		  
+//	  	}	  
 		
 //================================Candidate Job ========================================	
 		

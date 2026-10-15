@@ -284,13 +284,20 @@ public class EmployerService {
 		}
 		
 		
-		public ResponseEntity<?> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
+		public ResponseEntity<?> getAllJobsPostedByCompany(Authentication authentication){
 			
-			Optional<Employeer> emplr=employeerRepo.findById(employeerId);
+			String email = authentication.getName();
+			
+			AppUser user = appUserRepo.findByEmail(email);
+
+//		    Optional<Employeer> candidate = candidateRepo.findByUser(user);
+			
+			Optional<Employeer> emplr=employeerRepo.findByUser(user);
 			if(emplr.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Employeer Not Found"));
 			}
-			List<Job> allJobs=jobRepo.findAllJobsByComapanyId(employeerId);
+			Employeer emp=emplr.get();
+			List<Job> allJobs=jobRepo.findAllJobsByComapanyId(emp.getEmployeerId());
 			if(allJobs.isEmpty())
 			{
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No Job posted yet"));

@@ -29,6 +29,8 @@ public class JobApplicationsDTO {
 	    
 	    private String cndLname;
 	    
+	    private Integer resumeId;
+	    
 		private LocalDateTime dateApplied ;	
 		
 		private JobApplicationStatus  status;

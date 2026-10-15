@@ -124,6 +124,24 @@ public class CandidateService {
 	}
 
 	
+	public ResponseEntity<?> getCandidateProfileEmplrView(@PathVariable Integer cndId ) {
+//		String email = authentication.getName();
+//
+//		AppUser user = appUserRepo.findByEm(email);
+
+	    Optional<Candidate> candidate = candidateRepo.findById(cndId);
+	    
+		if(candidate.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+		}
+		Candidate cand=candidate.get();
+		
+	    CandidateDTO candidateDTO =candidateMapper.mapCandidateToCandidateDTO(cand);
+	  
+	    return ResponseEntity.ok(candidateDTO);
+	    
+}
+	
 	public ResponseEntity<?> updateCandidate(@RequestBody CandidateProfileUpdateDTO updatedCandidate, Authentication authentication) {
 
 	    String email = authentication.getName();
@@ -837,11 +855,13 @@ public class CandidateService {
 		}
 		
 		
-		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
-			
-				return fileService.getResume(resumeId);
-			
-		}
+//	this function is a part of app service	
+		
+//		public ResponseEntity<org.springframework.core.io.Resource> getCandidateResume(@PathVariable Integer resumeId) throws IOException{
+//			
+//				return fileService.getResume(resumeId);
+//			
+//		}
 		
 //---------------------------------------------Candidate Job----------------------------------------------	
 		

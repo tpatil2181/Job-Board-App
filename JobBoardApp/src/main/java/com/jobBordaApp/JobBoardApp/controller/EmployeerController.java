@@ -74,7 +74,7 @@ public class EmployeerController {
 	
 //================================Employer Profile related service========================================	
 	
-	@PostMapping("/emp_profile")
+	@PostMapping("/EmpProfile")
 	public ResponseEntity<?> getEmployerProfile( Authentication authentication ) {
 			
 			return EmprService.getCompanyProfile(authentication);
@@ -136,9 +136,9 @@ public class EmployeerController {
 	
 
 	@GetMapping("/AllPostedJobs/{employeerId}")
-	public ResponseEntity<?> getAllJobsPostedByCompany(@PathVariable Integer employeerId){
+	public ResponseEntity<?> getAllJobsPostedByCompany(Authentication authentication){
 		
-			return EmprService.getAllJobsPostedByCompany(employeerId);
+			return EmprService.getAllJobsPostedByCompany(authentication);
 	}
 	
 	@GetMapping("/allAppln/{jobId}")
