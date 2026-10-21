@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jobBordaApp.JobBoardApp.dto.AppliedJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
+import com.jobBordaApp.JobBoardApp.dto.ChangeCandidateStatus;
 import com.jobBordaApp.JobBoardApp.dto.ChangeJobStatusDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployeerDTO;
@@ -327,6 +328,31 @@ public class EmployerService {
 //		    return ResponseEntity.ok();		
 					
 		}
+		
+		
+		
+		public ResponseEntity<?> changeSelectionStatus(@PathVariable ChangeCandidateStatus updatedStatus ){
+			
+			
+			
+			Optional<ApplyJob> jobApplication =applyJobRepo.findById(updatedStatus.getApplyid());
+			
+			if(jobApplication.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Job Not Found"));
+			}
+			ApplyJob JA=jobApplication.get();
+			JA.setStatus(updatedStatus.getStatus());
+			
+			applyJobRepo.save(JA);
+			
+			
+			
+			
+			return ResponseEntity.ok(Map.of("message","status updated successfully"));
+			
+		}
+			
+		
 		
 		
 		

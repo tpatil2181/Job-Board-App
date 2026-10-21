@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.security.core.Authentication;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
+import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobSearchDTO;
@@ -304,6 +306,16 @@ public String test() {
 	  	public void deleteResume() {
 		  
 	  	}	
+		
+		
+		
+		 @PostMapping("/changePass")
+		   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
+					
+//					return candidateService.changeCandidatePassword(newPass,authentication);
+					
+					return appService.changePassword(newPass,authentication);
+			}
 		
 	
 	 

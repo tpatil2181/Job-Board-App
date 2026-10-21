@@ -101,13 +101,16 @@ public class CandidateController {
 		
 		    	return candidateService.deleteCandidate(authentication);
 	 	}
+	   
+	   
+//	   Now this is in commont coponent (it is in app services)
 	 
-	   @PostMapping("/changePass")
-	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
-				
-				return candidateService.changeCandidatePassword(newPass,authentication);
-		}
-	 
+//	   @PostMapping("/changePass")
+//	   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
+//				
+//				return candidateService.changeCandidatePassword(newPass,authentication);
+//		}
+//	 
   
 //================================Education========================================
 	

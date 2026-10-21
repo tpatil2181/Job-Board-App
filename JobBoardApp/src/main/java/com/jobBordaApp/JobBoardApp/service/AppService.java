@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jobBordaApp.JobBoardApp.dto.CandidateDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateRegisterDTO;
+import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.EmployerRegisterDTO;
 import com.jobBordaApp.JobBoardApp.dto.JobDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
@@ -59,6 +60,10 @@ public class AppService {
 	
 	@Autowired
 	private ApplyJobRepo applyJobRepo;
+	
+	
+	@Autowired
+	private AppUserRepo appUserRepo;
 	
 	@Autowired
 	private FileService fileService;
@@ -391,6 +396,41 @@ public class AppService {
 	
 }
 
+	
+	
+	
+	
+	
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO newPass, Authentication authentication) {
+
+	    String email = authentication.getName();
+
+	    AppUser user = appUserRepo.findByEmail(email);
+
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("message", "User not found"));
+	    }
+
+	    // Verify current password
+	    if (!encoder.matches(newPass.getCurrentPass(), user.getPassword())) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("message", "Current password is incorrect"));
+	    }
+
+	    // Check if new password is same as current password
+	    if (encoder.matches(newPass.getNewPass(), user.getPassword())) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("message", "New password cannot be same as current password"));
+	    }
+
+	    // Update password
+	    user.setPassword(encoder.encode(newPass.getNewPass()));
+	    appUserRepo.save(user);
+
+	    return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+	}
+	
 
 
 

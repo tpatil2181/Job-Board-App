@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jobBordaApp.JobBoardApp.dto.ChangeCandidateStatus;
 import com.jobBordaApp.JobBoardApp.dto.ChangeJobStatusDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
 import com.jobBordaApp.JobBoardApp.dto.LoginDTO;
@@ -151,6 +152,12 @@ public class EmployeerController {
 	public ResponseEntity<?> chngJbSta(@RequestBody ChangeJobStatusDTO updatedStatus) {
 
 	    return EmprService.changeJobStatus(updatedStatus );
+	}
+	
+	@PostMapping("/updateApplicationStatus")
+	public ResponseEntity<?> changecandidateselectionstatus(@RequestBody ChangeCandidateStatus updatedStatus) {
+
+	    return EmprService.changeSelectionStatus(updatedStatus );
 	}
 	
 	
@@ -325,6 +332,10 @@ public class EmployeerController {
 		applyJobRepo.save(application);
 		return "Job Status Updated Successfully";
 	}
+	
+	
+	
+	
 	
 	
 	

@@ -218,35 +218,40 @@ public class CandidateService {
 	}
 	
 	
-	public ResponseEntity<?> changeCandidatePassword(@RequestBody ChangePasswordDTO newPass, Authentication authentication) {
-
-	    String email = authentication.getName();
-
-	    AppUser user = appUserRepo.findByEmail(email);
-
-	    if (user == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body(Map.of("message", "User not found"));
-	    }
-
-	    // Verify current password
-	    if (!passwordEncoder.matches(newPass.getCurrentPass(), user.getPassword())) {
-	        return ResponseEntity.badRequest()
-	                .body(Map.of("message", "Current password is incorrect"));
-	    }
-
-	    // Check if new password is same as current password
-	    if (passwordEncoder.matches(newPass.getNewPass(), user.getPassword())) {
-	        return ResponseEntity.badRequest()
-	                .body(Map.of("message", "New password cannot be same as current password"));
-	    }
-
-	    // Update password
-	    user.setPassword(passwordEncoder.encode(newPass.getNewPass()));
-	    appUserRepo.save(user);
-
-	    return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
-	}
+	
+//	now this is in app service
+	
+	
+	
+//	public ResponseEntity<?> changeCandidatePassword(@RequestBody ChangePasswordDTO newPass, Authentication authentication) {
+//
+//	    String email = authentication.getName();
+//
+//	    AppUser user = appUserRepo.findByEmail(email);
+//
+//	    if (user == null) {
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//	                .body(Map.of("message", "User not found"));
+//	    }
+//
+//	    // Verify current password
+//	    if (!passwordEncoder.matches(newPass.getCurrentPass(), user.getPassword())) {
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("message", "Current password is incorrect"));
+//	    }
+//
+//	    // Check if new password is same as current password
+//	    if (passwordEncoder.matches(newPass.getNewPass(), user.getPassword())) {
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("message", "New password cannot be same as current password"));
+//	    }
+//
+//	    // Update password
+//	    user.setPassword(passwordEncoder.encode(newPass.getNewPass()));
+//	    appUserRepo.save(user);
+//
+//	    return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+//	}
 	
 	
 //---------------------------------------------Candidate Project----------------------------------------------	
