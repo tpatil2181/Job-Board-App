@@ -14,6 +14,7 @@ public interface EmployerMapper {
 	
 	
 	  @Mapping(source = "user.email", target = "empEmail")
+	  @Mapping(source = "companyLogo.logoId", target = "companyLogoId")
 	  EmployeerDTO mapEmployerToEmployerDTO(Employeer employer);
 	
 	

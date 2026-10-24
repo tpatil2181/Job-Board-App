@@ -101,17 +101,34 @@ public class CandidateImageService {
             existingImage.setPath(filePath);
 
             candidateImageRepo.save(existingImage);
+            candidate.setImage(existingImage);
+            candidateRepo.save(candidate);
+
 
             imageId = existingImage.getImageId();
 
         } else {
 
             // 6. Create new database entry
-            CandidateImage newImage =  new CandidateImage(candidate, filePath);
+        	
+        	
+        	
+//            CandidateImage newImage =  new CandidateImage(candidate, filePath);
+//
+//            candidateImageRepo.save(newImage);
+//            
+//            
+//
+//            imageId = newImage.getImageId();
+        	
+        	CandidateImage newImage = new CandidateImage(candidate, filePath);
 
-            candidateImageRepo.save(newImage);
+        	candidateImageRepo.save(newImage);
 
-            imageId = newImage.getImageId();
+        	candidate.setImage(newImage);
+        	candidateRepo.save(candidate);
+
+        	imageId = newImage.getImageId();
         }
 
 

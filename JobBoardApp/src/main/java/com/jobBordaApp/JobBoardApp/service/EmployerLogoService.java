@@ -98,24 +98,46 @@ public class EmployerLogoService {
                 oldFile.delete();
             }
 
+//            existingLogo.setPath(filePath);
+//
+//            employerLogoRepo.save(existingLogo);
+//            
+//
+//            logoId = existingLogo.getLogoId();
+            
             existingLogo.setPath(filePath);
-
             employerLogoRepo.save(existingLogo);
+
+            employer.setCompanyLogo(existingLogo);
+            employerRepo.save(employer);
 
             logoId = existingLogo.getLogoId();
 
         } else {
 
             // 6. Create new logo
-            EmployerLogo newLogo =
-                    new EmployerLogo(
-                            employer,
-                            filePath
-                    );
+        	
+        	
+        	
+//            EmployerLogo newLogo =
+//                    new EmployerLogo(
+//                            employer,
+//                            filePath
+//                    );
+//
+//            employerLogoRepo.save(newLogo);
+//
+//            logoId = newLogo.getLogoId();
+        	
+        	
+        	EmployerLogo newLogo = new EmployerLogo(employer, filePath);
 
-            employerLogoRepo.save(newLogo);
+        	employerLogoRepo.save(newLogo);
 
-            logoId = newLogo.getLogoId();
+        	employer.setCompanyLogo(newLogo);
+        	employerRepo.save(employer);
+
+        	logoId = newLogo.getLogoId();
         }
 
 

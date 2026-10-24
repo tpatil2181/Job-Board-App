@@ -17,6 +17,7 @@ public class EmployeerDTO {
 	
 	Integer employeerId;
 	String employeerName;
+	Integer companyLogoId;
 	String empEmail;
 	String website;
 	Long contact;

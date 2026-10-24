@@ -33,6 +33,10 @@ public class Employeer {
 	Integer employeerId;
 	@Column(name="employeer_name")
 	String employeerName;
+	@OneToOne
+	@JoinColumn(name = "company_image_id")
+	EmployerLogo companyLogo;
+	
 	@Column(name="website")
 	String website;
 	@Column(name="contact")

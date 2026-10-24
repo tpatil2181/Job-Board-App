@@ -384,5 +384,14 @@ public class EmployeerController {
 	    }
 	}
 	
+	
+//	@GetMapping("/companylogo/{imageId}")
+//	public ResponseEntity<org.springframework.core.io.Resource> getCandidateImage(
+//	        @PathVariable Integer imageId) throws IOException {
+//
+//	    return candidateImageService.getCandidateImage(imageId);
+//	}
+
+	
 
 }
