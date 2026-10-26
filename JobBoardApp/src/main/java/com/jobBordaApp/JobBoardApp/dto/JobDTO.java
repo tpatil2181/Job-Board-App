@@ -33,6 +33,8 @@ public class JobDTO {
 	    private Integer employerId;
 
 	    private String employerName;
+	    
+	    private Integer companyLogo;
 
 	    private WorkMode workMode;
 

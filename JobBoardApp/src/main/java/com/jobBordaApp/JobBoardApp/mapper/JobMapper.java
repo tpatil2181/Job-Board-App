@@ -15,6 +15,8 @@ public interface JobMapper {
 	@Mapping(source = "employer.employeerId",target = "employerId")
 
     @Mapping(source = "employer.employeerName",target = "employerName")
+    
+	@Mapping(source = "employer.companyLogo.logoId",target = "companyLogo")
 
     JobDTO mapJobToJobDTO(Job job);
 	
