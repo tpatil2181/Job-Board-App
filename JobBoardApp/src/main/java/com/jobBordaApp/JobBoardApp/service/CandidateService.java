@@ -980,6 +980,21 @@ public class CandidateService {
 		}
 		
 		
+		public Boolean isJobApplicationExist(@PathVariable Integer jobId , @PathVariable Integer candidateId, Authentication authentication){
+			
+//				String email = authentication.getName();
+//			
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+			return applyJobRepo.hasCandidateApplied(candidateId,jobId);
+			
+		}
+		
 	
 		public ResponseEntity<?> getJobApplication(@RequestBody ApplyJobDTO getJobAppln,Authentication authentication){
 			

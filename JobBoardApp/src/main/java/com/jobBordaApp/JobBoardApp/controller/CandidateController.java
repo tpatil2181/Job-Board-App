@@ -313,6 +313,14 @@ public class CandidateController {
 			 return candidateService.getJobApplication(getjob,authentication);
 		}
 		
+		@GetMapping("/isAlreadyApplied/{jobId}/{candidateId}")
+		public Boolean isApplied(@PathVariable Integer jobId, @PathVariable Integer candidateId,Authentication authentication){
+			System.out.println("Job Id: "+jobId);
+			System.out.println("Candidate Id: "+candidateId);
+			
+			 return candidateService.isJobApplicationExist( jobId,candidateId, authentication);
+		}
+		
 		
 		
 		
@@ -346,6 +354,9 @@ public class CandidateController {
 
 		    return candidateImageService.getCandidateImage(imageId);
 		}
+		
+
+		
 
 	    
 //================================Candidate Services End========================================    

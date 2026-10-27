@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -88,11 +92,24 @@ public class JobService {
 	
 //======================================New code for Job seraching=========================================		
 	public Page<JobDTO> findAllJobs(Pageable pageable,JobSearchDTO jobSearchDTO) {
+		
 
 	    Specification<Job> spec =
 	            JobSpecification.getJobSpecification(jobSearchDTO);
+	    
+	    // Return the newest jobs first
+	    Pageable sortedPageable = PageRequest.of(
+	            pageable.getPageNumber(),
+	            pageable.getPageSize(),
+	            Sort.by(
+	                Sort.Order.desc("datePosted"),
+	                Sort.Order.desc("jobId")
+	            )
+	    );
 
-	    Page<Job> jobs = jobRepo.findAll(spec, pageable);
+	    Page<Job> jobs = jobRepo.findAll(spec, sortedPageable);
+
+//	    Page<Job> jobs = jobRepo.findAll(spec, pageable);
 
 	    return jobs.map(jobMapper::mapJobToJobDTO);
 	}

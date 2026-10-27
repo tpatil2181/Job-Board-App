@@ -37,6 +37,17 @@ public interface ApplyJobRepo  extends JpaRepository<ApplyJob,Integer>{
 	@Query(value = "DELETE FROM apply_job WHERE candidate_id=?1 AND job_id=?2",nativeQuery = true)
 	int deleteByCandidateIdAndJobId(Integer candidateId,Integer jobId);
 	
+//	@Query(value = "select app apply_job WHERE candidate_id=?1 AND job_id=?2",nativeQuery = true)
+//	Boolean isAlreadyAppliedToThisJob(Integer candidateId,Integer jobId);
+//	
+	
+	@Query("""
+	        SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
+	        FROM ApplyJob a
+	        WHERE a.candidate.candidateId = :candidateId
+	          AND a.job.jobId = :jobId
+	    """)
+	    boolean hasCandidateApplied( Integer candidateId, Integer jobId);
 	
 	
 
