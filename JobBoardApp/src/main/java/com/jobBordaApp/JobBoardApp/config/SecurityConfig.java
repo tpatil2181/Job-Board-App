@@ -111,7 +111,8 @@ public class SecurityConfig {
         //         List.of("http://localhost:4200","http://127.0.0.1/","https://curly-happiness-69gvp65gq79wcr55-8080.app.github.dev"));
 		configuration.setAllowedOrigins(List.of(
 			"http://localhost:4200",
-			"https://curly-happiness-69gvp65gq79wcr55-4200.app.github.dev"
+			// "https://curly-happiness-69gvp65gq79wcr55-4200.app.github.dev"
+			"https://ancient-incantation-jj5rg675vgj7c57jq-4200.app.github.dev"
 		));
         configuration.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
