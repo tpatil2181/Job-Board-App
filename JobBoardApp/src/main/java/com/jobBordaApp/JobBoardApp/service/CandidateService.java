@@ -6,6 +6,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,6 +37,7 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateResume;
 import com.jobBordaApp.JobBoardApp.entity.Employeer;
 import com.jobBordaApp.JobBoardApp.entity.Job;
 import com.jobBordaApp.JobBoardApp.entity.Language;
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
 import com.jobBordaApp.JobBoardApp.enums.Months;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
 import com.jobBordaApp.JobBoardApp.mapper.AppliedJobMapper;
@@ -47,6 +53,7 @@ import com.jobBordaApp.JobBoardApp.repository.CandidateResumeReop;
 import com.jobBordaApp.JobBoardApp.repository.EmployeerRepo;
 import com.jobBordaApp.JobBoardApp.repository.JobRepo;
 import com.jobBordaApp.JobBoardApp.repository.LanguageRepo;
+import com.jobBordaApp.JobBoardApp.specification.AppliedJobSpecification;
 
 @Service
 public class CandidateService {
@@ -103,6 +110,10 @@ public class CandidateService {
 	
 
 //	 Complete Method jwt Rolebased Autharization 
+	
+	
+	
+//	public getCandidateId
 	
 	
 	public ResponseEntity<?> getCandidateProfile(Authentication authentication ) {
@@ -923,32 +934,45 @@ public class CandidateService {
 			
 		
 		
-		public ResponseEntity<?> allAppliedJobs(Authentication authentication){
-			
-				String email = authentication.getName();
-				
-				AppUser user = appUserRepo.findByEmail(email);
-	
-			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
-			    
-				if(candidate.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
-				}
-				
-				Candidate cnd=candidate.get();
-				
-				List<ApplyJob> allAppliedJobs=applyJobRepo.findAllApplicationsByCandidateId(cnd.getCandidateId());
-				if(allAppliedJobs.size()==0) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No jobs applied by this Candidate"));
+//		public ResponseEntity<?> allAppliedJobs(Authentication authentication){
+//			
+//				String email = authentication.getName();
+//				
+//				AppUser user = appUserRepo.findByEmail(email);
+//	
+//			    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+//			    
+//				if(candidate.isEmpty()) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+//				}
+//				
+//				Candidate cnd=candidate.get();
+//				
+//				List<ApplyJob> allAppliedJobs=applyJobRepo.findAllApplicationsByCandidateId(cnd.getCandidateId());
+//				if(allAppliedJobs.size()==0) {
+//					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No jobs applied by this Candidate"));
+//
+////					throw new ResourceNotFoundException("No jobs applied by this Candidate");
+//				}
+//			
+//				List<AppliedJobDTO> appliedJobsDTO = allAppliedJobs.stream().map(appliedJobMapper::mapAppiedJobToApplyjobDTO).toList();
+//			    
+//			    return ResponseEntity.ok(appliedJobsDTO);		
+//
+//		}
+		
+		public Page<AppliedJobDTO> findAllAppliedJobs(Integer candidateId, Pageable pageable, JobApplicationStatus status) {
 
-//					throw new ResourceNotFoundException("No jobs applied by this Candidate");
-				}
-			
-				List<AppliedJobDTO> appliedJobsDTO = allAppliedJobs.stream().map(appliedJobMapper::mapAppiedJobToApplyjobDTO).toList();
-			    
-			    return ResponseEntity.ok(appliedJobsDTO);		
+		    Specification<ApplyJob> spec = AppliedJobSpecification.getAppliedJobSpecification(candidateId, status);
 
+		    Pageable sortedPageable = PageRequest.of( pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.desc("dateApplied")));
+
+		    Page<ApplyJob> appliedJobs = applyJobRepo.findAll(spec, sortedPageable);
+
+		    return appliedJobs.map(appliedJobMapper::mapAppiedJobToApplyjobDTO);
 		}
+		
+		
 		
 		public ResponseEntity<?> withdarwJobApplication(@RequestBody Integer ApplicationId, Authentication authentication){
 			

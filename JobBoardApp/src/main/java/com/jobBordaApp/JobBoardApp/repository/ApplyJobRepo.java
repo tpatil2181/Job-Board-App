@@ -1,17 +1,23 @@
 package com.jobBordaApp.JobBoardApp.repository;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
+import com.jobBordaApp.JobBoardApp.entity.Job;
 
 import jakarta.transaction.Transactional;
 
-public interface ApplyJobRepo  extends JpaRepository<ApplyJob,Integer>{
+public interface ApplyJobRepo  extends JpaRepository<ApplyJob,Integer> , JpaSpecificationExecutor<ApplyJob>{
 	
 	
 	@Query(value="select * from apply_job where candidate_id=?1",nativeQuery = true)
@@ -48,7 +54,12 @@ public interface ApplyJobRepo  extends JpaRepository<ApplyJob,Integer>{
 	          AND a.job.jobId = :jobId
 	    """)
 	    boolean hasCandidateApplied( Integer candidateId, Integer jobId);
+
+
+//	public Page<ApplyJob> findAll(Specification<ApplyJob> spec, Pageable sortedPageable);
 	
+	
+//	public Page<Job>findAll(String jobTitle,Pageable pageable);
 	
 
 }

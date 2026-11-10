@@ -2,15 +2,13 @@ package com.jobBordaApp.JobBoardApp.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
+//import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -89,13 +87,6 @@ public String test() {
 	return "Job board app run successfully";
 }
 
-
-//ONLY JOB SEARCH FEATURE IS REMEAINING
-	 
-//Login Flow should be first user Login with credential and it gets loginResponce back witch contains token userEmail Id or time etc. and once we get login
-// Login DTO at the frontend autometically calls the mehode get profile for there respective controller
-//Loign-getProfile
-
 //===========================Candidate Specific Controller ==========================================
 
 		@PostMapping("/cnd_register")
@@ -130,21 +121,13 @@ public String test() {
 //		}
 			
 		
-//===========================Main service of job board app Specific Controller ==========================================
+//===========================Job Specific Controller ==========================================
 		
-		
-////		@GetMapping("/Jobs")
-//		public ResponseEntity<?> getAllJobs(){
-//
-//			return jobService.getAllJobs();
-//		}
-//		if no parameter pass in jobsearch it automatically pass the all job list
 		
 		@GetMapping("/job/{jobId}")
 		public ResponseEntity<?> getJob( @PathVariable Integer jobId) {
 			
-			return jobService.getJobByid(jobId);
-		    
+			return jobService.getJobByid(jobId);   
 		}
 		
 		
@@ -165,121 +148,19 @@ public String test() {
 		        sort = Sort.by(sortBy).descending();
 		    }
 
-		    return jobService.findAllJobs(
-		            PageRequest.of(pageNo - 1, pageSize, sort),
-		            jobSearchDTO);
+		    return jobService.findAllJobs(PageRequest.of(pageNo - 1, pageSize, sort), jobSearchDTO);
 		}
+				
 		
-		
-//===================================================================Old running Code for job searching===================================================================
-		
-//		@GetMapping("/jobsearch")
-//		public Page<JobDTO> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
-//									@RequestParam(required = false, defaultValue = "5")  int pageSize,
-//									@RequestParam(required = false, defaultValue = "jobId") String sortBy,
-//									@RequestParam(required = false, defaultValue = "ASE")String sortDir,
-//									@RequestParam(required = false) String jobTitle,
-//							        @RequestParam(required = false) String jobLocation,
-//							        @RequestParam(required = false) String employerName,
-////							        @RequestParam(required = false)  List<ExperienceFilterDTO> experiences;
-//							        @RequestParam(required = false) Integer minExperience,
-//							        @RequestParam(required = false) Integer maxExperience,
-//							        @RequestParam(name = "workMode",required = false) List<WorkMode> workModes,
-////							        @RequestParam(required = false) WorkMode workMode,
-//							        @RequestParam(required = false) Integer minSalary,
-//							        @RequestParam(required = false) Integer maxSalary,
-//							        @RequestParam(required = false) List<String> employmentTypes,
-////							        @RequestParam(required = false) List<EmplyementType> employmentTypes,
-////							        @RequestParam(required = false) String employmentType,
-//							        @RequestParam(required = false) List<String> industryType,
-////							        @RequestParam(required = false) String industryType,
-//							        @RequestParam(required = false)
-//							        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-//							        LocalDate datePosted){
-////			System.out.println(workModes);
-////			System.out.println(employmentTypes);
-//			Sort sort=null;
-//			if(sortDir.equalsIgnoreCase("ASE")) {
-//				sort=Sort.by(sortBy).ascending();
-//				
-//			}else {
-//				sort=Sort.by(sortBy).descending();	
-//			}
-//			
-//			return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
-//																				   minExperience,maxExperience,workModes,
-//																				   minSalary,maxSalary,employmentTypes,
-//																				   industryType,datePosted);
-//																	           
-//			
-//			}	
-		
-		
-//		@GetMapping("/jobs")
-//		public ResponseEntity<Page<Job>> getAllJobs(@RequestParam(required = false) Integer jobId,@RequestParam(required = false) String employer,
-//													@RequestParam(required = false) String jobTitle,@RequestParam(required = false) String status,
-//													@RequestParam(required = false) String createDate,Pageable pageable) {
-//
-//		    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
+//===========================Employer Specific service =========================================		
+
+//		@GetMapping("/company/{employeerId}")
+//		public Employeer getCompanyProfile(@PathVariable int companyId) {
+//			Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
+//			return company;
 //		}
-
-//===================================================================	===================================================================	
-		
-//-------------------------------------------------------------------------
-//	this should  be in company service only company can view candidate profile on candidate  email
-//	@GetMapping("/candidate/{email}")
-//	public ResponseEntity<?> getCandidate(@PathVariable String email) {
-//
-//		    Candidate existingCandidate = candidateRepo.findByEmail(email);
-//		    
-//		    if (existingCandidate==null) {
-//		        return ResponseEntity
-//		                .status(HttpStatus.NOT_FOUND)
-//		                .body("Candidate not found");
-//		    }
-//		    
-////		    Candidate candidate = existingCandidate();
-//		    CandidateDTO dto = new CandidateDTO();
-//		    
-//	//	    dto.setCandidateId(candidate.getCandidateId());
-////		    dto.setFirst_name(candidate.getFirstName());
-////		    dto.setLast_name(candidate.getLastName());
-////		    dto.setMobNo(candidate.getMobNo());
-////		    dto.setEmail(candidate.getEmail());
-////		    dto.setEducation(candidate.getEducation());
-//	//	    dto.setResume(candidate.getResume());
-////		    dto.setSkills(candidate.getSkills());
-//	
-//	
-//		    return ResponseEntity.ok(dto);
-//	}
-	
-	 
-//===========================Candidate Specific service End ==========================================
-	    
-		@GetMapping("candidate/{id}/applications")
-		public List<ApplyJob> getAllApplicationOfPerticularCandidate(@PathVariable Integer candidateId) {
-			
-			List<ApplyJob> allApplications= applyJobRepo.findAllApplicationsByCandidateId(candidateId);
-			if(allApplications.isEmpty()) {
-				throw new ResourceNotFoundException("Not appied for any job");
-			}
-			return allApplications;
-		}
 		
 		
-		
-		
-		
-//===========================Company Specific service =========================================		
-
-		@GetMapping("/company/{employeerId}")
-		public Employeer getCompanyProfile(@PathVariable int companyId) {
-			Employeer company= employeerRepo.findById(companyId).orElseThrow(()-> new ResourceNotFoundException("Company not found with this id"));
-			return company;
-		}
-		
-//---------------------------------Employer---------------------------------
 		
 //		@PreAuthorize("hasAnyRole('CANDIDATE','EMPLOYER')")
 		@GetMapping("/employerLogo/{logoId}")
@@ -289,11 +170,11 @@ public String test() {
 		    return employerLogoService.getEmployerLogo(logoId);
 		}
 		
-//===========================Company Specific service End =========================================
+//===========================Employer Specific service End =========================================
 		
 		
 		
-//		==================================Resume============================================
+//==================================Resume============================================
 		
 		@PreAuthorize("hasAnyRole('CANDIDATE','ROLE_EMPLOYER')")
 		@GetMapping("/resume/{resumeId}")
@@ -302,20 +183,11 @@ public String test() {
 			  return appService.getCandidateResume(resumeId);
 		}
 	  
-		@DeleteMapping("/deleteResume/{candidateId}")
-	  	public void deleteResume() {
-		  
-	  	}	
-		
-		
-		
-		 @PostMapping("/changePass")
-		   public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
+		@PostMapping("/changePass")
+		public ResponseEntity<?> changePassword( @RequestBody ChangePasswordDTO newPass,Authentication authentication) {	
 					
-//					return candidateService.changeCandidatePassword(newPass,authentication);
-					
-					return appService.changePassword(newPass,authentication);
-			}
+			return appService.changePassword(newPass,authentication);
+		}
 		
 	
 	 
@@ -420,7 +292,112 @@ public String test() {
 //		
 //	}
 		
+		 
+			
+////		@GetMapping("/Jobs")
+//		public ResponseEntity<?> getAllJobs(){
+//
+//			return jobService.getAllJobs();
+//		}
+//		if no parameter pass in jobsearch it automatically pass the all job list
 		
+		
+		//===================================================================Old running Code for job searching===================================================================
+			
+//			@GetMapping("/jobsearch")
+//			public Page<JobDTO> getAlljobs(@RequestParam(required = false, defaultValue = "1") int pageNo,
+//										@RequestParam(required = false, defaultValue = "5")  int pageSize,
+//										@RequestParam(required = false, defaultValue = "jobId") String sortBy,
+//										@RequestParam(required = false, defaultValue = "ASE")String sortDir,
+//										@RequestParam(required = false) String jobTitle,
+//								        @RequestParam(required = false) String jobLocation,
+//								        @RequestParam(required = false) String employerName,
+////								        @RequestParam(required = false)  List<ExperienceFilterDTO> experiences;
+//								        @RequestParam(required = false) Integer minExperience,
+//								        @RequestParam(required = false) Integer maxExperience,
+//								        @RequestParam(name = "workMode",required = false) List<WorkMode> workModes,
+////								        @RequestParam(required = false) WorkMode workMode,
+//								        @RequestParam(required = false) Integer minSalary,
+//								        @RequestParam(required = false) Integer maxSalary,
+//								        @RequestParam(required = false) List<String> employmentTypes,
+////								        @RequestParam(required = false) List<EmplyementType> employmentTypes,
+////								        @RequestParam(required = false) String employmentType,
+//								        @RequestParam(required = false) List<String> industryType,
+////								        @RequestParam(required = false) String industryType,
+//								        @RequestParam(required = false)
+//								        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//								        LocalDate datePosted){
+////				System.out.println(workModes);
+////				System.out.println(employmentTypes);
+//				Sort sort=null;
+//				if(sortDir.equalsIgnoreCase("ASE")) {
+//					sort=Sort.by(sortBy).ascending();
+//					
+//				}else {
+//					sort=Sort.by(sortBy).descending();	
+//				}
+//				
+//				return jobService.findAllJobs(PageRequest.of(pageNo-1, pageSize,sort), jobTitle,jobLocation,employerName,
+//																					   minExperience,maxExperience,workModes,
+//																					   minSalary,maxSalary,employmentTypes,
+//																					   industryType,datePosted);
+//																		           
+//				
+//				}	
+			
+		 
+
+//			@GetMapping("/jobs")
+//			public ResponseEntity<Page<Job>> getAllJobs(@RequestParam(required = false) Integer jobId,@RequestParam(required = false) String employer,
+//														@RequestParam(required = false) String jobTitle,@RequestParam(required = false) String status,
+//														@RequestParam(required = false) String createDate,Pageable pageable) {
+	//
+//			    return ResponseEntity.ok(jobService.findAllJobs(pageable,jobId,employer,jobTitle,status,createDate));
+//			}
+
+	//===================================================================	===================================================================	
+			
+	//-------------------------------------------------------------------------
+//		this should  be in company service only company can view candidate profile on candidate  email
+//		@GetMapping("/candidate/{email}")
+//		public ResponseEntity<?> getCandidate(@PathVariable String email) {
+	//
+//			    Candidate existingCandidate = candidateRepo.findByEmail(email);
+//			    
+//			    if (existingCandidate==null) {
+//			        return ResponseEntity
+//			                .status(HttpStatus.NOT_FOUND)
+//			                .body("Candidate not found");
+//			    }
+//			    
+////			    Candidate candidate = existingCandidate();
+//			    CandidateDTO dto = new CandidateDTO();
+//			    
+//		//	    dto.setCandidateId(candidate.getCandidateId());
+////			    dto.setFirst_name(candidate.getFirstName());
+////			    dto.setLast_name(candidate.getLastName());
+////			    dto.setMobNo(candidate.getMobNo());
+////			    dto.setEmail(candidate.getEmail());
+////			    dto.setEducation(candidate.getEducation());
+//		//	    dto.setResume(candidate.getResume());
+////			    dto.setSkills(candidate.getSkills());
+	//	
+	//	
+//			    return ResponseEntity.ok(dto);
+//		}
+		 
+		 
+		 
+//			@GetMapping("candidate/{id}/applications")
+//			public List<ApplyJob> getAllApplicationOfPerticularCandidate(@PathVariable Integer candidateId) {
+//				
+//				List<ApplyJob> allApplications= applyJobRepo.findAllApplicationsByCandidateId(candidateId);
+//				if(allApplications.isEmpty()) {
+//					throw new ResourceNotFoundException("Not appied for any job");
+//				}
+//				return allApplications;
+//			}
+			
 		
 
 }

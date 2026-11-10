@@ -165,28 +165,7 @@ public class AppService {
 		    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
 		}
 		
-//		public String verifyAndLogin( @RequestBody LoginDTO loginDTO) {
-//
-//		    Authentication auth =
-//		            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
-//
-//		    if (auth.isAuthenticated()) {
-//		    	
-//		    	return jwtService.generateToken(loginDTO.getEmail());
-////		        return ResponseEntity.ok(Map.of("message", "success"));
-//		    }
-//		    return "fail";
-////		    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
-//		}
-		
-//		public ResponseEntity<?> verify(User user) {
-//		
-//		Authentication auth=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-//		if(auth.isAuthenticated()) {
-//			 return ResponseEntity.ok(Map.of("message", "success" ));
-//		}
-//    	return ResponseEntity.badRequest().body(Map.of( "message", "Fail "));
-//	}
+
 	
 	
 //===========================Candidate Specific service ==========================================
@@ -432,6 +411,30 @@ public class AppService {
 	}
 	
 
+//======================================================================================================================================================
+	
+//	public String verifyAndLogin( @RequestBody LoginDTO loginDTO) {
+//
+//	    Authentication auth =
+//	            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
+//
+//	    if (auth.isAuthenticated()) {
+//	    	
+//	    	return jwtService.generateToken(loginDTO.getEmail());
+////	        return ResponseEntity.ok(Map.of("message", "success"));
+//	    }
+//	    return "fail";
+////	    return ResponseEntity.badRequest().body(Map.of("message", "fail"));
+//	}
+	
+//	public ResponseEntity<?> verify(User user) {
+//	
+//	Authentication auth=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//	if(auth.isAuthenticated()) {
+//		 return ResponseEntity.ok(Map.of("message", "success" ));
+//	}
+//	return ResponseEntity.badRequest().body(Map.of( "message", "Fail "));
+//}
 
 
 

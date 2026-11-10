@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,9 +27,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import com.jobBordaApp.JobBoardApp.dto.AppliedJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.ApplyJobDTO;
 import com.jobBordaApp.JobBoardApp.dto.CandidateProfileUpdateDTO;
 import com.jobBordaApp.JobBoardApp.dto.ChangePasswordDTO;
+import com.jobBordaApp.JobBoardApp.entity.AppUser;
 import com.jobBordaApp.JobBoardApp.entity.ApplyJob;
 import com.jobBordaApp.JobBoardApp.entity.Candidate;
 import com.jobBordaApp.JobBoardApp.entity.CandidateCertification;
@@ -34,7 +40,9 @@ import com.jobBordaApp.JobBoardApp.entity.CandidateEducation;
 import com.jobBordaApp.JobBoardApp.entity.CandidateExperience;
 import com.jobBordaApp.JobBoardApp.entity.CandidateProject;
 import com.jobBordaApp.JobBoardApp.entity.Language;
+import com.jobBordaApp.JobBoardApp.enums.JobApplicationStatus;
 import com.jobBordaApp.JobBoardApp.exception.ResourceNotFoundException;
+import com.jobBordaApp.JobBoardApp.repository.AppUserRepo;
 import com.jobBordaApp.JobBoardApp.repository.ApplyJobRepo;
 import com.jobBordaApp.JobBoardApp.repository.CandidateRepo;
 import com.jobBordaApp.JobBoardApp.service.CandidateImageService;
@@ -47,6 +55,8 @@ import com.jobBordaApp.JobBoardApp.service.FileService;
 @RequestMapping("/Hireflow/candidate")
 public class CandidateController {
 	
+	@Autowired
+	private AppUserRepo appUserRepo;
 	
 	@Autowired
 	private CandidateRepo candidateRepo;   //Reporisotory variable
@@ -56,6 +66,7 @@ public class CandidateController {
 	
 	@Autowired
 	private CandidateImageService candidateImageService; 
+	
 	
 	
 
@@ -294,10 +305,42 @@ public class CandidateController {
 			 return candidateService.jobApplication(jobApplicaation,authentication);
 		}
 	
-		@GetMapping("/allAppliedJobs")
-		public ResponseEntity<?> allAppliedJobs(Authentication authentication){
+//		@GetMapping("/allAppliedJobs")
+//		public ResponseEntity<?> allAppliedJobs(
+//								@RequestParam(defaultValue = "1") int pageNo,
+//						        @RequestParam(defaultValue = "5") int pageSize,
+//						        @RequestParam(defaultValue = "jobId") String sortBy,
+//						        @RequestParam(defaultValue = "ASE") String sortDir,
+//						        Authentication authentication){
+//			
+//			 return candidateService.allAppliedJobs(authentication);
+//		}
+		
+		@PostMapping("/allAppliedJobs")
+		public Page<AppliedJobDTO> getAllAppliedJobs(
+		        @RequestParam(defaultValue = "1") int pageNo,
+		        @RequestParam(defaultValue = "5") int pageSize,
+		        @RequestParam(required = false) JobApplicationStatus status,
+		        Authentication authentication) {
 			
-			 return candidateService.allAppliedJobs(authentication);
+			String email = authentication.getName();
+			
+			AppUser user = appUserRepo.findByEmail(email);
+
+		    Optional<Candidate> candidate = candidateRepo.findByUser(user);
+		    
+			if(candidate.isEmpty()) {
+//				return;
+//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Candidate Not Found"));
+			}
+			
+
+//		    Integer candidateId = candidateService.getCandidateId(authentication);
+			Candidate cnd=candidate.get();
+
+		    Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		    return candidateService.findAllAppliedJobs(cnd.getCandidateId(), pageable, status);
 		}
 		
 		
